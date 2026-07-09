@@ -1,0 +1,280 @@
+/* Pojo Core styles for the page */
+body {
+  background: #303030;
+  color: #121212;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  line-height: 14px;
+}
+
+a {
+  color: #303030;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #5488ad;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+p {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000000;
+}
+
+#pojo-login {
+  background: #5488ad;
+  color: #ffffff;
+  font-size: 1.2em;
+  font-weight: bold;
+  border: 3px solid #ffffff;
+  border-radius: 5px;
+  width: 25%;
+  margin: auto;
+  padding: 20px;
+}
+
+#pojo-login div {
+  width: 50%;
+  margin: auto;
+  padding: 5px;
+}
+
+.pojo-font {
+  color: #000000;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+}
+
+.pojo-small-font {
+  color: #000000;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 9px;
+}
+
+.pojo-border {
+  border-radius: 5px;
+  border: 1px solid #000000;
+  padding: 5px;
+}
+
+.pojo-header-info {
+  color: #c0c0c0;
+  float: right;
+  text-align: right;
+}
+
+.pojo-header-info a {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.pojo-fronttext {
+  color: #000000;
+  font-size: 13px;
+}
+
+.ui-widget-content {
+  background: #303030;
+}
+
+.ui-widget-header {
+  background: #303030;
+}
+
+.ui-tabs .ui-tabs-nav {
+  background: none repeat scroll 0% 0% #303030;
+}
+
+.ui-tabs-nav .ui-state-default {
+  background: #c0c0c0;
+  border: 3px;
+  border-bottom: 1px solid #c0c0c0;
+  border-radius: 16px 16px 0px 0px;
+}
+
+.ui-tabs-nav .ui-state-hover {
+  background: #5488ad;
+}
+
+/* Remove the bottom border on the active state */
+.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+  background: #5488ad;
+  margin-bottom: -2px;
+  margin-top: -2px;
+  padding-bottom: 6px;
+  /* top-left, top-right, bottom-right, bottom-left */
+  border-radius: 6px 6px 0px 0px;
+}
+
+.ui-tabs-nav .ui-state-default a {
+  color: #303030;
+}
+
+.ui-tabs-nav .ui-state-hover a:hover,
+.ui-tabs-nav .ui-state-active a {
+  color: #ffffff;
+}
+
+/* Override jQuery-ui padding for the panel */
+.ui-tabs .ui-tabs-panel {
+  padding: 0em;
+}
+
+/* Warning messages */
+.pojo-msg-alert {
+  font-family: Verdana, Arial, Helvetica, Sans-Serif, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #821717;
+}
+
+div.ext-box {
+  display: table;
+  background: #303030;
+  color: #ffffff;
+  font-size: 2.25em;
+  font-weight: bold;
+  text-align: left;
+}
+div.int-box {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/***********
+* SECTIONS *
+************/
+/* Special formatting used on alerts area beneath main page */
+.pojo-alerts {
+  background: #c0c0c0;
+  border-radius: 5px;
+  border: 1px solid #000000;
+  padding: 5px;
+}
+
+/* Special formatting used on alerts header area beneath main page */
+.pojo-alerts-header {
+  background: #303030;
+  color: #ffffff;
+  font-size: 1.25em;
+  font-weight: bold;
+  padding: 10px;
+  text-align: left;
+}
+
+/* Special formatting used on alerts body area beneath main page */
+.pojo-alerts-body {
+  background: #f0f0f0;
+  border-radius: 3px;
+  clear: both;
+  padding: 10px;
+}
+
+.pojo-section {
+  background: #5488ad;
+  border-radius: 5px;
+  border: 1px solid #000000;
+  padding: 5px;
+}
+
+/* Table or section header */
+.pojo-section-header {
+  background: #5488ad;
+  color: #ffffff;
+  font-size: 1.25em;
+  font-weight: bold;
+  padding: 10px;
+  text-align: left;
+}
+
+.pojo-section-header a {
+  background: #5488ad;
+  color: #ffffff;
+  font-size: 0.5em;
+  font-weight: bold;
+  text-align: left;
+}
+
+.pojo-section-body {
+  /* Special formatting used on sub-pages for text (opposite of alternate tag below) */
+  background: #f0f0f0;
+  border-radius: 3px;
+  clear: both;
+  padding: 10px;
+}
+
+.pojo-section-alternate {
+  /* Special formatting used on sub-pages for text (opposite of body tag above) */
+  background-color: #c0c0c0;
+}
+
+.pojo-section-break {
+  /* Special formatting used on home pages of the components to set a line break */
+  clear: both;
+}
+
+.pojo-section-item {
+  /* Special formatting used on home pages of the components for each sub-page link/button */
+  float: left;
+  margin: 10px;
+  text-align: center;
+}
+
+.pojo-section-selected {
+  /* Not sure what this one is used for because it is not currently being used */
+}
+
+.pojo-section-subheader {
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.pojo-section-footer {
+  font-size: 11px;
+}
+
+/* Text that belongs to the table but does not fall in one of the other categories
+(e.g. explanatory or help text that is associated with the section. */
+.pojo-section-text {
+  font-size: 12px;
+  font-style: italic;
+}
+
+/******************
+* pojo_tablestyle *
+*******************/
+.pojo_tablestyle {
+  clear: both;
+  width: 100%;
+}
+
+.pojo_tablestyle th {
+  background: #5488ad;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0 10px 0 5px;
+  border-bottom: #c0c0c0 dotted 1px;
+}
+
+.pojo_tablestyle td {
+  height: 2em;
+  padding-left: 6px;
+  font-size: 11px;
+  padding: 5px 5px;
+}
+
+/* Using new CSS3 selectors for styling */
+.pojo_tablestyle tr:nth-child(odd) {
+  background: #c0c0c0;
+}
+
+.pojo_tablestyle tr:nth-child(even) {
+  background: #ffffff;
+}
+

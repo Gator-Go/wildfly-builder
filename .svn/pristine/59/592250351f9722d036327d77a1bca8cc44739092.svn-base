@@ -1,0 +1,5 @@
+<appApps>
+
+  <appHome appName="social" appDesc="Social Home" appPng="social_logo.png" appHomeURL="/social/do?op=Home"/>
+
+</appApps>

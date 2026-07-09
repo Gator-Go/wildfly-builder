@@ -1,0 +1,288 @@
+
+to connect: psql
+
+Server [localhost]:
+Database [postgres]: berrydb
+Port [5432]:
+Username [postgres]: admin
+
+
+sudo -u postgres createuser -d -P -h 127.0.0.1 -U postgres wildfly-admin
+CREATE USER admin WITH PASSWORD 'admin';
+
+psql -U "admin" -W -h 127.0.0.1 -d berrydb
+
+SELECT * FROM inv_item;
+
+CREATE DATABASE berrydb OWNER admin;
+CREATE DATABASE berrydb OWNER wildfly-admin;
+
+
+to show tables:
+
+\dt
+berrydb=> \dt
+        List of relations
+ Schema |  Name   | Type  | Owner
+--------+---------+-------+-------
+ public | alert   | table | admin
+ public | comment | table | admin
+ public | member  | table | admin
+ public | posting | table | admin
+(4 rows)
+
+or
+
+SELECT * FROM pg_catalog.pg_tables;
+
+
+to describe table
+
+berrydb=> \d+ alert
+                                      Table "public.alert"
+    Column     |            Type             | Modifiers | Storage  | Stats target | Description
+---------------+-----------------------------+-----------+----------+--------------+-------------
+ id            | bigint                      | not null  | plain    |              |
+ alert_id      | bigint                      |           | plain    |              |
+ alert_message | text                        | not null  | extended |              |
+ alert_source  | character varying(255)      | not null  | extended |              |
+ alert_type    | character varying(255)      | not null  | extended |              |
+ device_id     | bigint                      |           | plain    |              |
+ occurred_at   | timestamp without time zone |           | plain    |              |
+Indexes:
+    "alert_pkey" PRIMARY KEY, btree (id)
+
+berrydb=> \d+ comment
+                                      Table "public.comment"
+     Column      |            Type             | Modifiers | Storage  | Stats target | Description
+-----------------+-----------------------------+-----------+----------+--------------+-------------
+ id              | bigint                      | not null  | plain    |              |
+ commentdate     | timestamp without time zone |           | plain    |              |
+ commentid       | bigint                      |           | plain    |              |
+ deviceid        | bigint                      |           | plain    |              |
+ posting_comment | character varying(255)      | not null  | extended |              |
+ member          | bigint                      |           | plain    |              |
+ posting         | bigint                      |           | plain    |              |
+Indexes:
+    "comment_pkey" PRIMARY KEY, btree (id)
+Foreign-key constraints:
+    "fk_c1f3mgb4pc5ewndgox02y7ara" FOREIGN KEY (member) REFERENCES member(id)
+    "fk_qp5fsi4h28w4ldpsa265vpjua" FOREIGN KEY (posting) REFERENCES posting(id)
+
+
+berrydb=> \d+ member
+                                     Table "public.member"
+      Column       |          Type          | Modifiers | Storage  | Stats target | Description
+-------------------+------------------------+-----------+----------+--------------+-------------
+ id                | bigint                 | not null  | plain    |              |
+ current_loc_lat   | double precision       |           | plain    |              |
+ current_loc_long  | double precision       |           | plain    |              |
+ deviceid          | bigint                 |           | plain    |              |
+ memberid          | bigint                 |           | plain    |              |
+ name              | character varying(255) | not null  | extended |              |
+ picture_temp_name | character varying(255) |           | extended |              |
+ picture_version   | integer                | not null  | plain    |              |
+Indexes:
+    "member_pkey" PRIMARY KEY, btree (id)
+Referenced by:
+    TABLE "comment" CONSTRAINT "fk_c1f3mgb4pc5ewndgox02y7ara" FOREIGN KEY (member) REFERENCES member(id)
+    TABLE "posting" CONSTRAINT "fk_kc9yb6m6nn9u05scepqfg2lyy" FOREIGN KEY (member) REFERENCES member(id)
+
+
+berrydb=> \d+ posting
+                                       Table "public.posting"
+      Column       |            Type             | Modifiers | Storage  | Stats target | Description
+-------------------+-----------------------------+-----------+----------+--------------+-------------
+ id                | bigint                      | not null  | plain    |              |
+ deviceid          | bigint                      |           | plain    |              |
+ postingdate       | timestamp without time zone |           | plain    |              |
+ posting_event     | character varying(255)      | not null  | extended |              |
+ postingid         | bigint                      |           | plain    |              |
+ posting_info      | character varying(255)      | not null  | extended |              |
+ posting_temp_name | character varying(255)      |           | extended |              |
+ posting_type      | character varying(255)      | not null  | extended |              |
+ posting_version   | integer                     | not null  | plain    |              |
+ member            | bigint                      |           | plain    |              |
+Indexes:
+    "posting_pkey" PRIMARY KEY, btree (id)
+Foreign-key constraints:
+    "fk_kc9yb6m6nn9u05scepqfg2lyy" FOREIGN KEY (member) REFERENCES member(id)
+Referenced by:
+    TABLE "comment" CONSTRAINT "fk_qp5fsi4h28w4ldpsa265vpjua" FOREIGN KEY (posting) REFERENCES posting(id)
+
+
+to dump schema:
+
+pg_dump [connection-option...] [option...] [dbname]
+
+pg_dump.exe --dbname=berrydb --username=admin --file=D:/temp/dump.sql --schema-only
+
+Usage:
+  pg_dump [OPTION]... [DBNAME]
+
+General options:
+  -f, --file=FILENAME          output file or directory name
+  -F, --format=c|d|t|p         output file format (custom, directory, tar,
+                               plain text (default))
+  -j, --jobs=NUM               use this many parallel jobs to dump
+  -v, --verbose                verbose mode
+  -V, --version                output version information, then exit
+  -Z, --compress=0-9           compression level for compressed formats
+  --lock-wait-timeout=TIMEOUT  fail after waiting TIMEOUT for a table lock
+  -?, --help                   show this help, then exit
+
+Options controlling the output content:
+  -a, --data-only              dump only the data, not the schema
+  -b, --blobs                  include large objects in dump
+  -c, --clean                  clean (drop) database objects before recreating
+  -C, --create                 include commands to create database in dump
+  -E, --encoding=ENCODING      dump the data in encoding ENCODING
+  -n, --schema=SCHEMA          dump the named schema(s) only
+  -N, --exclude-schema=SCHEMA  do NOT dump the named schema(s)
+  -o, --oids                   include OIDs in dump
+  -O, --no-owner               skip restoration of object ownership in
+                               plain-text format
+  -s, --schema-only            dump only the schema, no data
+  -S, --superuser=NAME         superuser user name to use in plain-text format
+  -t, --table=TABLE            dump the named table(s) only
+  -T, --exclude-table=TABLE    do NOT dump the named table(s)
+  -x, --no-privileges          do not dump privileges (grant/revoke)
+  --binary-upgrade             for use by upgrade utilities only
+  --column-inserts             dump data as INSERT commands with column names
+  --disable-dollar-quoting     disable dollar quoting, use SQL standard quoting
+  --disable-triggers           disable triggers during data-only restore
+  --enable-row-security        enable row security (dump only content user has
+                               access to)
+  --exclude-table-data=TABLE   do NOT dump data for the named table(s)
+  --if-exists                  use IF EXISTS when dropping objects
+  --inserts                    dump data as INSERT commands, rather than COPY
+  --no-security-labels         do not dump security label assignments
+  --no-synchronized-snapshots  do not use synchronized snapshots in parallel jobs
+  --no-tablespaces             do not dump tablespace assignments
+  --no-unlogged-table-data     do not dump unlogged table data
+  --quote-all-identifiers      quote all identifiers, even if not key words
+  --section=SECTION            dump named section (pre-data, data, or post-data)
+  --serializable-deferrable    wait until the dump can run without anomalies
+  --snapshot=SNAPSHOT          use given snapshot for the dump
+  --strict-names               require table and/or schema include patterns to
+                               match at least one entity each
+  --use-set-session-authorization
+                               use SET SESSION AUTHORIZATION commands instead of
+                               ALTER OWNER commands to set ownership
+
+Connection options:
+  -d, --dbname=DBNAME      database to dump
+  -h, --host=HOSTNAME      database server host or socket directory
+  -p, --port=PORT          database server port number
+  -U, --username=NAME      connect as specified database user
+  -w, --no-password        never prompt for password
+  -W, --password           force password prompt (should happen automatically)
+  --role=ROLENAME          do SET ROLE before dump
+
+If no database name is supplied, then the PGDATABASE environment
+variable value is used.
+
+
+--dbname=berrydb --username=admin
+
+For password less login:
+
+sudo -u user_name psql db_name
+To reset the password if you have forgotten:
+
+ALTER USER "user_name" WITH PASSWORD 'new_password';
+
+
+postgres=# ALTER USER username WITH ENCRYPTED PASSWORD 'password';
+
+
+use psql
+
+
+CREATE USER admin WITH PASSWORD 'admin';
+
+sudo -u postgres createuser -d -P -h 127.0.0.1 -U postgres wildfly-admin
+
+CREATE DATABASE berrydb OWNER admin;
+
+sudo -u postgres /usr/bin/pg_ctlcluster 9.4 main restart
+\q
+
+make dir C:\bin\wildfly\modules\org\postgresql\main
+
+mv postgresql-9.4.1212.jre7.jar from C:\bin\PostgreSQL\pgJDBC to here
+
+create module.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.0" name="org.postgresql">
+    <resources>
+        <resource-root path="postgresql-9.4.1212.jre7.jar"/>
+    </resources>
+
+    <dependencies>
+        <module name="javax.api"/>
+        <module name="javax.transaction.api"/>
+    </dependencies>
+</module>
+
+
+
+update standalone.xml
+
+             <datasource jta="false" jndi-name="java:jboss/postgresDS" pool-name="PostgresDS" enabled="true" use-ccm="false">
+                 <connection-url>jdbc:postgresql://127.0.0.1:5432/berrydb</connection-url>
+                 <driver-class>org.postgresql.Driver</driver-class>
+                 <driver>postgresql</driver>
+                 <pool>
+                    <min-pool-size>5</min-pool-size>
+                    <max-pool-size>10</max-pool-size>
+                </pool>
+                 <security>
+                     <user-name>admin</user-name>
+                     <password>admin</password>
+                 </security>
+                 <validation>
+                     <validate-on-match>false</validate-on-match>
+                     <background-validation>false</background-validation>
+                     <background-validation-millis>1</background-validation-millis>
+                 </validation>
+                 <statement>
+                     <prepared-statement-cache-size>0</prepared-statement-cache-size>
+                     <share-prepared-statements>false</share-prepared-statements>
+                 </statement>
+             </datasource>
+
+             <drivers>
+                 <driver name="postgresql" module="org.postgresql">
+                    <xa-datasource-class>org.postgresql.Driver</xa-datasource-class>
+                 </driver>
+             </drivers>
+
+search for "default-bindings"
+<default-bindings context-service="java:jboss/ee/concurrency/context/default" datasource="java:jboss/postgresDS" jms-connection-factory="java:jboss/DefaultJMSConnectionFactory" managed-executor-service="java:jboss/ee/concurrency/executor/default" managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default" managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
+
+update D:\WildflySocial\Social\src\main\webapp\WEB-INF\social-ds.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.jboss.org/ironjacamar/schema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.jboss.org/ironjacamar/schema http://docs.jboss.org/ironjacamar/schema/datasources_1_0.xsd">
+
+   <datasource jndi-name="java:jboss/datasources/SocialDS"
+      pool-name="social-jsp" enabled="true"
+      use-java-context="true">
+      <connection-url>jdbc:postgresql://127.0.0.1:5432/berrydb</connection-url>
+      <driver>postgresql</driver>
+      <security>
+         <user-name>admin</user-name>
+         <password>admin</password>
+      </security>
+   </datasource>
+</datasources>
+
+
+Large Objects may not be used in auto-commit mode
+
+out:
+@Lob

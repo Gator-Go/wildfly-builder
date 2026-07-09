@@ -1,0 +1,81 @@
+
+To show requests and responses
+
+<host name="default-host" >
+     .....
+     <filter-ref name="request-dumper"/>
+</host>
+....
+<filters>
+    ...
+    <filter name="request-dumper" class-name="io.undertow.server.handlers.RequestDumpingHandler" module="io.undertow.core" />
+</filters>
+
+
+
+Basic HTTP Authentication
+
+http://192.168.1.23/social/do?op=Home
+
+http://192.168.1.23/socialws/sync?op=Test
+
+http://ron:gator@192.168.1.23/socialws/sync?op=Test
+
+http://192.168.1.23/socialws/rest/members
+
+http://ron:gator@192.168.1.23/socialws/rest/members
+
+
+http://192.168.1.23/socialws/rest/newDevice
+http://ron:gator@192.168.1.23/socialws/rest/newDevice
+
+
+Have you tried http://myusername:mypassword@somesite.com in your browser ?
+
+curl somesite.com --user username:password
+
+curl -u myusername:mypassword http://somesite.com
+
+You can use Postman a plugin for chrome. It gives the ability to choose the
+ authentication type you need for each of the requests. In that menu you can
+ configure user and password. Postman will automatically translate the config
+ to a authentication header that will be sent with your request.
+
+alert requests
+
+http://192.168.1.23/socialws/rest/syncAlerts/%5B%7B%22alertType%22%3A%22config%22%2C%22alertSource%22%3A%22SocialSettings-2%22%2C%22alertMessage%22%3A%22New%20Config%20Settings%22%2C%22deviceId%22%3A%222%22%2C%22occurredAt%22%3A%221482676518665%22%7D%5D
+
+http://ron:gator@192.168.1.23/socialws/rest/syncAlerts/%5B%7B%22alertType%22%3A%22config%22%2C%22alertSource%22%3A%22SocialSettings-2%22%2C%22alertMessage%22%3A%22New%20Config%20Settings%22%2C%22deviceId%22%3A%222%22%2C%22occurredAt%22%3A%221482706410589%22%7D%5D
+
+
+import android.util.Base64;
+
+        conn.setRequestProperty("Authorization", "Basic " + 
+            Base64.encodeToString("ron:gator".getBytes(), Base64.NO_WRAP));
+
+Xxxxx/rest  --> xxxxxws/rest
+
+AlertServer
+MultipartUtility
+XxxxxSyncAdapter
+SyncYyyyyQueueHelper
+SyncYyyyyServerHelper
+
+
+Xxxxx/do  --> xxxxxws/sync
+
+PPPsPPPsPPP\camera\YyyyyFffffPhotoSync.java:        String urlDown = "http://" + prefServerIP + "/Xxxxx/do?op=Yyyyy";
+PPPsPPPsPPP\camera\YyyyyFffffPicThumbSync.java:        String urlDown = "http://" + prefServerIP + "/Xxxxx/do?op=Yyyyy";
+PPPsPPPsPPP\camera\YyyyyFffffThumbnailSync.java:        String urlDown = "http://" + prefServerIP + "/Xxxxx/do?op=Yyyyy";
+PPPsPPPsPPP\post\YyyyyFffffPostPicSync.java:        String urlDown = "http://" + prefServerIP + "/Xxxxx/do?op=Yyyyy";
+PPPsPPPsPPP\post\YyyyyFffffPostVidSync.java:        String urlDown = "http://" + prefServerIP + "/Xxxxx/do?op=Yyyyy";
+PPPsPPPsPPP\sync\YyyyySync.java:        String urlDown = "http://" + prefServerIP + "/Xxxxx/do?op=Yyyyy";
+PPPsPPPsPPP\video\YyyyyFffffVideoSync.java:        String urlDown = "http://" + prefServerIP + "/Xxxxx/do?op=Yyyyy";
+PPPsPPPsPPP\video\YyyyyFffffVidThumbSync.java:        String urlDown = "http://" + prefServerIP + "/Xxxxx/do?op=Yyyyy";
+
+
+
+
+We still directly grab files from server
+XxxxxSyncUpFile
+

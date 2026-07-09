@@ -1,0 +1,90 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="ISO-8859-1"%>
+<%@ page import="ppp.ppp.ppp.SocialConst" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%
+String httpRoot = System.getProperty("com.pojomax.sync.app.http-root");
+%>
+
+
+<div class='pojo-section'>
+<div class='pojo-section-header'>Report List Delete Form</div>
+<div class='pojo-section-body'>
+<div align="left">
+
+    <c:set var="rptList" value="${rptList}"/>
+    <form id="idRptListDelete" name="regform" action="do" method="POST">
+
+        <input type='hidden' id="opRptListDelete" name='op' value="${opAction}">
+        <input type='hidden' name='id' value="${rptList.id}">
+
+        <br><font class="Verdana"><b>RptList Delete Confirmation</b></font>
+
+
+        <table class="pojo_tablestyle">
+
+            <tr>
+               <th width="10%"></th>
+               <th width="23%"></th>
+               <th width="10%"></th>
+               <th width="23%"></th>
+               <th width="10%"></th>
+               <th width="23%"></th>
+            </tr>
+
+            <tr class="detail" >
+              <td style="text-align: right;"><label for="id">Id:</label></td>
+              <td>${rptList.id}</td>
+
+              <td style="text-align: right;"><label for="deviceId">Device Id:</label></td>
+              <td>${rptList.deviceId}</td>
+
+              <td style="text-align: right;"><label for="rptListId">RptList Id:</label></td>
+              <td>${rptList.rptListId}</td>
+            </tr>
+
+            <tr class="detail">
+              <td style="text-align: right;"><label for="lastUpdate">Last Update:</label></td>
+              <td>${rptList.lastUpdate}</td>
+
+              <td style="text-align: right;"><label for="deleteFlag">Delete Flag:</label></td>
+              <td>${rptList.deleteFlag}</td>
+            </tr>
+
+            <tr class='detail'>
+              <td style="text-align: right;"><label for="rptName">Report Name:</label></td>
+              <td>${rptList.rptName}</td>
+
+
+
+        </table>
+
+
+        <p>
+
+            <c:if test="${!rptList.deleteFlag}">
+                <button class='btnDelete' id="add" type="button" onclick='goRptListDelete("${opAction}");'>Delete</button>
+            </c:if>
+            &nbsp;&nbsp;&nbsp;
+            <button class='btnBack' id="back" type="button" onclick='goRptListDelete("${opBack}");'>Back</button>
+
+        </p>
+
+    </form>
+
+</div>
+
+<script>
+
+  function goRptListDelete(op)
+  {
+    $('#opRptListDelete').val(op);
+    $('#idRptListDelete').submit();
+  }
+
+</script>
+
+
+</div>
+</div>

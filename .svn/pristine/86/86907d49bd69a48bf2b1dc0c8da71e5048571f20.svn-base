@@ -1,0 +1,137 @@
+package ppp.ppp.ppp.service;
+
+import ppp.ppp.ppp.entity.UserInfo;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.logging.Logger;
+
+import javax.inject.Inject;
+import javax.enterprise.inject.Model;
+import javax.ejb.Stateful;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+
+/**
+ * This EJB3 provides the business logic needed to implement the services<br>
+ * for the Webservice Component. This EJB3 is a Stateful bean that is the<br>
+ * interface for all Webservice services.
+ *
+ * @author Ron Kanengieter
+ * @author <a href="mailto:ron@usgs.gov">Ron Kanengieter</a>
+ * @version 1.0
+ * @version $Id$
+ */
+@Stateful
+@Model
+public class SubscriptionService
+{
+
+    @Inject
+    private Logger log;
+
+    @Inject
+    private EntityManager em;
+
+   /**
+    * This service returns an UserInfo object when given an id.
+    *
+    * @param id <code>Integer</code> object containing the userInfo id.
+    * @return <code>UserInfo</code> object that contains the UserInfo.
+    */
+   public UserInfo getUserInfo(Long id)
+   {
+      log.info("getUserInfo id = " + id);
+      UserInfo userInfo = em.find(UserInfo.class, id);
+      log.info("Size of the event set returned from this method:  " + userInfo.getEvents().size());
+      return userInfo;
+   }
+
+   /**
+    * This service creates a userInfo object and returns its id.
+    *
+    * @param userInfo <code>UserInfo</code> object containing the userInfo info to add.
+    * @return <code>Long</code> object that contains the userInfo id.
+    */
+
+   public Long addUserInfo(UserInfo userInfo)
+   {
+
+      em.persist(userInfo);
+
+      return userInfo.getId();
+   }
+
+
+   /**
+    * This service edits an UserInfo object.
+    *
+    * @param editUserInfo <code>UserInfo</code> object containing the userInfo edit info.
+    * @return <code>String</code> object that indicates the success of the userInfo edit.
+    */
+   public String editUserInfo(UserInfo editUserInfo)
+   {
+      UserInfo userInfo = null;
+      try {
+         userInfo = em.getReference(UserInfo.class, editUserInfo.getId());
+      } catch (EntityNotFoundException notFound) {
+
+         return "Not Found";
+      }
+
+      if (editUserInfo.getFirstName() != null)
+         userInfo.setFirstName(editUserInfo.getFirstName());
+      if (editUserInfo.getLastName() != null)
+         userInfo.setLastName(editUserInfo.getLastName());
+      if (editUserInfo.getEmail() != null)
+         userInfo.setEmail(editUserInfo.getEmail());
+      if (editUserInfo.getEvents() != null)
+         userInfo.setEvents(editUserInfo.getEvents());
+
+      em.merge(userInfo);
+
+      return "Success";
+   }
+
+   /**
+    * This service deletes an UserInfo object.
+    *
+    * @param id <code>Long</code> object containing the userInfo id.
+    * @return <code>String</code> object that indicates the delete userInfo success.
+    */
+   public String deleteUserInfo(Long id)
+   {
+      log.info("deleteUserInfo id = " + id);
+      UserInfo userInfo = null;
+      try {
+         userInfo = em.getReference(UserInfo.class, id);
+      } catch (EntityNotFoundException notFound) {
+
+         return "Not Found";
+      }
+
+      em.remove(userInfo);
+
+      return "Success";
+   }
+   
+   
+   /**
+    * This service returns all UserInfo objects.
+    *
+    * @return <code>List</code> object that contains all existing userInfos.
+    */
+   @SuppressWarnings("unchecked")
+   public List <UserInfo> findAllUserInfos()
+   {
+      return em.createQuery("FROM UserInfo l").getResultList();
+   }
+
+
+}

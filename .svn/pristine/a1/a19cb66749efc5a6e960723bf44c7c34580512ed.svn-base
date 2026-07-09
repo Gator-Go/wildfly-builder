@@ -1,0 +1,19 @@
+
+package ppp.ppp.ppp.event.msg;
+
+import java.io.Serializable;
+
+public class GenericEvent implements Serializable
+{
+    private static final long serialVersionUID = 1L;
+    protected String name;
+    protected String alertSource;
+    protected String message;
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getAlertSource() { return alertSource; }
+    public void setAlertSource(String alertSource) { this.alertSource = alertSource; }
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
+}

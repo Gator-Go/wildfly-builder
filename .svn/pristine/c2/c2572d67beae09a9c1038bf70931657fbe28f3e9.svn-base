@@ -1,0 +1,21 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%
+String httpRoot = System.getProperty("com.sw-builder.sync.app.http-root");
+%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<div class='pojo-section'>
+<div class='pojo-section-header'>${videoTitle}</div>
+<div class='pojo-section-body'>
+<div align="left">
+
+<video controls source src="<%= httpRoot %>/video/${videoPath}" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+</div>
+</div>
+</div>

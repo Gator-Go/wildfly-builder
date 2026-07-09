@@ -1,0 +1,153 @@
+
+package ppp.ppp.ppp.settings;
+
+import ppp.ppp.ppp.event.msg.XxxxxAlertEvent;
+import jakarta.enterprise.event.Event;
+import ppp.ppp.ppp.settings.XxxxxProperty;
+
+import ppp.ppp.ppp.event.msg.SettingsEvent;
+import ppp.ppp.ppp.event.msg.SettingsChangedEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.event.Event;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@Startup
+@Singleton
+@ApplicationScoped
+public class XxxxxSettings {
+
+    @Inject
+    private Logger log;
+
+    @Inject
+    @XxxxxProperty(name = "Format.DateTimeStr")
+    private String FormatDateTimeStr;
+
+    @Inject
+    private Event<XxxxxAlertEvent> alertEventMsg;
+
+    @Inject
+    private Event<SettingsChangedEvent> settingsChangedEventMsg;
+
+    // Properties for app
+    private Properties xxxxxProp = new Properties();
+    private String path = System.getProperty("com.sw-builder.sync.app.data.dir") + "xxxxx.properties";
+    private Map<String, String> properties = new HashMap<>();
+
+    // Default values
+    private String FormatDateStr = "yyyy/MM/dd";
+    private String FormatDateTimeStr = "yyyy/MM/dd HH:mm:ss";
+    private Boolean ShowSync = new Boolean(false);
+    private Integer RowsAlert = new Integer(20);
+    private Integer RowsToPage = new Integer(20);
+    private Integer MaxVideos = 1000;
+
+    // Get values
+    public String getFormatDateStr() { return FormatDateStr; }
+    public String getFormatDateTimeStr() { return FormatDateTimeStr; }
+    public Boolean getShowSync() { return ShowSync; }
+    public Integer getRowsAlert() { return RowsAlert; }
+    public Integer getRowsToPage() { return RowsToPage; }
+    public Integer getMaxVideos() { return MaxVideos; }
+
+    // provide the property
+    public String getProperty(String key) {
+        return properties.get(key);
+    }
+
+    // process the SettingsEvent
+    public void onSettings(@Observes SettingsEvent settingsEvent) {
+        String key = settingsEvent.getKey();
+        String value = settingsEvent.getValue();
+	properties.replace(key, value);
+	xxxxxProp.putAll(properties);
+	writeXxxxxSettings();
+	initXxxxxSettings();
+
+        SettingsChangedEvent settingsChangedEvent = new SettingsChangedEvent();
+        settingsChangedEvent.setName("SettingsChangedEvent");
+        settingsChangedEventMsg.fire(settingsChangedEvent);
+	String msg = "Settings changed successfully to key:" + key + "  value:" + value;
+        log.info(msg);
+	fireAlert("config", msg);
+    }
+
+    private void fireAlert(String alertType, String alertMessage) {
+        
+	SimpleDateFormat formatDateTime = new SimpleDateFormat (FormatDateTimeStr);
+        XxxxxAlertEvent alertEvent = new XxxxxAlertEvent();
+        alertEvent.setName("alertEvent");
+        alertEvent.setXxxxxAlertType(alertType);
+        alertEvent.setXxxxxAlertSource("XxxxxSettings");
+        alertEvent.setXxxxxAlertMessage(alertMessage);
+        alertEvent.setOccurredAt(formatDateTime.format(new Date()));
+        alertEventMsg.fire(alertEvent);
+    }
+
+
+    // read the properties file
+    private void readXxxxxSettings() {
+        try (InputStream input = new FileInputStream(path)) {
+            xxxxxProp.load(input);
+        } catch (IOException ex) {
+            log.info("readXxxxxSettings error: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    // write the properties file
+    private void writeXxxxxSettings() {
+        try (OutputStream output = new FileOutputStream(path)) {
+            xxxxxProp.store(output, null);
+        } catch (IOException io) {
+            log.info("readXxxxxSettings error: " + io.getMessage());
+            io.printStackTrace();
+        }
+    }
+
+    @PostConstruct
+    public void initXxxxxSettings() {
+
+        log.info("PostConstruct:initXxxxxSettings called");
+	File fileTest = new File(path);
+	if (fileTest.exists()) {
+	    readXxxxxSettings();
+            FormatDateStr = xxxxxProp.getProperty("Format.DateStr", FormatDateStr);
+            FormatDateTimeStr = xxxxxProp.getProperty("Format.DateTimeStr", FormatDateTimeStr);
+            ShowSync = Boolean.valueOf(xxxxxProp.getProperty("Show.Sync", ShowSync.toString()));
+            RowsAlert = Integer.valueOf(xxxxxProp.getProperty("Rows.Alert", RowsAlert.toString()));
+            RowsToPage = Integer.valueOf(xxxxxProp.getProperty("Rows.ToPage", RowsToPage.toString()));
+            MaxVideos = Integer.valueOf(xxxxxProp.getProperty("Max.Videos", MaxVideos.toString()));
+	} else {
+            // set the default properties value
+            xxxxxProp.setProperty("Format.DateStr", FormatDateStr);
+            xxxxxProp.setProperty("Format.DateTimeStr", FormatDateTimeStr);
+            xxxxxProp.setProperty("Show.Sync", ShowSync.toString());
+            xxxxxProp.setProperty("Rows.Alert", RowsAlert.toString());
+            xxxxxProp.setProperty("Rows.ToPage", RowsToPage.toString());
+            xxxxxProp.setProperty("Max.Videos", MaxVideos.toString());
+	    writeXxxxxSettings();
+	}
+        HashMap hashMap = new HashMap<>(xxxxxProp);
+        properties.putAll(hashMap);
+
+        log.info("PostConstruct:initXxxxxSettings: " + hashMap.toString());
+    }
+}

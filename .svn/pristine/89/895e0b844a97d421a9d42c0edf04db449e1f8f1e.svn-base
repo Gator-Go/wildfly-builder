@@ -1,0 +1,606 @@
+
+package ppp.ppp.ppp.servlet;
+
+import ppp.ppp.ppp.servlet.helper.RptDataHelper;
+import ppp.ppp.ppp.servlet.helper.Option;
+import ppp.ppp.ppp.entity.Report;
+import ppp.ppp.ppp.entity.RptSort;
+import ppp.ppp.ppp.entity.RptParam;
+import ppp.ppp.ppp.entity.RptList;
+import ppp.ppp.ppp.report.BaseReport;
+import ppp.ppp.ppp.report.ReportParameter;
+import ppp.ppp.ppp.report.ReportFormat;
+import ppp.ppp.ppp.service.ReportService;
+import ppp.ppp.ppp.report.ConstRpt;
+import ppp.ppp.ppp.servlet.CommonLib;
+
+
+import java.util.logging.Logger;
+import java.io.IOException;
+import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Date;
+import java.util.Collection;
+import java.util.ArrayList;
+import java.sql.Timestamp;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import jakarta.ejb.Stateful;
+import jakarta.enterprise.inject.Model;
+
+//import jakarta.annotation.Resource;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import jakarta.inject.Inject;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+
+/**
+ * Servlet implementation of test report
+ */
+@Stateful
+@Model
+public class ReportServlet extends HttpServlet
+{
+    @Inject
+    private Logger log;
+
+    @Inject
+    ReportService reportService;
+
+    @Inject
+    RptDataHelper dataHelper;
+
+    @Inject
+    private CommonLib commonLib;
+
+    private final static int RowsToPage = 30;
+
+    public void doReportHome(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        List<Report> reports = reportService.findAllReports();
+        req.setAttribute("reports", reports);
+        req.setAttribute(ConstRpt.OP, "RptListList");
+log.info("*** In doReportHome *** " + ConstRpt.OP + "*** " + "RptListList");
+    }
+
+
+    public void doGenRpt(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String id = req.getParameter(ConstRpt.ID);
+        Long reportId = new Long(id);
+        Report report = reportService.getReport(reportId);
+
+        dataHelper.loadGenerateReport(req, report);
+        req.setAttribute(ConstRpt.OP_ACTION, ConstRpt.OP_GEN_RPT_ACTION);
+        req.setAttribute(ConstRpt.OP_BACK, ConstRpt.OP_HOME);
+        req.setAttribute(ConstRpt.OP, ConstRpt.OP_GEN_RPT);
+
+    }
+
+    public void doGenRptAction(HttpServletRequest req, HttpServletResponse resp)
+       throws ServletException, IOException, NamingException, SQLException
+    {
+
+         String id = req.getParameter("id");
+
+         String reportName = req.getParameter("reportName");
+         String reportJrxml = req.getParameter("reportJrxml");
+         String reportMimeType = reportJrxml.split("\\.")[1];
+         String mimeType = req.getParameter("mimeType");
+         String sortOption = req.getParameter("sortOption");
+         String nbrParams = req.getParameter("nbrParams");
+         Integer nbrParamsInt = Integer.parseInt(nbrParams);
+
+         log.info("*** In doReportAction *** " + reportJrxml + "*** " + mimeType);
+
+        InputStream is = null;
+        OutputStream os = null;
+
+        try {
+           String inpath = System.getProperty("com.pojomax.sync.app.jrxml.dir") + reportJrxml;
+           is = new FileInputStream(inpath );
+
+           String outpath = System.getProperty("com.pojomax.sync.app.report.dir") + reportName + "." + mimeType;
+           os = new FileOutputStream(outpath );
+        } catch (FileNotFoundException e) {
+           log.warning("error getting file stream. error = " + e);
+           throw new ServletException("error getting file stream. error = " + e);
+        }
+
+	Connection conn = null;
+	try {
+	    InitialContext ctx = new InitialContext();
+	    DataSource ds = (DataSource) ctx.lookup("java:jboss/datasources/SwBuilderDS");
+	    conn = ds.getConnection();
+
+	    //System.out.println(">>> USING REAL DB: " + conn.getMetaData().getURL());
+	    log.info(">>> Testing DB connection...");
+
+	    if (conn == null) {
+	        throw new SQLException("DataSource returned null connection");
+	    }
+
+	    try (var stmt = conn.createStatement();
+	         var rs = stmt.executeQuery("SELECT 1")) {
+	        if (rs.next()) {
+	            log.info(">>> DB CONNECTION TEST: SUCCESS");
+	        }
+	    }
+
+	} catch (SQLException | NamingException e) {
+	    log.severe(">>> DB CONNECTION TEST FAILED: " + e.getMessage());
+	    throw e;
+	}
+
+	try {
+
+          BaseReport report = BaseReport.newInstance(reportMimeType, is);
+
+          log.info("jrxml Name = " + report.getName());
+
+          Map<String, ReportParameter> parameters = report.getParameters();
+	  if (parameters == null) {
+	      parameters = new HashMap<>();
+	  }
+          for (Map.Entry<String, ReportParameter> entry : parameters.entrySet()) {
+              String key = entry.getKey();
+              ReportParameter parameter = entry.getValue();
+              String paramName = parameter.getName();
+              log.info("jrxml Parameter Key = " + key + "   Parameter Name = " + paramName);
+          }
+
+          ReportFormat type = null;
+
+          if (mimeType.equals("csv"))
+            type = new ReportFormat(ReportFormat.Type.MIME_TYPE_CSV);
+          if (mimeType.equals("html"))
+            type = new ReportFormat(ReportFormat.Type.MIME_TYPE_HTML);
+          if (mimeType.equals("xls"))
+            type = new ReportFormat(ReportFormat.Type.MIME_TYPE_EXCEL);
+          if (mimeType.equals("docx"))
+            type = new ReportFormat(ReportFormat.Type.MIME_TYPE_DOCX);
+          if (mimeType.equals("pdf"))
+            type = new ReportFormat(ReportFormat.Type.MIME_TYPE_PDF);
+          if (mimeType.equals("rtf"))
+            type = new ReportFormat(ReportFormat.Type.MIME_TYPE_RTF);
+          if (mimeType.equals("txt"))
+            type = new ReportFormat(ReportFormat.Type.MIME_TYPE_PLAINTEXT);
+
+          Map<String, Object> paramMap = new HashMap<>();
+
+          int x = 1;
+          while (x <= nbrParamsInt.intValue()) {
+            Integer count = new Integer(x);
+            String paramName = req.getParameter("paramName." + count.toString());
+            String paramValue = req.getParameter("paramValue." + count.toString());
+            log.info("Web Page paramName = " + paramName + "   paramValue = " + paramValue);
+            String paramDataType = req.getParameter("paramDataType." + count.toString());
+            String paramDateFormat = req.getParameter("paramDateFormat." + count.toString());
+            if(paramValue != null && !paramValue.isEmpty() && !paramValue.equals("All")) {
+              if (paramDataType.equals("String"))
+                paramMap.put(paramName, paramValue);
+
+              if (paramDataType.equals("Integer")) {
+                Integer intValue = Integer.parseInt(paramValue);
+                paramMap.put(paramName, intValue);
+              }
+
+              if (paramDataType.equals("Long")) {
+                Long longValue = Long.parseLong(paramValue);
+                paramMap.put(paramName, longValue);
+              }
+
+              if (paramDataType.equals("Float")) {
+                Float floatValue = Float.parseFloat(paramValue);
+                paramMap.put(paramName, floatValue);
+              }
+
+              if (paramDataType.equals("Date")) {
+                if (paramDateFormat.equals("yy/oo")) {
+                  Date dateValue = ConstRpt.formatDOYDate.parse(paramValue);
+                  paramMap.put(paramName, dateValue);
+                }
+                if (paramDateFormat.equals("yy/oo 00:00")) {
+                  Date dateValue = ConstRpt.formatDOYDateHourMinute.parse(paramValue);
+                  paramMap.put(paramName, dateValue);
+                }
+              }
+
+              if (paramDataType.equals("Timestamp")) {
+                if (paramDateFormat.equals("yy/oo")) {
+                  Date dateValue = ConstRpt.formatDOYDate.parse(paramValue);
+                  Timestamp timestampValue = new Timestamp(dateValue.getTime());
+                  paramMap.put(paramName, timestampValue);
+                }
+                if (paramDateFormat.equals("yy/oo 00:00")) {
+                  Date dateValue = ConstRpt.formatDOYDateHourMinute.parse(paramValue);
+                  Timestamp timestampValue = new Timestamp(dateValue.getTime());
+                  paramMap.put(paramName, timestampValue);
+                }
+              }
+            }
+            ++x;
+          }
+
+          if (!sortOption.equals("None"))
+            paramMap.put(sortOption, "true");
+
+          report.render(type, paramMap, os, conn);
+
+        } catch (Exception e) {
+           log.warning("error getting BaseReport. error = " + e);
+           throw new ServletException("error getting BaseReport. error = " + e);
+	}
+	
+        is.close();
+        os.close();
+
+        RptList rptList = new RptList();
+        rptList.setRptName(reportName + "." + mimeType);
+        String result = reportService.addRptList(rptList);
+    }
+
+    public void doAdminHome(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        List<Report> reports = reportService.findAllReports();
+        req.setAttribute("reports", reports);
+        req.setAttribute(ConstRpt.OP, ConstRpt.OP_ADMIN_HOME);
+log.info("*** In doReportHome *** " + ConstRpt.OP + "*** " + ConstRpt.OP_ADMIN_HOME);
+    }
+
+    public void doAdminRptView(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String id = req.getParameter(ConstRpt.ID);
+        Long reportId = new Long(id);
+        Report report = reportService.getReport(reportId);
+        dataHelper.loadGenerateReport(req, report);
+
+        req.setAttribute(ConstRpt.OP, ConstRpt.OP_ADMIN_RPT_VIEW);
+    }
+
+
+   /**
+    * The doAdminRptAdd method calls the Admin Rpt import jrxml web page.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doAdminRptAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        req.setAttribute(ConstRpt.TITLE, "Import JRXML File");
+        req.setAttribute(ConstRpt.OP_ACTION, ConstRpt.OP_ADMIN_RPT_ADD_ACTION);
+        req.setAttribute(ConstRpt.OP_BACK, ConstRpt.OP_ADMIN_HOME);
+        req.setAttribute(ConstRpt.OP, ConstRpt.OP_ADMIN_RPT_ADD);
+    }
+
+   /**
+    * The doAdminRptAddAction method imports the JRXML data using file data from the web page.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doAdminRptAddAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        InputStream inputStream = commonLib.loadFileUpload(req);
+
+        String filePath = (String)req.getAttribute("filePath");
+        String mimeType = filePath.split("\\.")[1];
+        log.info("*** In doAdminRptAddAction *** filePath = " + filePath + " mimeType = " + mimeType);
+        if(filePath == null || filePath.isEmpty()) {
+            doAdminRptAdd(req, resp);
+            req.setAttribute(ConstRpt.MSG, "File Data Not Loaded");
+            return;
+        }
+
+        String strFile = System.getProperty("com.pojomax.sync.app.jrxml.dir") + filePath;
+        File jrxmlfile = new File(strFile);
+        OutputStream outputStream = new FileOutputStream(jrxmlfile);
+
+        try {
+          byte[] buffer = new byte[1024];
+          int bytesRead;
+          while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+          }
+        } catch (IOException e) {
+           doAdminRptAdd(req, resp);
+           req.setAttribute(ConstRpt.MSG, "Error Creating JRXML File. error = " + e);
+           return;
+        }
+        inputStream.close();
+        outputStream.close();
+
+        log.info("filePath = " + filePath);
+        Report report = new Report();
+        report.setReportFileName(filePath);
+        Collection<RptParam> rptParams = new ArrayList<RptParam>();
+        Collection<RptSort> rptSorts = new ArrayList<RptSort>();
+
+        try {
+          InputStream is = new FileInputStream(strFile);
+          BaseReport baseReport = BaseReport.newInstance(mimeType, is);
+
+          log.info("jrxml Name = " + baseReport.getName());
+          report.setReportName(baseReport.getName());
+          report.setReportDesc(baseReport.getName() + " Description");
+
+          Map<String, ReportParameter> parameters = baseReport.getParameters();
+	  if (parameters == null) {
+	       parameters = new HashMap<>();  // Safe default
+	  }
+          for (Map.Entry<String, ReportParameter> entry : parameters.entrySet()) {
+              ReportParameter parameter = entry.getValue();
+              String paramName = parameter.getName();
+              log.info("jrxml Parameter Name = " + paramName);
+              if (paramName.startsWith("ORDER_BY")) {
+                RptSort rptSort = new RptSort();
+                rptSort.setSortReport(report);
+rptSort.setSortOption(paramName);
+//                String[] parts = paramName.split("-");
+//                if ( parts.length == 3)
+//                  rptSort.setSortOption(parts[1] + " " + parts[2]);
+//                else
+//                  rptSort.setSortOption("Invalid Sort Option");
+                rptSorts.add(rptSort);
+              } else {
+                RptParam rptParam = new RptParam();
+                rptParam.setParamReport(report);
+                rptParam.setParamName(paramName);
+                rptParam.setParamDesc(paramName + " Description");
+                if (parameter.isRequired())
+                  rptParam.setParamRequired("true");
+                else
+                  rptParam.setParamRequired("false");
+                String dataType = parameter.getDataType();
+                String[] parts = dataType.split("\\.");
+                int x = parts.length - 1;
+                rptParam.setParamDataType(parts[x]);
+                if (rptParam.getParamDataType().equals("Date") || rptParam.getParamDataType().equals("Timestamp")) {
+                  rptParam.setParamDateFormat("yy/oo");
+                }
+                rptParam.setParamType("VALUE");
+                rptParams.add(rptParam);
+              }
+          }
+
+          is.close();
+        } catch (Exception e) {
+           doAdminRptAdd(req, resp);
+           req.setAttribute(ConstRpt.MSG, "Error loading BaseReport. error = " + e);
+           return;
+        }
+
+        Long rptId = reportService.addReport(report);
+
+        for (RptParam rptParam : rptParams) {
+         rptParam.setParamReport(report);
+         Long paramId = reportService.addRptParam(rptParam);
+        }
+
+        for (RptSort rptSort : rptSorts) {
+         rptSort.setSortReport(report);
+         Long sortId = reportService.addRptSort(rptSort);
+        }
+
+        report.setRptParam(rptParams);
+        report.setRptSort(rptSorts);
+        String result = reportService.editReport(report);
+
+        String importMsg = "Report Loaded ID = " + rptId.toString();
+
+        req.setAttribute(ConstRpt.MSG, importMsg);
+
+        doAdminHome(req, resp);
+    }
+
+
+   /**
+    * The doAdminRptEdit method calls the AdminReport Edit web page.
+    * It loads AdminReport data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doAdminRptEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String id = req.getParameter(ConstRpt.ID);
+        Long reportId = new Long(id);
+        Report report = reportService.getReport(reportId);
+        dataHelper.loadEditReport(req, report);
+
+        req.setAttribute(ConstRpt.OP_ACTION, ConstRpt.OP_ADMIN_RPT_EDIT_ACTION);
+        req.setAttribute(ConstRpt.OP_BACK, ConstRpt.OP_ADMIN_HOME);
+        req.setAttribute(ConstRpt.OP, ConstRpt.OP_ADMIN_RPT_EDIT);
+    }
+
+   /**
+    * The doAdminRptDeleteAction method deletes the AdminReport from delete web page data.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doAdminRptEditAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Long reportId = new Long(req.getParameter(ConstRpt.ID));
+        Report report = reportService.getReport(reportId);
+        dataHelper.editReport(req, report);
+
+        String result = reportService.editReport(report);
+        if (!result.equals("success"))
+        {
+            req.setAttribute(ConstRpt.MSG, "Report Edit Error " + result);
+            log.warning("result = " + result);
+        }
+        else
+            req.setAttribute(ConstRpt.MSG, "Report Record Edited Successfully");
+
+        doAdminHome(req, resp);
+    }
+
+
+   /**
+    * The doAdminRptDelete method calls the AdminReport delete web page.
+    * It loads AdminReport data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doAdminRptDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String id = req.getParameter(ConstRpt.ID);
+        Long reportId = new Long(id);
+        Report report = reportService.getReport(reportId);
+        dataHelper.loadGenerateReport(req, report);
+
+        req.setAttribute(ConstRpt.OP_ACTION, ConstRpt.OP_ADMIN_RPT_DELETE_ACTION);
+        req.setAttribute(ConstRpt.OP_BACK, ConstRpt.OP_ADMIN_HOME);
+        req.setAttribute(ConstRpt.OP, ConstRpt.OP_ADMIN_RPT_DELETE);
+    }
+
+   /**
+    * The doAdminRptDeleteAction method deletes the AdminReport from delete web page data.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doAdminRptDeleteAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Long reportId = new Long(req.getParameter(ConstRpt.ID));
+
+        String result = reportService.deleteReport(reportId);
+        if (!result.equals("success"))
+        {
+            req.setAttribute(ConstRpt.MSG, "Report Delete Error " + result);
+            log.warning("result = " + result);
+        }
+        else
+            req.setAttribute(ConstRpt.MSG, "Report Record Deleted Successfully");
+
+        doAdminHome(req, resp);
+    }
+
+
+    public void doRptListList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        req.getSession().setAttribute("rptListSearchCriteria", null);
+        req.getSession().setAttribute("rptListSearchCriteria2", null);
+
+        String subOp = req.getParameter("opSub");
+        if (subOp == null)
+            subOp = "new";
+
+        Long count = reportService.getCountRptListing();
+        if (count.intValue() == 0)
+        {
+            req.setAttribute("pageInfo", "0 Rows - Page  1 of 1");
+            req.setAttribute("op", "RptListList");
+            return;
+        }
+
+        Integer page = new Integer(1);
+        String pageStr = (String) req.getSession().getAttribute("rptListPage");
+        if (pageStr != null)
+           page = new Integer(pageStr);
+        int nbrOfPages = count.intValue() / RowsToPage;
+        if (count.intValue() % RowsToPage > 0)
+           nbrOfPages++;
+
+        if (subOp.equals("nextPage")) {
+           page = new Integer(page.intValue() + 1);
+           req.getSession().setAttribute("rptListPage", page.toString());
+        }
+        if (subOp.equals("previousPage")) {
+           page = new Integer(page.intValue() - 1);
+           req.getSession().setAttribute("rptListPage", page.toString());
+        }
+
+        String pageInfo = count.intValue() + " Rows - Page " + page.toString() + " of " + nbrOfPages;
+        req.setAttribute("pageInfo", pageInfo);
+
+        if (page.intValue() <  nbrOfPages)
+           req.setAttribute("nextFlag", "true");
+        if (page.intValue() >  1)
+           req.setAttribute("previousFlag", "true");
+
+	int first = 0;
+	if (page.intValue() > 1)
+            first = (page.intValue() * RowsToPage) - (RowsToPage + 1);
+
+        List<RptList> rptListing = reportService.getRptListPage(first, RowsToPage);
+
+        if (req.isUserInRole("ADMIN"))
+            req.setAttribute("admin", "admin");
+        req.setAttribute("rptListing", rptListing);
+        req.setAttribute("op", "RptListList");
+
+    }
+
+   /**
+    * The doDeleteWebservice method calls the RptList delete web page.
+    * It loads RptList data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the req data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doRptListDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Long id = new Long(req.getParameter("id"));
+        RptList rptList = reportService.getRptList(id);
+        req.setAttribute("rptList", rptList);
+
+
+        if (req.getSession().getAttribute("rptListSearchCriteria") == null)
+            req.setAttribute("opBack", "RptListList");
+        else
+            req.setAttribute("opBack", "RptListSearchList");
+
+
+
+        req.setAttribute("opAction", "RptListDeleteAction");
+        req.setAttribute("op", "RptListDelete");
+    }
+
+   /**
+    * The doDeleteWebserviceAction method deletes the RptList from delete web page data.
+    *
+    * @param req A HttpServletRequest object containing the req data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doRptListDeleteAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Long id = new Long(req.getParameter("id"));
+
+        String result = reportService.deleteRptList(id);
+        if (!result.equals("success"))
+        {
+            req.setAttribute("msg", "RptList Delete Error: " + result);
+            log.warning("delete result = " + result);
+        }
+        else
+            req.setAttribute("msg", "RptList Delete Flag Update Successful");
+
+        doRptListList(req, resp);
+
+    }
+
+}

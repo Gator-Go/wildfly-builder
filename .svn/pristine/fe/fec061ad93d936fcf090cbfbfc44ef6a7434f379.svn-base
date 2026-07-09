@@ -1,0 +1,128 @@
+
+package ppp.ppp.ppp.event;
+
+import ppp.ppp.ppp.event.msg.EmailEvent;
+
+import ppp.ppp.ppp.event.msg.XxxxxAlertEvent;
+import jakarta.enterprise.event.Event;
+import ppp.ppp.ppp.settings.XxxxxProperty;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
+
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
+
+@Singleton
+@Startup
+@ApplicationScoped
+public class EmailListener {
+
+    @Inject
+    private Logger log;
+
+    @Inject
+    @XxxxxProperty(name = "Format.DateTimeStr")
+    private String FormatDateTimeStr;
+
+    @Inject
+    private Event<XxxxxAlertEvent> alertEventMsg;
+
+    @Resource(lookup = "java:/mail/GWorkspace")
+
+    private Session mailSession;
+
+    public void onEmailEvent(@Observes EmailEvent emailEvent) {
+        log.info("Email event received: " + emailEvent.getName());
+
+        try {
+            Message message = new MimeMessage(mailSession);
+
+            // From is usually configured in the mail-session definition in WildFly
+            // If you need to override/set it explicitly:
+            // message.setFrom(new InternetAddress("your-app@sw-builder.com"));
+
+            // Handle multiple recipients (safest & cleanest way)
+            addRecipients(message, Message.RecipientType.TO,  emailEvent.getTo());
+            addRecipients(message, Message.RecipientType.CC,  emailEvent.getCc());
+            addRecipients(message, Message.RecipientType.BCC, emailEvent.getBcc());
+
+            message.setSubject(emailEvent.getSubject() != null ? emailEvent.getSubject() : "[No Subject]");
+
+            String body = emailEvent.getMessage();
+            message.setText(body != null ? body.trim() : "");
+
+            Transport.send(message);
+	    String msg = "Email sent successfully to: " + emailEvent.getTo();
+            log.info(msg);
+	    fireAlert("event", msg);
+
+        } catch (MessagingException e) {
+            log.warning("Failed to send email: " + emailEvent.getName() + " → " + e.toString());
+            // Consider logging the full stack trace in production:
+            // log.log(Level.WARNING, "Email send failure", e);
+        }
+    }
+
+    /**
+     * Safely adds comma/semicolon separated email addresses to the given recipient type.
+     * Invalid addresses are skipped + logged (similar to your original behavior).
+     */
+    private void addRecipients(Message msg, Message.RecipientType type, String addressesStr) 
+            throws MessagingException {
+        
+        if (addressesStr == null || addressesStr.trim().isEmpty()) {
+            return;
+        }
+
+        // Split by comma or semicolon, trim whitespace
+        String[] rawAddresses = addressesStr.split("\\s*[,;]+\\s*");
+
+        InternetAddress[] validAddresses = Arrays.stream(rawAddresses)
+                .filter(addr -> addr != null && !addr.trim().isEmpty())
+                .map(addr -> {
+                    try {
+                        // true = strict validation
+                        return new InternetAddress(addr.trim(), true);
+                    } catch (AddressException e) {
+                        log.warning("Invalid email address skipped: '" + addr + "' → " + e.getMessage());
+                        return null;
+                    }
+                })
+                .flatMap(Stream::ofNullable)           // remove nulls
+                .toArray(InternetAddress[]::new);
+
+        if (validAddresses.length > 0) {
+            msg.addRecipients(type, validAddresses);
+        }
+    }
+
+
+    private void fireAlert(String alertType, String alertMessage) {
+        
+	SimpleDateFormat formatDateTime = new SimpleDateFormat (FormatDateTimeStr);
+        XxxxxAlertEvent alertEvent = new XxxxxAlertEvent();
+        alertEvent.setName("alertEvent");
+        alertEvent.setXxxxxAlertType(alertType);
+        alertEvent.setXxxxxAlertSource("EmailListener");
+        alertEvent.setXxxxxAlertMessage(alertMessage);
+        alertEvent.setOccurredAt(formatDateTime.format(new Date()));
+        alertEventMsg.fire(alertEvent);
+    }
+
+    @PostConstruct
+    public void logStart() {
+        log.info("Email Event Listener (Jakarta Mail) started - using session: " + 
+                 (mailSession != null ? "injected successfully" : "NULL!"));
+    }
+}

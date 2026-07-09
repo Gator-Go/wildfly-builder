@@ -1,0 +1,522 @@
+
+package ppp.ppp.ppp.servlet;
+
+import ppp.ppp.ppp.entity.Yyyyy;
+import ppp.ppp.ppp.service.YyyyyService;
+import ppp.ppp.ppp.servlet.CommonLib;
+import ppp.ppp.ppp.servlet.helper.YyyyyDataHelper;
+import ppp.ppp.ppp.servlet.helper.YyyyyErrorHelper;
+import ppp.ppp.ppp.servlet.helper.Option;
+import ppp.ppp.ppp.settings.XxxxxProperty;
+
+___IMPORT_OPTION_SERVLET_ONE2MANY_CHILD___
+___IMPORT_OPTION_SERVLET_ONE2MANY_CHILD_ALERT___
+___IMPORT_OPTION_ONE2MANY_PARENT___
+___IMPORT_OPTION_ONE2MANY_PARENT_ALERT___
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
+import java.util.logging.Logger;
+import java.util.List;
+import java.util.ArrayList;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.persistence.EntityManager;
+
+import jakarta.inject.Inject;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+
+/**
+ * Servlet implementation class YyyyyServlet
+ */
+@RequestScoped
+public class YyyyyServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Inject
+    private Logger log;
+
+    @Inject
+    @XxxxxProperty(name = "Format.DateStr")
+    private String FormatDateStr;
+
+    @Inject
+    @XxxxxProperty(name = "Format.DateTimeStr")
+    private String FormatDateTimeStr;
+
+    @Inject
+    @XxxxxProperty(name = "Rows.ToPage")
+    private Integer RowsPage;
+
+    @Inject
+    YyyyyService yyyyyService;
+
+    @Inject
+    YyyyyDataHelper yyyyyDataHelper;
+
+    @Inject
+    YyyyyErrorHelper yyyyyErrorHelper;
+
+    @Inject
+    CommonLib commonLib;
+
+___INJECT_SERVICE_ONE2MANY_CHILD___
+___INJECT_SERVICE_ONE2MANY_CHILD_ALERT___
+___INJECT_SERVICE_ONE2MANY_PARENT___
+___INJECT_SERVICE_ONE2MANY_PARENT_ALERT___
+
+    /**
+     * Default constructor.
+     */
+    public YyyyyServlet() {
+        // TODO Auto-generated constructor stub
+    }
+
+
+
+    public void doYyyyyList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        req.getSession().setAttribute("yyyyySearchCriteria", null);
+        req.getSession().setAttribute("yyyyySearchCriteria2", null);
+___SET_FUNC_ID_NULL_ONE2MANY_CHILD___
+___SET_FUNC_ID_NULL_ONE2MANY_CHILD_ALERT___
+___SET_FUNC_ID_NULL_ONE2MANY_PARENT___
+___SET_FUNC_ID_NULL_ONE2MANY_PARENT_ALERT___
+
+        String subOp = req.getParameter("opSub");
+        if (subOp == null)
+            subOp = "new";
+
+        Long count = yyyyyService.getCountYyyyys();
+        if (count.intValue() == 0)
+        {
+            req.setAttribute("pageInfo", "0 Rows - Page  1 of 1");
+            req.setAttribute("op", "YyyyyList");
+            return;
+        }
+
+	int RowsToPage = RowsPage.intValue();
+        Integer page = new Integer(1);
+        String pageStr = (String) req.getSession().getAttribute("yyyyyPage");
+        if (pageStr != null)
+           page = new Integer(pageStr);
+        int nbrOfPages = count.intValue() / RowsToPage;
+        if (count.intValue() % RowsToPage > 0)
+           nbrOfPages++;
+
+        if (subOp.equals("nextPage")) {
+           page = new Integer(page.intValue() + 1);
+           req.getSession().setAttribute("yyyyyPage", page.toString());
+        }
+        if (subOp.equals("previousPage")) {
+           page = new Integer(page.intValue() - 1);
+           req.getSession().setAttribute("yyyyyPage", page.toString());
+        }
+
+        String pageInfo = count.intValue() + " Rows - Page " + page.toString() + " of " + nbrOfPages;
+        req.setAttribute("pageInfo", pageInfo);
+
+        if (page.intValue() <  nbrOfPages)
+           req.setAttribute("nextFlag", "true");
+        if (page.intValue() >  1)
+           req.setAttribute("previousFlag", "true");
+
+	int first = 0;
+	if (page.intValue() > 1)
+            first = (page.intValue() * RowsToPage) - (RowsToPage + 1);
+
+        List<Yyyyy> yyyyys = yyyyyService.getYyyyyPage(first, RowsToPage);
+
+        if (req.isUserInRole("ADMIN"))
+            req.setAttribute("admin", "admin");
+        req.setAttribute("yyyyys", yyyyys);
+        req.setAttribute("op", "YyyyyList");
+        req.setAttribute("formatDateStr", FormatDateStr);
+        req.setAttribute("formatDateTimeStr", FormatDateTimeStr);
+    }
+
+
+
+___LIST_FUNC_ONE2MANY_CHILD___
+___LIST_FUNC_ONE2MANY_CHILD_ALERT___
+
+
+
+   /**
+    * The doYyyyyView method calls the Yyyyy view web page.
+    * It loads Yyyyy data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the req data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doYyyyyView(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+___SET_FUNC_ID_NULL_ONE2MANY_PARENT___
+___SET_FUNC_ID_NULL_ONE2MANY_PARENT_ALERT___
+
+        Long id = new Long(req.getParameter("id"));
+        Yyyyy yyyyy = yyyyyService.getYyyyy(id);
+
+___LOAD_DSP_ONE2MANY_CHILD___
+___LOAD_DSP_ONE2MANY_CHILD_ALERT___
+
+        if (req.getSession().getAttribute("yyyyySearchCriteria") == null)
+            req.setAttribute("opBack", "YyyyyList");
+        else
+            req.setAttribute("opBack", "YyyyySearchList");
+
+___GET_FUNC_ID_ONE2MANY_CHILD___
+___GET_FUNC_ID_ONE2MANY_CHILD_ALERT___
+
+___SHOW_PICTURE_CAMERA___
+___SHOW_PICTURE_VIDEO___
+___SHOW_PICTURE_POST___
+___SHOW_MAP_LOC___
+___SHOW_MAP_CURRENT_LOC___
+
+        req.setAttribute("yyyyy", yyyyy);
+        req.setAttribute("op", "YyyyyView");
+        req.setAttribute("formatDateStr", FormatDateStr);
+        req.setAttribute("formatDateTimeStr", FormatDateTimeStr);
+    }
+
+
+   /**
+    * The doYyyyyAdd method calls the Yyyyy add web page.
+    * It loads default data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the req data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doYyyyyAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+___LOAD_OPTION_ADD_ONE2MANY_CHILD___
+___LOAD_OPTION_ADD_ONE2MANY_CHILD_ALERT___
+
+___LOAD_ENUM_ATTRIBUTE_FIRST___
+___LOAD_TAG_ATTRIBUTE_FIRST___
+
+        req.setAttribute("opBack", "YyyyyList");
+
+___GET_FUNC_ID_ONE2MANY_CHILD___
+___GET_FUNC_ID_ONE2MANY_CHILD_ALERT___
+
+        Yyyyy yyyyy = new Yyyyy();
+        req.setAttribute("yyyyy", yyyyy);
+        req.setAttribute("mode", "add");
+        req.setAttribute("opAction", "YyyyyAddAction");
+        req.setAttribute("op", "YyyyyAdd");
+        req.setAttribute("formatDateStr", FormatDateStr);
+        req.setAttribute("formatDateTimeStr", FormatDateTimeStr);
+    }
+
+   /**
+    * The doYyyyyAddAction method creates the Yyyyy from add web page data.
+    *
+    * @param req A HttpServletRequest object containing the req data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doYyyyyAddAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        req.setAttribute("mode", "add");
+        Yyyyy yyyyy = new Yyyyy();
+
+        if (yyyyyDataHelper.loadYyyyy(yyyyy, req) == false)
+        {
+            req.setAttribute("yyyyy", yyyyy);
+            doYyyyyAdd(req, resp);
+___LOAD_ENUM_ATTRIBUTE2___
+___LOAD_TAG_ATTRIBUTE2___
+            return;
+        }
+
+        req.setAttribute("yyyyy", yyyyy);
+___LOAD_ENUM_ATTRIBUTE___
+___LOAD_TAG_ATTRIBUTE___
+
+        if (yyyyyErrorHelper.checkYyyyyData(yyyyy, req) == true)
+        {
+            doYyyyyAdd(req, resp);
+            return;
+        }
+
+        String result = yyyyyService.addYyyyy(yyyyy);
+        if (!result.equals("success"))
+        {
+            req.setAttribute("msg", "Yyyyy Add Error: " + result);
+            log.warning("add result = " + result);
+        }
+        else
+            req.setAttribute("msg", "Yyyyy Add Successful");
+
+___GET_FUNC_LIST_ONE2MANY_CHILD___
+___GET_FUNC_LIST_ONE2MANY_CHILD_ALERT___
+
+        doYyyyyList(req, resp);
+    }
+
+
+
+   /**
+    * The doYyyyyEdit method calls the Yyyyy Edit web page.
+    * It loads default data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the req data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doYyyyyEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Long id = new Long(req.getParameter("id"));
+        Yyyyy yyyyy = yyyyyService.getYyyyy(id);
+        req.setAttribute("yyyyy", yyyyy);
+___LOAD_ENUM_ATTRIBUTE___
+___LOAD_TAG_ATTRIBUTE___
+
+___LOAD_OPTION_EDIT_ONE2MANY_CHILD___
+___LOAD_OPTION_EDIT_ONE2MANY_CHILD_ALERT___
+
+        if (req.getSession().getAttribute("yyyyySearchCriteria") == null)
+            req.setAttribute("opBack", "YyyyyList");
+        else
+            req.setAttribute("opBack", "YyyyySearchList");
+
+___GET_FUNC_ID_ONE2MANY_CHILD___
+___GET_FUNC_ID_ONE2MANY_CHILD_ALERT___
+
+        req.setAttribute("mode", "edit");
+        req.setAttribute("opAction", "YyyyyEditAction");
+        req.setAttribute("op", "YyyyyEdit");
+        req.setAttribute("formatDateStr", FormatDateStr);
+        req.setAttribute("formatDateTimeStr", FormatDateTimeStr);
+    }
+
+   /**
+    * The doYyyyyEditAction method creates the Yyyyy from add web page data.
+    *
+    * @param req A HttpServletRequest object containing the req data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doYyyyyEditAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        req.setAttribute("mode", "edit");
+        Long id = new Long(req.getParameter("id"));
+        Yyyyy yyyyy = yyyyyService.getYyyyy(id);
+
+        if (yyyyyDataHelper.loadYyyyy(yyyyy, req) == false)
+        {
+            req.setAttribute("yyyyy", yyyyy);
+___LOAD_ENUM_ATTRIBUTE2___
+___LOAD_TAG_ATTRIBUTE2___
+            req.setAttribute("opAction", "YyyyyEditAction");
+            if (req.getSession().getAttribute("yyyyySearchCriteria") == null)
+                req.setAttribute("opBack", "YyyyyList");
+            else
+                req.setAttribute("opBack", "YyyyySearchList");
+            req.setAttribute("op", "YyyyyEdit");
+            return;
+        }
+
+        req.setAttribute("yyyyy", yyyyy);
+___LOAD_ENUM_ATTRIBUTE___
+___LOAD_TAG_ATTRIBUTE___
+
+        if (yyyyyErrorHelper.checkYyyyyData(yyyyy, req) == true)
+        {
+            req.setAttribute("opAction", "YyyyyEditAction");
+            if (req.getSession().getAttribute("yyyyySearchCriteria") == null)
+                req.setAttribute("opBack", "YyyyyList");
+            else
+                req.setAttribute("opBack", "YyyyySearchList");
+            req.setAttribute("op", "YyyyyEdit");
+            return;
+        }
+
+        String result = yyyyyService.editYyyyy(yyyyy);
+        if (!result.equals("success"))
+        {
+            req.setAttribute("msg", "Yyyyy Edit Error: " + result);
+            log.warning("edit result = " + result);
+        }
+        else
+            req.setAttribute("msg", "Yyyyy Edit Successful");
+
+___GET_FUNC_LIST_ONE2MANY_CHILD___
+___GET_FUNC_LIST_ONE2MANY_CHILD_ALERT___
+
+        if (req.getSession().getAttribute("yyyyySearchCriteria") == null)
+            doYyyyyList(req, resp);
+        else
+            doYyyyySearchList(req, resp);
+    }
+
+
+
+   /**
+    * The doDeleteWebservice method calls the Yyyyy delete web page.
+    * It loads Yyyyy data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the req data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doYyyyyDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Long id = new Long(req.getParameter("id"));
+        Yyyyy yyyyy = yyyyyService.getYyyyy(id);
+        req.setAttribute("yyyyy", yyyyy);
+
+___LOAD_DSP_ONE2MANY_CHILD___
+___LOAD_DSP_ONE2MANY_CHILD_ALERT___
+
+        if (req.getSession().getAttribute("yyyyySearchCriteria") == null)
+            req.setAttribute("opBack", "YyyyyList");
+        else
+            req.setAttribute("opBack", "YyyyySearchList");
+
+___GET_FUNC_ID_ONE2MANY_CHILD___
+___GET_FUNC_ID_ONE2MANY_CHILD_ALERT___
+
+___SHOW_MAP_LOC___
+___SHOW_MAP_CURRENT_LOC___
+
+        req.setAttribute("opAction", "YyyyyDeleteAction");
+        req.setAttribute("op", "YyyyyDelete");
+        req.setAttribute("formatDateStr", FormatDateStr);
+        req.setAttribute("formatDateTimeStr", FormatDateTimeStr);
+    }
+
+   /**
+    * The doDeleteWebserviceAction method deletes the Yyyyy from delete web page data.
+    *
+    * @param req A HttpServletRequest object containing the req data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doYyyyyDeleteAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Long id = new Long(req.getParameter("id"));
+
+        String result = yyyyyService.deleteYyyyyFlag(id);
+        if (!result.equals("success"))
+        {
+            req.setAttribute("msg", "Yyyyy Delete Error: " + result);
+            log.warning("delete result = " + result);
+        }
+        else
+            req.setAttribute("msg", "Yyyyy Delete Flag Update Successful");
+
+___GET_FUNC_LIST_ONE2MANY_CHILD___
+___GET_FUNC_LIST_ONE2MANY_CHILD_ALERT___
+
+        if (req.getSession().getAttribute("yyyyySearchCriteria") == null)
+            doYyyyyList(req, resp);
+        else
+            doYyyyySearchList(req, resp);
+    }
+
+
+
+    public void doYyyyySearch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+___LOAD_OPTION_SEARCH_ONE2MANY_CHILD___
+___LOAD_OPTION_SEARCH_ONE2MANY_CHILD_ALERT___
+
+___LOAD_ENUM_ATTRIBUTE_PICK___
+___LOAD_TAG_ATTRIBUTE_PICK___
+
+        if (req.isUserInRole("ADMIN"))
+            req.setAttribute("admin", "admin");
+
+        if (req.getSession().getAttribute("yyyyySearchCriteria") == null)
+            req.setAttribute("opBack", "YyyyyList");
+        else
+            req.setAttribute("opBack", "YyyyySearchList");
+        req.setAttribute("opAction", "YyyyySearchAction");
+        req.setAttribute("op", "YyyyySearch");
+        req.setAttribute("formatDateStr", FormatDateStr);
+        req.setAttribute("formatDateTimeStr", FormatDateTimeStr);
+    }
+
+
+    public void doYyyyySearchAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Yyyyy yyyyy = new Yyyyy();
+        Yyyyy yyyyy2 = new Yyyyy();
+___LOAD_ENUM_ATTRIBUTE_PICK___
+___LOAD_TAG_ATTRIBUTE_PICK___
+
+        if (yyyyyDataHelper.loadYyyyySearch(yyyyy, yyyyy2, req) == false)
+        {
+            req.setAttribute("yyyyy", yyyyy);
+            req.setAttribute("yyyyy2", yyyyy2);
+            doYyyyySearch(req, resp);
+            return;
+        }
+        req.getSession().setAttribute("yyyyySearchCriteria", yyyyy);
+        req.getSession().setAttribute("yyyyySearchCriteria2", yyyyy2);
+
+        List<Yyyyy> yyyyys = yyyyyService.searchYyyyys(yyyyy, yyyyy2);
+        if (yyyyys == null || yyyyys.size() == 0)
+        {
+            req.setAttribute("msg", "Yyyyy Search Returned 0 Yyyyys");
+            req.setAttribute("op", "YyyyyList");
+            return;
+        }
+
+___SHOW_MAP_LOC___
+___SHOW_MAP_CURRENT_LOC___
+
+        if (req.isUserInRole("ADMIN"))
+            req.setAttribute("admin", "admin");
+        req.setAttribute("yyyyys", yyyyys);
+        req.setAttribute("opBack", "YyyyyList");
+        req.setAttribute("op", "YyyyySearchList");
+    }
+
+
+    public void doYyyyySearchList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Yyyyy yyyyy = (Yyyyy) req.getSession().getAttribute("yyyyySearchCriteria");
+        Yyyyy yyyyy2 = (Yyyyy) req.getSession().getAttribute("yyyyySearchCriteria2");
+
+        List<Yyyyy> yyyyys = yyyyyService.searchYyyyys(yyyyy, yyyyy2);
+        if (yyyyys == null || yyyyys.size() == 0)
+        {
+            doYyyyyList(req, resp);
+            return;
+        }
+
+___SHOW_MAP_LOC___
+___SHOW_MAP_CURRENT_LOC___
+
+        if (req.isUserInRole("ADMIN"))
+            req.setAttribute("admin", "admin");
+        req.setAttribute("yyyyys", yyyyys);
+        req.setAttribute("opBack", "YyyyyList");
+        req.setAttribute("op", "YyyyySearchList");
+        req.setAttribute("formatDateStr", FormatDateStr);
+        req.setAttribute("formatDateTimeStr", FormatDateTimeStr);
+    }
+
+
+___UPLOAD_FUNC_CAMERA___
+
+___UPLOAD_FUNC_CAMERA_ACTION___
+
+___UPLOAD_FUNC_VIDEO___
+
+___UPLOAD_FUNC_VIDEO_ACTION___
+
+___UPLOAD_FUNC_THUMBNAIL___
+
+___UPLOAD_FUNC_THUMBNAIL_ACTION___
+
+___UPLOAD_FUNC_POST___
+
+___UPLOAD_FUNC_POST_ACTION___
+
+}

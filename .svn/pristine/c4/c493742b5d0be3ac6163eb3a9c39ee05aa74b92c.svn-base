@@ -1,0 +1,59 @@
+import groovy.xml.XmlParser
+import groovy.xml.XmlUtil
+
+// Read XML files
+def APP_APPS = new File("./APP_APPS.xml").text
+def APP_HOME = new File("./APP_HOME.xml").text
+def appApps = new XmlParser().parseText(APP_APPS)
+def appHome = new XmlParser().parseText(APP_HOME)
+
+def appFound = false
+def appChanged = false
+def one = 1
+
+def findApp() {
+    for (a in appApps.appHome) {
+        if (a.@appName == appHome.home.@appName) {
+            appFound = true
+            if (one > 1) {
+                println "ERROR: more than one ${a.@appName} in APP_APPS.xml"
+                System.exit(1)
+            }
+            one++
+            // Check if attributes match
+            if (a.@appDesc == appHome.home.@appDesc &&
+                a.@appPng == appHome.home.@appPng &&
+                a.@appHomeURL == appHome.home.@appHomeURL) {
+                appChanged = false
+            } else {
+                appChanged = true
+                // Update attributes
+                a.@appDesc = appHome.home.@appDesc
+                a.@appPng = appHome.home.@appPng
+                a.@appHomeURL = appHome.home.@appHomeURL
+            }
+        }
+    }
+}
+
+findApp()
+
+if (appFound) {
+    if (appChanged) {
+        new File("./APP_APPS.xml").write(XmlUtil.serialize(appApps))
+        println "APP_APPS.xml updated"
+    } else {
+        println "APP_APPS.xml up-to-date"
+    }
+} else {
+    // Correct way to add a new node
+    appApps.appendNode('appHome', [
+        appName: appHome.home.@appName,
+        appDesc: appHome.home.@appDesc,
+        appPng: appHome.home.@appPng,
+        appHomeURL: appHome.home.@appHomeURL
+    ])
+
+    new File("./APP_APPS.xml").write(XmlUtil.serialize(appApps))
+    println "APP_APPS.xml updated"
+}

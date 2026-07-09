@@ -1,0 +1,68 @@
+
+package ppp.ppp.ppp.event;
+
+import ppp.ppp.ppp.service.EventService;
+import ppp.ppp.ppp.entity.AdminEvent;
+import ppp.ppp.ppp.entity.UserInfo;
+import ppp.ppp.ppp.event.msg.EmailEvent;
+import ppp.ppp.ppp.event.msg.SettingsEvent;
+
+import javax.ejb.Startup;
+import javax.ejb.Singleton;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.logging.Logger;
+
+@Singleton
+@Startup
+@ApplicationScoped
+public class SubscriptionsListener {
+
+    @Inject
+    private Logger log;
+
+    @Inject
+    private EventService eventService;
+
+    @Inject
+    private Event<EmailEvent> emailEventMsg;
+
+    public void onEmailEvent(@Observes SettingsEvent settingsEvent) {
+
+	String eventName = settingsEvent.getName();
+        log.info("In the Subscriptions Listener " + eventName + " was received.");
+
+        AdminEvent adminEvent = eventService.getAdminEventbyName(eventName);
+        if (adminEvent == null) {
+          log.warning("Event not in Event table - name = " + eventName);
+          return;
+        }
+        for (UserInfo userInfo : adminEvent.getUserInfo()) {
+
+          String subject = eventName + " Subscription Email";
+          String msg = eventName + " Data\t\n\t\n" +
+		"Key   : " + settingsEvent.getKey() + "\t\n" +
+		"Value : " + settingsEvent.getValue();
+
+          EmailEvent emailEvent = new EmailEvent();
+          emailEvent.setName(eventName);
+          emailEvent.setTo(userInfo.getEmail());
+          emailEvent.setSubject(subject);
+          emailEvent.setMessage(msg);
+          emailEventMsg.fire(emailEvent);
+        }
+    }
+    
+
+    @PostConstruct
+    public void logStart() {
+
+        log.info("@PostConstruct:Subscriptions Event Listener Started");
+    }
+}

@@ -1,0 +1,117 @@
+
+package ppp.ppp.ppp.servlet;
+
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.lang.Class;
+___JSP_REPORT_IMPORT_CONST_FUNCTION___
+
+public class ControllerEnums {
+    private static final long serialVersionUID = 1L;
+
+    public enum Calls {
+
+        HOME("Home",ControllerServlet.class,"doPass","0","x","home.jsp","blank.jsp"),
+
+        ADMIN_LOGS("AdminLogs",ControllerServlet.class,"doPass","1","0","alert.jsp","adminIndex.jsp"),
+
+        ADMIN_EVENTS("AdminEvents",EventManagerServlet.class,"doHome","1","1","event/EventList.jsp","adminIndex.jsp"),
+        ADMIN_EVENTS_ADD_EVENT("AddEvent",EventManagerServlet.class,"doAddAdminEvent","1","1","event/EventAdd.jsp","adminIndex.jsp"),
+        ADMIN_EVENTS_ADD_EVENT_ACTION("AddEventAction",EventManagerServlet.class,"doAddAdminEventAction","1","1","event/EventAdd.jsp","adminIndex.jsp"),
+        ADMIN_EVENTS_EDIT_EVENT("EditEvent",EventManagerServlet.class,"doEditAdminEvent","1","1","event/EventEdit.jsp","adminIndex.jsp"),
+        ADMIN_EVENTS_EDIT_EVENT_ACTION("EditEventAction",EventManagerServlet.class,"doEditAdminEventAction","1","1","event/EventEdit.jsp","adminIndex.jsp"),
+        ADMIN_EVENTS_DELETE_EVENT("DeleteEvent",EventManagerServlet.class,"doDeleteAdminEvent","1","1","event/EventDelete.jsp","adminIndex.jsp"),
+        ADMIN_EVENTS_DELETE_EVENT_ACTION("DeleteEventAction",EventManagerServlet.class,"doDeleteAdminEventAction","1","1","event/EventDelete.jsp","adminIndex.jsp"),
+        ADMIN_EVENTS_FIRESCHEDULE_EVENT("FireEvent",EventManagerServlet.class,"doFireEvent","1","1","event/EventFire.jsp","adminIndex.jsp"),
+        ADMIN_EVENTS_FIRE_EVENT("FireEvent",EventManagerServlet.class,"doFireEvent","1","1","event/EventFire.jsp","adminIndex.jsp"),
+        ADMIN_EVENTS_FIRE_EVENT_ACTION("FireEventAction",EventManagerServlet.class,"doFireEventAction","1","1","event/EventFire.jsp","adminIndex.jsp"),
+        ADMIN_EVENTS_SCHEDULE_EVENT("ScheduleEvent",EventManagerServlet.class,"doScheduleEvent","1","1","event/EventSchedule.jsp","adminIndex.jsp"),
+        ADMIN_EVENTS_SCHEDULE_EVENT_ACTION("ScheduleEventAction",EventManagerServlet.class,"doScheduleEventAction","1","1","event/EventSchedule.jsp","adminIndex.jsp"),
+
+        ADMIN_SUBSCRIPT("AdminSubscriptions",SubscriptionServlet.class,"doHome","1","2","subscription/SubscriptList.jsp","adminIndex.jsp"),
+        ADMIN_SUBSCRIPT_VIEW("ViewSubscription",SubscriptionServlet.class,"doViewSubscription","1","2","subscription/SubscriptView.jsp","adminIndex.jsp"),
+        ADMIN_SUBSCRIPT_ADD("AddSubscription",SubscriptionServlet.class,"doAddSubscription","1","2","subscription/SubscriptAdd.jsp","adminIndex.jsp"),
+        ADMIN_SUBSCRIPT_ADD_SELECT("AddSubscriptionSelect",SubscriptionServlet.class,"doAddSubscriptionSelect","1","2","subscription/SubscriptAdd.jsp","adminIndex.jsp"),
+        ADMIN_SUBSCRIPT_ADD_ACTION("AddSubscriptionAction",SubscriptionServlet.class,"doAddSubscriptionAction","1","2","subscription/SubscriptAdd.jsp","adminIndex.jsp"),
+        ADMIN_SUBSCRIPT_EDIT("EditSubscription",SubscriptionServlet.class,"doEditSubscription","1","2","subscription/SubscriptEdit.jsp","adminIndex.jsp"),
+        ADMIN_SUBSCRIPT_EDIT_ACTION("EditSubscriptionAction",SubscriptionServlet.class,"doEditSubscriptionAction","1","2","subscription/SubscriptEdit.jsp","adminIndex.jsp"),
+        ADMIN_SUBSCRIPT_DELETE("DeleteSubscription",SubscriptionServlet.class,"doDeleteSubscription","1","2","subscription/SubscriptDelete.jsp","adminIndex.jsp"),
+        ADMIN_SUBSCRIPT_DELETE_ACTION("DeleteSubscriptionAction",SubscriptionServlet.class,"doDeleteSubscriptionAction","1","2","subscription/SubscriptDelete.jsp","adminIndex.jsp"),
+
+___CONTROLLER_ENUMS_ADMIN_FUNCTION___
+
+___CONTROLLER_ENUMS_FUNCTION___
+___CONTROLLER_REPORT_FUNCTION___
+
+        FILE_DOWNLOAD("FileDownload",DownloadFileServlet.class,"doFileDownload","0","x","FileExport.jsp","blank.jsp");
+
+        private static final Map<String, Calls> lookup = new HashMap<String, Calls>();
+
+        static {
+            for (Calls s : EnumSet.allOf(Calls.class)) {
+                lookup.put(s.getCode(), s);
+            }
+        }
+        private String code;
+        private Class servlet;
+        private String method;
+        private String tabIdx;
+        private String tabIdx2;
+        private String jsp;
+        private String indexJsp;
+
+        private Calls(String code, Class servlet, String method, String tabIdx, String tabIdx2, String jsp, String indexJsp) {
+            this.code = code;
+            this.servlet = servlet;
+            this.method = method;
+            this.tabIdx = tabIdx;
+            this.tabIdx2 = tabIdx2;
+            this.jsp = jsp;
+            this.indexJsp = indexJsp;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public Class getServlet() {
+            return servlet;
+        }
+
+        public String getMethod() {
+            return method;
+        }
+
+        public String getTabIdx() {
+            return tabIdx;
+        }
+
+        public String getTabIdx2() {
+            return tabIdx2;
+        }
+
+        public String getJsp() {
+            return jsp;
+        }
+
+        public String getIndexJsp() {
+            return indexJsp;
+        }
+
+        public static Calls get(String code) {
+            return lookup.get(code);
+        }
+
+        public static boolean checkCode(String code) {
+            for (Calls values : Calls.values()) {
+                if (code.equals(values.getCode())) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+}

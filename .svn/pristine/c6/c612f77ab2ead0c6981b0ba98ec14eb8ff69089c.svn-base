@@ -1,0 +1,430 @@
+package ppp.ppp.ppp.report;
+
+import ppp.ppp.ppp.report.BaseException;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.math.BigDecimal;
+import java.util.LinkedHashMap;
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JRField;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.export.JRCsvExporter;
+import net.sf.jasperreports.engine.export.JRHtmlExporter;
+import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.JRRtfExporter;
+import net.sf.jasperreports.engine.export.JRTextExporter;
+import net.sf.jasperreports.engine.export.JRTextExporterParameter;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+
+import java.util.logging.Logger;
+import jakarta.inject.Inject;
+import jakarta.naming.NamingException;
+
+
+public class JasperReport extends BaseReport implements Serializable {
+
+    private static final long serialVersionUID = 4423995085270068263L;
+
+    /** Holds the logging component for this class. */
+//    @Inject
+//    private Logger logger;
+
+    private InputStream fileStream = null;
+    private JasperDesign design = null;
+    private net.sf.jasperreports.engine.JasperReport runtime = null;
+
+    /**
+     * Default constructor
+     */
+    protected JasperReport() {
+    }
+
+    /**
+     * Creates a new {@link JasperReport} instance based on the report template
+     * contained in the {@link InputStream} object
+     * passed in
+     * @param fileStream the stream containing the template for the report
+     */
+    protected JasperReport(InputStream fileStream) {
+        this.fileStream = fileStream;
+    }
+
+    /**
+     * Returns a reference to the {@link JasperDesign} object for this report
+     * @return JasperDesign object containing the {@link JasperDesign} for this
+     * report
+     */
+    protected JasperDesign getDesign() {
+        return this.design;
+    }
+
+    /**
+     * Returns a reference to the {@link net.sf.jasperreports.engine.JasperReport}
+     * object for this report
+     * @return JasperReport object containing the
+     * {@link net.sf.jasperreports.engine.JasperReport} for this report
+     */
+    protected net.sf.jasperreports.engine.JasperReport getRuntime() {
+        return this.runtime;
+    }
+
+    /**
+     * This method performs initialization for the report including parsing
+     * the parameters, fields, sort options, and subreports from the report
+     * template.
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#init()
+     */
+    @Override
+    public void init() throws BaseException {
+
+        System.out.println("initializing report");
+        try {
+            // destroy any local state for this report
+            this.design = null;
+            this.runtime = null;
+            if (this.parameters != null) {
+                this.parameters.clear();
+                this.parameters = null;
+            }
+
+            System.out.println("loading the report design");
+            this.design = JRXmlLoader.load(this.fileStream);
+
+            System.out.println("parsing parameters for report [" + this.getName() + "]");
+            List<JRParameter> jrParams = this.design.getParametersList();
+            List<JRParameter> optionalParams = new ArrayList<JRParameter>();
+            String paramName = null;
+            if ((jrParams != null) && (jrParams.size() > 0)) {
+                for (JRParameter jrParam : jrParams) {
+                    paramName = jrParam.getName();
+                    if (jrParam.isSystemDefined()) {
+                        // skip all system defined parameters
+                    } else {
+                        if (jrParam.isForPrompting()) {
+                            // this is a parameter we will need to prompt the user for
+                            ReportParameter param = new ReportParameter();
+                            param.setName(paramName);
+                            param.setDescription(jrParam.getDescription());
+                            param.setDataType(jrParam.getValueClassName());
+                            param.setRequired(true);
+                            this.addParameter(paramName, param);
+                        } else if (jrParam.getValueClassName().equalsIgnoreCase(net.sf.jasperreports.engine.JasperReport.class.getCanonicalName())) {
+                            // this parameter defines a subreport
+                            this.addSubreport(paramName);
+                        }
+                        // check to see if this is an optional parameter
+                        if (paramName.endsWith("_CLAUSE")) {
+                            optionalParams.add(jrParam);
+                        }
+                    }
+                }
+                // loop through and mark the optional parameters
+                for (JRParameter optionalParam : optionalParams) {
+                    paramName = optionalParam.getName().replace("_CLAUSE", "");
+                    if (this.parameters.containsKey(paramName)) {
+                        this.parameters.get(paramName).setRequired(false);
+                    }
+                }
+            }
+
+            // get the fields that are available on this report
+            System.out.println("parsing fields for report [" + this.getName() + "]");
+            List<JRField> jrFields = this.design.getFieldsList();
+            if ((jrFields != null) && (jrFields.size() > 0)) {
+                this.fields = new TreeMap<String, ReportField>();
+                for (JRField jrField : jrFields) {
+                    ReportField field = new ReportField();
+                    field.setName(jrField.getName());
+                    field.setDescription(jrField.getDescription());
+                    field.setType(jrField.getValueClassName());
+                    this.fields.put(field.getName(), field);
+                }
+            }
+            
+        } catch (Exception ex) {
+            throw new BaseException(ex);
+        }
+    }
+
+    /**
+     * This method compiles the report into a state that can be used for
+     * generating the report output.
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#compile()
+     */
+    @Override
+    public void compile() throws BaseException {
+
+        if (this.design == null) {
+            throw new BaseException("This report has not been initialized.");
+        }
+
+        // only recompile if necessary
+        if (this.runtime != null) {
+            return;
+        }
+
+        try {
+            // compile the report design
+            System.out.println("compiling report " + this.getName());
+            this.runtime = JasperCompileManager.compileReport(design);
+            System.out.println("Finished compiling report " + this.getName());
+            
+        } catch (Exception ex) {
+            System.out.println("IN Exception: ");
+            Throwable t = ex;
+            System.out.println("Exception: " + t.getMessage());
+            throw new BaseException(ex);
+        }
+
+    }
+
+    /**
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#getName()
+     */
+    @Override
+    public String getName() throws BaseException {
+
+        if (this.design == null) {
+            throw new BaseException("This report has not been initialized.");
+        }
+
+        return this.design.getName();
+    }
+
+    /**
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#getType()
+     */
+    @Override
+    public ReportTypeEnum getType() {
+        return ReportTypeEnum.JASPER;
+    }
+
+    /**
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#getFormats()
+     */
+    @Override
+    public Map<String, ReportFormat> getFormats() {
+        if ((this.formats == null) || (this.formats.isEmpty())) {
+            this.formats = getValidFormats();
+        }
+        return this.formats;
+    }
+
+    /**
+     * Static method to return a {@link Map} of valid {@link ReportFormat}
+     * objects for this report.
+     * @return Map containing the valid formats for this report
+     */
+    public static Map<String, ReportFormat> getValidFormats() {
+        // create a map of all supported report formats
+        Map<String, ReportFormat> formats = new LinkedHashMap<String, ReportFormat>();
+        formats.put(ReportFormat.Type.MIME_TYPE_CSV.getValue(), new ReportFormat(ReportFormat.Type.MIME_TYPE_CSV));
+        formats.put(ReportFormat.Type.MIME_TYPE_HTML.getValue(), new ReportFormat(ReportFormat.Type.MIME_TYPE_HTML));
+        formats.put(ReportFormat.Type.MIME_TYPE_EXCEL.getValue(), new ReportFormat(ReportFormat.Type.MIME_TYPE_EXCEL));
+        formats.put(ReportFormat.Type.MIME_TYPE_DOCX.getValue(), new ReportFormat(ReportFormat.Type.MIME_TYPE_DOCX));
+        formats.put(ReportFormat.Type.MIME_TYPE_PDF.getValue(), new ReportFormat(ReportFormat.Type.MIME_TYPE_PDF));
+        formats.put(ReportFormat.Type.MIME_TYPE_RTF.getValue(), new ReportFormat(ReportFormat.Type.MIME_TYPE_RTF));
+        formats.put(ReportFormat.Type.MIME_TYPE_PLAINTEXT.getValue(), new ReportFormat(ReportFormat.Type.MIME_TYPE_PLAINTEXT));
+        return formats;
+    }
+
+    /**
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#getParamDataTypes()
+     */
+    @Override
+    public Collection<String> getParamDataTypes() {
+        if ((this.paramDataTypes == null) || (this.paramDataTypes.isEmpty())) {
+            this.paramDataTypes = getValidParamDataTypes();
+        }
+        return this.paramDataTypes;
+    }
+
+    /**
+     * Static method to return a {@link Collection} of valid parameter data types
+     * for this report.
+     * @return Collection containing the valid parameter data types for this report
+     */
+    public static Collection<String> getValidParamDataTypes() {
+        // create a map of all supported parameter data types
+        Collection<String> types = new ArrayList<String>();
+        types.add(Boolean.class.getCanonicalName());
+        types.add(Date.class.getCanonicalName());
+        types.add(Timestamp.class.getCanonicalName());
+        types.add(Double.class.getCanonicalName());
+        types.add(Float.class.getCanonicalName());
+        types.add(Byte.class.getCanonicalName());
+        types.add(Integer.class.getCanonicalName());
+        types.add(Short.class.getCanonicalName());
+        types.add(Long.class.getCanonicalName());
+        types.add(String.class.getCanonicalName());
+        types.add(BigDecimal.class.getCanonicalName());
+        return types;
+    }
+
+    /**
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#renderAsCsv(java.util.Map, java.io.OutputStream)
+     */
+    @Override
+    protected void renderAsCsv(Map params, OutputStream stream) throws BaseException {
+        this.renderReport(params, stream, new JRCsvExporter());
+    }
+
+    /**
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#renderAsHtml(java.util.Map, java.io.OutputStream)
+     */
+    @Override
+    protected void renderAsHtml(Map params, OutputStream stream) throws BaseException {
+        JRExporter exporter = new JRHtmlExporter();
+        // need to pass in this parameter so we don't have blank images on our reports
+        exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false);
+        this.renderReport(params, stream, exporter);
+    }
+
+    /**
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#renderAsExcel(java.util.Map, java.io.OutputStream)
+     */
+    @Override
+    protected void renderAsExcel(Map params, OutputStream stream) throws BaseException {
+        this.renderReport(params, stream, new JRXlsExporter());
+    }
+
+    /**
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#renderAsWord(java.util.Map, java.io.OutputStream)
+     */
+    @Override
+    protected void renderAsWord(Map params, OutputStream stream) throws BaseException {
+        this.renderReport(params, stream, new JRDocxExporter());
+    }
+
+    /**
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#renderAsPdf(java.util.Map, java.io.OutputStream)
+     */
+    @Override
+    protected void renderAsPdf(Map params, OutputStream stream) throws BaseException {
+        this.renderReport(params, stream, new JRPdfExporter());
+    }
+
+    /**
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#renderAsRtf(java.util.Map, java.io.OutputStream)
+     */
+    @Override
+    protected void renderAsRtf(Map params, OutputStream stream) throws BaseException {
+        this.renderReport(params, stream, new JRRtfExporter());
+    }
+
+    /**
+     * @see gov.usgs.ldcm.ie.sf.report.BaseReport#renderAsTxt(java.util.Map, java.io.OutputStream)
+     */
+    @Override
+    protected void renderAsTxt(Map params, OutputStream stream) throws BaseException {
+        try {
+            JRExporter exporter = new JRTextExporter();
+            Float width = Float.valueOf(System.getProperty(JRTextExporterParameter.PROPERTY_CHARACTER_WIDTH, "8F"));
+            exporter.setParameter(JRTextExporterParameter.CHARACTER_WIDTH, width);
+            Float height = Float.valueOf(System.getProperty(JRTextExporterParameter.PROPERTY_CHARACTER_HEIGHT, "8F"));
+            exporter.setParameter(JRTextExporterParameter.CHARACTER_HEIGHT, height);
+            this.renderReport(params, stream, exporter);
+        } catch (Exception ex) {
+            throw new BaseException(ex);
+        }
+    }
+
+    /**
+     * Helper method to render a Jasper report based on the parameters, database
+     * connection, output stream, and exporter passed in.
+     * @param params the parameter values to pass to the report
+     * @param conn the database connection to use when rendering the report
+     * @param stream the {@link OutputStream} to send the rendered report to
+     * @param exporter the exporter that corresponds to the output format for
+     * the report
+     * @throws BaseException if the report cannot be rendered successfully
+     */
+    private void renderReport(Map params, OutputStream stream,
+            JRExporter exporter) throws BaseException {
+
+        System.out.println("entering renderReport");
+
+        java.sql.Connection conn = null;
+
+        try {
+          jakarta.naming.Context ic = new jakarta.naming.InitialContext();
+          jakarta.naming.Context ctx = (jakarta.naming.Context) ic.lookup("java:");
+          jakarta.sql.DataSource ds = (jakarta.sql.DataSource) ctx.lookup("jboss/datasources/SocialDS");
+          conn = ds.getConnection();
+
+        } catch (NamingException ne) {
+          throw new BaseException(ne);
+        } catch (SQLException se) {
+          throw new BaseException(se);
+        }
+
+        if (conn == null) {
+            System.out.println("DB Connection is NULL");
+            return;
+        }
+
+        System.out.println("compiling the report design");
+        this.compile();
+        if (this.runtime == null) {
+            throw new BaseException("This report was not successfully compiled.");
+        }
+
+        try {
+            // link in any parameters that are referencing subreports
+            if (this.hasSubreports()) {
+                System.out.println("linking the " + this.subreports.size() + " subreports");
+                if (params == null) {
+                    params = new HashMap();
+                }
+                for (String subreportName : this.subreports.keySet()) {
+                    System.out.println("compiling and linking subreport " + subreportName);
+                    JasperReport tempReport = (JasperReport)this.subreports.get(subreportName);
+                    tempReport.compile();
+                    params.put(subreportName, tempReport.getRuntime());
+                }
+            }
+
+            System.out.println("filling data for report [" + this.getName() + "]");
+            JasperPrint print = JasperFillManager.fillReport(this.runtime, params, conn);
+
+            System.out.println("exporting report " + this.getName());
+            exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
+            exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, stream);
+            exporter.exportReport();
+            conn.close();
+
+        } catch (Exception e) {
+            throw new BaseException(e);
+        } finally {
+            if(conn!=null) {
+              try {
+                conn.close();
+              } catch (SQLException se) {
+                throw new BaseException(se);
+              }
+            }
+            System.out.println("exiting renderReport");
+        }
+
+    }
+  
+}

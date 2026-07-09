@@ -1,0 +1,75 @@
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="ISO-8859-1" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:url value="do" var="BackURL">
+  <c:param name="op" value="AdminEmailSubs" />
+</c:url>
+
+<div class='pojo-section'>
+<div class='pojo-section-header'>View Email Subs</div>
+<div class='pojo-section-body'>
+<table width='90%'>
+  <tr>
+    <td valign='middle' width='10%'>
+      <div align='left'>
+        <a id='CollMgrBack' href='<c:out value="${BackURL}" />'>
+          <button class='btnBack'>Back</button>
+        </a>
+      </div>
+    </td>
+
+    <td valign='middle' width='90%'>
+    </td>
+  </tr>
+</table>
+<br /><br />
+
+<div align="left">
+  <font class="Verdana" size="+1">User Email</font>
+</div>
+
+<div align="center">
+  <c:set var="parent" value="${emailSubs}"/>
+  <table id="parenttable" class="pojo_tablestyle" >
+  <tr>
+    <th valign='top' width='10%'>User ID</th>
+    <th valign='top' width='20%'>First Name</th>
+    <th valign='top' width='20%'>Last Name</th>
+    <th valign='top' width='30%'>Email</th>
+  </tr>
+
+  <tr>
+    <td>${parent.id}</td>
+    <td>${parent.firstName}</td>
+    <td>${parent.lastName}</td>
+    <td>${parent.email}</td>
+  </tr>
+
+  </table>
+<br /><br />
+
+<div align="left">
+  <font class="Verdana" size="+1">Email Subs Events</font>
+</div>
+
+  <table id="childtable" class="pojo_tablestyle">
+  <tr>
+    <th valign='top' width='10%'>Event ID</th>
+    <th valign='top' width='20%'>Name</th>
+    <th valign='top' width='50%'>Description</th>
+  </tr>
+
+  <c:forEach items="${parent.events}" var="child"  varStatus="loop">
+    <tr>
+      <td>${child.id}</td>
+      <td>${child.name}</td>
+      <td>${child.description}</td>
+    </tr>
+
+  </c:forEach>
+  </table>
+</div>
+</div>
+</div>

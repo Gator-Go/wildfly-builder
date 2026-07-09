@@ -1,0 +1,167 @@
+$(function() {
+	$('.btnBlankIcon').button({
+		icons: { primary: 'ui-icon-blank' },
+		text: false
+	});
+
+	$('.btnBlank').button({
+		icons: { primary: 'ui-icon-blank' }
+	});
+
+	$('.btnBackIcon').button({
+		icons: { primary: 'ui-icon-arrowreturnthick-1-w' },
+		text: false
+	});
+
+	$('.btnBack').button({
+		icons: { primary: 'ui-icon-arrowreturnthick-1-w' }
+	});
+
+	$('.btnCloseIcon').button({
+		icons: { primary: 'ui-icon-closethick' },
+		text: false
+	});
+
+	$('.btnClose').button({
+		icons: { primary: 'ui-icon-closethick' },
+	});
+
+	$('.btnNextIcon').button({
+		icons: { primary: 'ui-icon-seek-next' },
+		text: false
+	});
+
+	$('.btnNext').button({
+		icons: { primary: 'ui-icon-seek-next' }
+	});
+
+	$('.btnPreviousIcon').button({
+		icons: { primary: 'ui-icon-seek-prev' },
+		text: false
+	});
+
+	$('.btnPrevious').button({
+		icons: { primary: 'ui-icon-seek-prev' }
+	});
+
+	$('.btnSearchIcon').button({
+		icons: { primary: 'ui-icon-search' },
+		text: false
+	});
+
+	$('.btnSearch').button({
+		icons: { primary: 'ui-icon-search' }
+	});
+
+	$('.btnEditIcon').button({
+		icons: { primary: 'ui-icon-pencil' },
+		text: false
+	});
+
+	$('.btnEdit').button({
+		icons: { primary: 'ui-icon-pencil' }
+	});
+
+	$('.btnAddIcon').button({
+		icons: { primary: 'ui-icon-plusthick' },
+		text: false
+	});
+
+	$('.btnAdd').button({
+		icons: { primary: 'ui-icon-plusthick' }
+	});
+
+	$('.btnDeleteIcon').button({
+		icons: { primary: 'ui-icon-trash' },
+		text: false
+	});
+
+	$('.btnDelete').button({
+		icons: { primary: 'ui-icon-trash' }
+	});
+
+	$('.btnFireIcon').button({
+		icons: { primary: 'ui-icon-transferthick-e-w' },
+		text: false
+	});
+
+	$('.btnFire').button({
+		icons: { primary: 'ui-icon-transferthick-e-w' }
+	});
+
+	$('.btnScheduleIcon').button({
+		icons: { primary: 'ui-icon-calculator' },
+		text: false
+	});
+
+	$('.btnSchedule').button({
+		icons: { primary: 'ui-icon-calculator' }
+	});
+
+	$('.btnViewIcon').button({
+		icons: { primary: 'ui-icon-document' },
+		text: false
+	});
+
+	$('.btnView').button({
+		icons: { primary: 'ui-icon-document' }
+	});
+
+	$('.btnListIcon').button({
+		icons: { primary: 'ui-icon-folder-collapsed' },
+		text: false
+	});
+
+	$('.btnList').button({
+		icons: { primary: 'ui-icon-folder-collapsed' }
+	});
+
+	$('.btnGenerateIcon').button({
+		icons: { primary: 'ui-icon-gear' },
+		text: false
+	});
+
+	$('.btnGenerate').button({
+		icons: { primary: 'ui-icon-gear' }
+	});
+
+	$('.btnUploadIcon').button({
+		icons: { primary: 'ui-icon-arrowthickstop-1-n' },
+		text: false
+	});
+
+	$('.btnUpload').button({
+		icons: { primary: 'ui-icon-arrowthickstop-1-n' }
+	});
+
+	$('.btnDownloadIcon').button({
+		icons: { primary: 'ui-icon-arrowthickstop-1-s' },
+		text: false
+	});
+
+	$('.btnDownload').button({
+		icons: { primary: 'ui-icon-arrowthickstop-1-s' }
+	});
+
+	$('.btnOnIcon').button({
+		icons: { primary: 'ui-icon-radio-on' },
+		text: false
+	});
+
+	$('.btnOn').button({
+		icons: { primary: 'ui-icon-radio-on' }
+	});
+
+	$('.btnOffIcon').button({
+		icons: { primary: 'ui-icon-radio-off' },
+		text: false
+	});
+
+	$('.btnOff').button({
+		icons: { primary: 'ui-icon-radio-off' }
+	});
+
+	$('.btnTest').button({
+		icons: { primary: 'ui-icon-transferthick-e-w' }
+	});
+});

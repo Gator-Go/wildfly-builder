@@ -1,0 +1,177 @@
+
+https://docs.jboss.org/weld/reference/2.2.3.Final/en-US/html_single/
+
+groovy wildApp
+
+cd SyncCar
+
+cls && mvn clean package wildfly:deploy
+
+
+mvn wildfly:undeploy
+
+
+validate: validate that the schema matches, make no changes to the schema of the database,
+ you probably want this for production.
+
+update: update the schema to reflect the entities being persisted
+
+create: creates the schema necessary for your entities, destroying any previous data.
+
+create-drop: create the schema as in create above, but also drop the schema at the end
+ of the session. This is great in early development or for testing
+
+***** for adding email to standalone.xml
+***** open up gmail account to outside apps
+        <subsystem xmlns="urn:jboss:domain:mail:4.0">
+            <mail-session name="default" jndi-name="java:jboss/mail/Default">
+                <smtp-server outbound-socket-binding-ref="mail-smtp"/>
+            </mail-session>
+            <mail-session name="gmail-incoming" jndi-name="java:jboss/mail/gmail-incoming">
+                <imap-server outbound-socket-binding-ref="mail-gmail-incoming" ssl="true" username="homeberrycloud@gmail.com" password="16@goBridget"/>
+            </mail-session>
+            <mail-session name="gmail-outgoing" jndi-name="java:jboss/mail/gmail-outgoing" from="example@gmail.com">
+                <smtp-server outbound-socket-binding-ref="mail-gmail-outgoing" ssl="true" username="homeberrycloud@gmail.com" password="16@goBridget"/>
+            </mail-session>
+        </subsystem>
+
+
+        <outbound-socket-binding name="mail-gmail-incoming" source-port="0" fixed-source-port="false">
+            <remote-destination host="imap.gmail.com" port="993"/>
+        </outbound-socket-binding>
+        <outbound-socket-binding name="mail-gmail-outgoing">
+            <remote-destination host="smtp.gmail.com" port="465"/>
+        </outbound-socket-binding>
+        <outbound-socket-binding name="mail-smtp">
+            <remote-destination host="localhost" port="25"/>
+        </outbound-socket-binding>
+
+
+
+port 80 used to download cert
+used chrome to get device number first time to get by ssl security question
+
+keytool -genkeypair -ext SAN=IP:192.168.0.156 -keyalg RSA -alias mycert -keystore berry.jks -storepass keypassword -keypass keypassword -validity 7360 -keysize 2048
+
+What is your first and last name?
+  [Unknown]:  192.168.0.156
+What is the name of your organizational unit?
+  [Unknown]:  com
+What is the name of your organization?
+  [Unknown]:  berrycloud
+What is the name of your City or Locality?
+  [Unknown]:  Crawfordsville
+What is the name of your State or Province?
+  [Unknown]:  IN
+What is the two-letter country code for this unit?
+  [Unknown]:  US
+Is CN=localhost, OU=myfear, O=eisele.net, L=Grasbrun, ST=Bavaria, C=ME correct?
+  [no]:  yes
+Wait a bit now create the berry.cer in the data directory.
+
+keytool -export -alias mycert -keystore C:/bin/wildfly-20.0.1.Final/standalone/configuration/berry.jks -storepass keypassword -keypass keypassword -rfc -file C:/bin/wildfly-20.0.1.Final/data/berry.cer
+
+
+*** When copying tables from DroidBuilder
+
+- for codeType One2ManyChild update fieldType from Long to class name (Car)
+
+- in car table remove Stop Location Logging line
+
+
+for NewDeviceRestService
+- added com.pojomax.sync.app.data.dir
+- create empty file under data dir - DeviceGenerator.dat
+
+to show requests and responses
+<filter-ref name="request-dumper"/>
+
+<filters> ...
+<filter name="request-dumper" class-name="io.undertow.server.handlers.RequestDumpingHandler" module="io.undertow.core"/>
+</filters>
+
+
+to show ssl info
+set "JAVA_OPTS=%JAVA_OPTS% -Djavax.net.debug=ssl"
+
+
+in C:\bin\wildfly\standalone\configuration\standalone.xml - under </extensions>
+
+    <system-properties>
+        <property name="com.pojomax.sync.app.http-root" value="http://192.168.1.23"/>
+        <property name="com.pojomax.sync.app.ip-display" value="192.168.1.11"/>
+        <property name="com.pojomax.sync.app.alert-user" value="conrad"/>
+        <property name="com.pojomax.sync.app.alert-password" value="C0nr@daPJTop"/>
+        <property name="com.pojomax.sync.app.picture.dir" value="C:/bin/wildfly/picture/"/>
+        <property name="com.pojomax.sync.app.video.dir" value="C:/bin/wildfly/video/"/>
+        <property name="com.pojomax.sync.app.thumbnail.dir" value="C:/bin/wildfly/thumbnail/"/>
+        <property name="com.pojomax.sync.app.data.dir" value="C:/bin/wildfly/data/"/>
+        <property name="com.pojomax.sync.app.temp.dir" value="C:/bin/wildfly/temp/"/>
+    </system-properties>
+
+        <subsystem xmlns="urn:jboss:domain:undertow:1.2">
+            <buffer-cache name="default"/>
+            <server name="default-server">
+                <http-listener name="default" socket-binding="http" max-post-size="104857600"/>
+                <host name="default-host" alias="localhost">
+                    <location name="/" handler="welcome-content"/>
+                    <location name="/picture" handler="pictures"/>
+                    <location name="/video" handler="video"/>
+                    <filter-ref name="server-header"/>
+                    <filter-ref name="x-powered-by-header"/>
+                    <single-sign-on path="/"/>
+                </host>
+            </server>
+            <servlet-container name="default">
+                <jsp-config/>
+                <websockets/>
+            </servlet-container>
+            <handlers>
+                <file name="welcome-content" path="${jboss.home.dir}/welcome-content"/>
+                <file name="pictures" path="${jboss.home.dir}/pictures"/>
+	        <file name="video" path="${jboss.home.dir}/video"/>
+            </handlers>
+            <filters>
+                <response-header name="server-header" header-name="Server" header-value="Wildfly 8"/>
+                <response-header name="x-powered-by-header" header-name="X-Powered-By" header-value="Undertow 1"/>
+            </filters>
+        </subsystem>
+
+
+To update wildfly H2db password:
+java -jar ${env.WILDFLY_HOME}/modules/system/layers/base/com/h2database/h2/main/h2*.jar
+->
+ALTER USER SA SET PASSWORD 'w!1dH2016aReSD';
+
+
+To Stop Windows 10 from using port 80
+I found the easiest way there was to click on the search button next to the start menu button
+ in the Windows 10 taskbar and type "Administrative Tools". You can either hit return or click
+ on the "Administrative Tools" link that Windows finds for you.
+
+A control panel window will open with a list of tools. The one you want is "Services." Double-click it.
+
+Another window will open called "Services." Locate the one named "World Wide Web Publishing Service."
+ Some other users in this thread have listed what it is called in other languages, if your list is not in English.
+
+
+login changes:
+
+                <security-domain name="LDAPAuth" cache-type="default">
+                    <authentication>
+                        <login-module code="UsersRoles" flag="required">
+                            <module-option name="usersProperties" value="${jboss.server.config.dir}/testws-users.properties"/>
+                            <module-option name="rolesProperties" value="${jboss.server.config.dir}/testws-roles.properties"/>
+                        </login-module>
+                    </authentication>
+                </security-domain>
+
+under C:\bin\wildfly\standalone\configuration
+
+testws-users.properties
+ron=gator
+conrad=gator
+
+testws-roles.properties
+ron=ADMIN,USER
+conrad=ADMIN,USER

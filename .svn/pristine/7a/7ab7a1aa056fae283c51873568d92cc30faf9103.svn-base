@@ -1,0 +1,258 @@
+
+package ppp.ppp.ppp.servlet;
+
+import ppp.ppp.ppp.entity.UserEmail;
+import ppp.ppp.ppp.service.SubscriptionService;
+import ppp.ppp.ppp.servlet.helper.SubscriptDataHelper;
+import ppp.ppp.ppp.servlet.helper.SubscriptErrorHelper;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import java.util.logging.Logger;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Servlet implementation class SubscriptionServlet
+ */
+@RequestScoped
+public class SubscriptionServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    @Inject
+    private Logger log;
+
+    @Inject
+    private SubscriptionService subscriptionService;
+
+    @Inject
+    private SubscriptDataHelper dataHelper;
+
+    @Inject
+    private SubscriptErrorHelper errorHelper;
+
+
+
+    /**
+     * Default constructor.
+     */
+    public SubscriptionServlet() {
+        // TODO Auto-generated constructor stub
+    }
+
+
+
+    public void doHome(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        List<UserEmail> userEmails = subscriptionService.findAllUserEmails();
+        if (userEmails == null || userEmails.size() == 0)
+        {
+            String alertMsg = "UserEmail search and results returned null or 0 userEmails";
+            log.warning(alertMsg);
+            req.setAttribute("op", "AdminSubscriptions");
+            return;
+        }
+
+        req.setAttribute("userEmails", userEmails);
+        req.setAttribute("op", "AdminSubscriptions");
+    }
+
+
+   /**
+    * The doViewAdminSubscription method calls the AdminSubscription view web page.
+    * It loads AdminSubscription data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+
+    public void doViewSubscription(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Long userEmailId = new Long(req.getParameter("id"));
+        UserEmail userEmail = subscriptionService.getUserEmail(userEmailId);
+
+        req.setAttribute("subscription", userEmail);
+        req.setAttribute("op", "ViewSubscription");
+    }
+
+
+   /**
+    * The doAddSubscription method calls the User Subscription Add web page.
+    * It loads default data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doAddSubscription(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        dataHelper.loadEventSubscriptionData(req);
+        req.setAttribute("opAction", "AddSubscriptionAction");
+        req.setAttribute("opBack", "AdminSubscriptions");
+        req.setAttribute("op", "AddSubscription");
+        req.setAttribute("returnOp", "AddSubscription");
+        req.setAttribute("returnAction", "AddSubscriptionAction");
+    }
+
+   /**
+    * The doAddSubscriptionSelection method adds a selection to the User Subscription Add web page.
+    * It loads user data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doAddSubscriptionSelect(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String returnOp = req.getParameter("returnOp");
+        String returnAction = req.getParameter("returnAction");
+        String newSubscriptId = req.getParameter("subscriptId");
+        dataHelper.loadSubscriptionDataFromReq(req, newSubscriptId);
+        dataHelper.loadEventSubscriptionData(req);
+
+        req.setAttribute("opBack", "AdminSubscriptions");
+        req.setAttribute("op", returnOp);
+        req.setAttribute("opAction", returnAction);
+
+    }
+
+   /**
+    * The doAddSubscriptionAction method creates the AdminSubscription from add web page data.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+
+    public void doAddSubscriptionAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        if (errorHelper.checkSubscriptionData(req) == true)
+        {
+            dataHelper.loadSubscriptionDataFromReq(req, null);
+            dataHelper.loadEventSubscriptionData(req);
+            req.setAttribute("opAction", "AddSubscriptionAction");
+            req.setAttribute("opBack", "AdminSubscriptions");
+            req.setAttribute("op", "AddSubscription");
+            return;
+        }
+
+        UserEmail userEmail = new UserEmail();
+        dataHelper.loadUserEmail(userEmail, req);
+
+        Long userEmailId = subscriptionService.addUserEmail(userEmail);
+
+        req.setAttribute("msg", "User Subscription Record Added, ID = " + userEmailId);
+        doHome(req, resp);
+    }
+
+
+   /**
+    * The doEditSubscription method calls the AdminSubscription edit web page.
+    * It loads default data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+
+    public void doEditSubscription(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Long userEmailId = new Long(req.getParameter("id"));
+        UserEmail userEmail = subscriptionService.getUserEmail(userEmailId);
+        dataHelper.loadSubscriptionFormData(userEmail, req);
+        dataHelper.loadEventSubscriptionData(req);
+
+        req.setAttribute("opAction", "EditSubscriptionAction");
+        req.setAttribute("opBack", "AdminSubscriptions");
+        req.setAttribute("op", "EditSubscription");
+        req.setAttribute("returnOp", "EditSubscription");
+        req.setAttribute("returnAction", "EditSubscriptionAction");
+    }
+
+   /**
+    * The doEditSubscriptionAction method creates the AdminSubscription from edit web page data.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+
+    public void doEditSubscriptionAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        if (errorHelper.checkSubscriptionData(req) == true)
+        {
+            dataHelper.loadSubscriptionDataFromReq(req, null);
+            dataHelper.loadEventSubscriptionData(req);
+            req.setAttribute("opAction", "EditSubscriptionAction");
+            req.setAttribute("opBack", "AdminSubscriptions");
+            req.setAttribute("op", "EditSubscription");
+            return;
+        }
+
+        Long userEmailId = new Long(req.getParameter("id"));
+        UserEmail userEmail = subscriptionService.getUserEmail(userEmailId);
+
+        dataHelper.loadUserEmail(userEmail, req);
+        String result = subscriptionService.editUserEmail(userEmail);
+
+        if (!result.equals("Success"))
+        {
+            req.setAttribute("msg", "User Subscription Edit Error " + result);
+            log.warning("result = " + result);
+        }
+        else
+            req.setAttribute("msg", "User Subscription Record Edited Successfully");
+
+        doHome(req, resp);
+    }
+
+
+   /**
+    * The doDeleteSubscription method calls the UserEmail delete web page.
+    * It loads UserEmail data to the web page.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doDeleteSubscription(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Long userEmailId = new Long(req.getParameter("id"));
+        UserEmail userEmail = subscriptionService.getUserEmail(userEmailId);
+        req.setAttribute("subscription", userEmail);
+
+        req.setAttribute("opAction", "DeleteSubscriptionAction");
+        req.setAttribute("opBack", "AdminSubscriptions");
+        req.setAttribute("op", "DeleteSubscription");
+    }
+
+
+   /**
+    * The doDeleteSubscriptionAction method deletes the UserEmail from delete web page data.
+    *
+    * @param req A HttpServletRequest object containing the request data.
+    * @param resp A HttpServletResponse object containing the response data.
+    */
+    public void doDeleteSubscriptionAction(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Long userEmailId = new Long(req.getParameter("id"));
+
+        String result = subscriptionService.deleteUserEmail(userEmailId);
+        if (!result.equals("Success"))
+        {
+            req.setAttribute("msg", "User Subscription Delete Error " + result);
+            log.warning("result = " + result);
+        }
+        else
+            req.setAttribute("msg", "User Subscription Record Deleted Successfully");
+
+        doHome(req, resp);
+    }
+
+
+
+}

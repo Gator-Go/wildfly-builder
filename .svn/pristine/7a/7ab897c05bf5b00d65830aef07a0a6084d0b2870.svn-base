@@ -1,0 +1,173 @@
+
+web site info
+
+http://developer-should-know.com/post/134394533957/how-to-install-wildfly-on-ubuntu
+
+https://www.howtoforge.com/tutorial/howto-install-raspbian-on-raspberry-pi/
+
+http://www.c2b2.co.uk/middleware-blog/jboss-eap-6-as-light-as-raspberry-pi.php
+
+http://fios.sector16.net/wildfly-on-the-raspberry-pi/
+
+http://ralph.soika.com/wildfly-reverse-proxy-via-ssl/
+
+https://developer.jboss.org/wiki/RunningJBossOnPort80Or443
+
+http://www.nailedtothex.org/roller/kyle/entry/configuring-wildfly-as-a-standalone
+
+
+(1) Download the latest version of Raspbian - RASPBIAN JESSIE LITE
+
+(2) Insert the SD card into the laptop/pc and run the image writer
+
+(3) win32 disk imager - select device "E:" - select Raspbian image file "C:\pi" - "write"
+
+(4) start pi login pi/raspberry
+
+(5) in Setup Options --> Expand Filesystem - sudo raspi-config - df to see filesystem
+
+(6) sudo raspi-config -> localisation -> locale -> en_US.UTF-8
+(7) sudo raspi-config -> timezone -> America -> Central
+(8) sudo dpkg-reconfigure keyboard-configuration -> Generic 105 key -> Other -> US (set AltGr to "Both Alt" and Compose to "Right Control")
+(9) sudo apt-get install rpi-update  -  sudo rpi-update  -  sudo reboot
+(10) sudo apt-get update --fix-missing  - sudo apt-get upgrade  -  sudo apt-get install oracle-java8-jdk postgresql iptables iptables-persistent
+(10b) If wireless needed:
+see: iwlist wlan0 scan
+Change GB to US in /etc/wpa_supplicant/wpa_supplicant.conf
+sudo bash -c "wpa_passphrase \"Gator Home\" \"LeeJe@nH0me9314\" >> /etc/wpa_supplicant/wpa_supplicant.conf"
+sudo systemctl enable wpa_supplicant.service
+sudo systemctl start wpa_supplicant.service
+sudo systemctl daemon-reload
+make sure changes are successful: ip addr show wlan0
+(10c) for static host name, append the lines to dhcpcd.conf:
+
+interface wlan0
+static ip_address=192.168.1.6/24
+static routers=192.168.1.1
+static domain_name_servers=192.168.1.1
+............
+sudo reboot
+
+(10d) if subversion is needed:
+apt-get install subversion
+extract latest tar archive from /mnt/pi/backups of svn
+add "/usr/bin/svnserve -d -r /srv/svn" to /etc/rc.local
+(10e) To enable ssh:
+sudo raspi-config -> interfacing options->ssh
+
+(11) postgresql files to edit: 
+/etc/postgresql/9.4/main/pg_hba.conf
+Second line: local	all	all	trust
+Third line: host	all	all	samehost	md5
+/etc/postgresql/9.4/main/postgresql.conf
+max_connections=10
+lc_messages='en_US.UTF-8'
+lc_monetary='en_US.UTF-8'
+lc_numeric='en_US.UTF-8'
+lc_time='en_US.UTF-8'
+
+(12) Recreate cluster with new localization:
+if lc_messages lc_monetary, lc_numeric, and lc_time need to change:
+sudo -u postgres pg_dropcluster --stop 9.4 main
+sudo -u postgres pg_createcluster --start 9.4 main
+
+if lc_messages, lc_monetary, lc_numeric, and lc_time are the same:
+sudo -u postgres pg_ctlcluster 9.4 main reload
+(13) for database/user setup
+sudo -u postgres psql
+\password
+p$A2016aReSD
+
+at command terminal sudo -u postgres createuser -d -P -h 127.0.0.1 -U postgres wildfly-admin
+or
+or psql terminal: CREATE USER "wildfly-admin";
+or psql terminal: \password wildfly-admin
+
+psql -U "wildfly-admin" -W -h 127.0.0.1 -d berrydb
+
+CREATE DATABASE berrydb OWNER "wildfly-admin";
+
+
+(14) sudo mkdir /srv/www; sudo chown www-data:www-data -R /srv/www
+(15) mount -o uid=33,gid=33 /dev/sda1 /mnt
+(16) Create wildfly-10.2.0.Final under /srv/www:
+cd /srv/www
+sudo -u www-data cp -R /mnt/pi/wildfly-10.2.0.Final-SNAPSHOT .
+sudo umount /dev/sda1
+(17) edit '/etc/profile' and after 'export PATH': 
+export JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt;
+export JBOSS_HOME=/srv/www/wildfly-10.2.0.Final-SNAPSHOT;
+
+And then save the changes in terminal
+. /etc/profile
+(18) Update iptables
+sudo iptables -N PREROUTING
+sudo iptables -N POSTROUTING
+For ethernet connections add: 
+
+sudo iptables -t nat -A PREROUTING -i eth0 -p tcp -m tcp --dport 80 -j DNAT --to-destination 192.168.1.3:8080
+sudo iptables -t nat -A PREROUTING -i eth0 -p tcp -m tcp --dport 443 -j DNAT --to-destination 192.168.1.3:8443
+
+For wifi connections add:
+sudo iptables -t nat -A PREROUTING -i wlan0 -p tcp -m tcp --dport 80 -j DNAT --to-destination 192.168.1.3:8080
+sudo iptables -t nat -A PREROUTING -i wlan0 -p tcp -m tcp --dport 443 -j DNAT --to-destination 
+
+sudo iptables -t filter -A FORWARD -d 192.168.1.3/32 -p tcp -m tcp --dport 8080 -j ACCEPT
+sudo iptables -t filter -A FORWARD -d 192.168.1.3/32 -p tcp -m tcp --dport 8443 -j ACCEPT
+sudo bash -c "iptables-save -c > /etc/iptables/rules.v4"
+
+(19) Go to the router WPS Wizard -> Advanced Setup -> Port Forwarding/Port Triggering
+Add something like Wildfly-HTTPS
+Add to the external port range: 443
+Add the IP 192.168.1.3 then click Apply
+Then go to the WPS Wizard -> Setup -> Internet Setup and view the IP.
+
+
+(20) Get IP address and change standalone.xml if running a test Raspbian. Configure JBoss
+keytool -genkey -keyalg RSA -alias mycert -keystore berry.jks -storetype pkcs12 -storepass G@t0rBerryC10ud -keypass G@t0rBerryC10ud -validity 7360 -keysize 2048
+
+What is your first and last name?
+  [Unknown]:  192.168.1.23
+What is the name of your organizational unit?
+  [Unknown]:  com
+What is the name of your organization?
+  [Unknown]:  berrycloud
+What is the name of your City or Locality?
+  [Unknown]:  Renner
+What is the name of your State or Province?
+  [Unknown]:  SD
+What is the two-letter country code for this unit?
+  [Unknown]:  US
+Is CN=localhost, OU=myfear, O=eisele.net, L=Grasbrun, ST=Bavaria, C=ME correct?
+  [no]:  yes
+
+
+keytool -certreq -alias mycert -keyalg RSA -storetype pkcs12 -file berry.csr -keystore berry.jks -storepass G@t0rBerryC10ud -keypass G@t0rBerryC10ud
+
+keytool -export -alias mycert -keystore berry.jks -storetype pkcs12 -storepass G@t0rBerryC10ud -keypass G@t0rBerryC10ud -rfc -file berry.cer
+
+keytool -printcert -file berry.cer
+ip addr show
+sudo -u www-data vi $JBOSS_HOME/standalone/configuration/standalone.xml
+cd $JBOSS_HOME
+sudo -u www-data bin/add-user.sh 
+then put the raspberry IP in the public and management interfaces (toward the bottom) and add the Internet IP from the router setup to the com.pojomax.sync.app.http-root
+sudo -u www-data $JBOSS_HOME/bin/standalone.sh
+
+su
+
+(21) To enable wildfly as a linux service:
+sudo cp $JBOSS_HOME/docs/contrib/scripts/systemd/wildfly.service /etc/systemd/system
+sudo mkdir /etc/wildfly
+sudo cp $JBOSS_HOME/docs/contrib/scripts/systemd/wildfly.conf /etc/wildfly
+set 'WILDFLY_BIND' in wildfly.conf to be ip address 
+change 'User' in wildfly.service if necessary
+sudo systemctl enable wildfly.service
+sudo systemctl start wildfly.service
+
+(22) to create users
+add-user   a-admin   ron/gator
+
+localhost:9990/console/index.html
+http://127.0.0.1:9990
+

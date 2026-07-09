@@ -1,0 +1,129 @@
+
+package ppp.ppp.ppp.event;
+
+import ppp.ppp.ppp.entity.AdminEvent;
+import ppp.ppp.ppp.entity.EventParameter;
+import ppp.ppp.ppp.service.EventService;
+
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import java.util.logging.Logger;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+@Singleton
+@Startup
+public class EventInitializer {
+
+    @Inject
+    private Logger log;
+
+    @Inject
+    private EventService eventService;
+
+
+    private AdminEvent checkAdminEvent;
+
+    @PostConstruct
+    public void init() {
+        log.info("=== Starting Event Data Initialization ===");
+
+	checkAdminEvent = eventService.getAdminEventbyName("SettingsEvent");
+	if (checkAdminEvent == null) {
+	    log.info("=== SettingsEvent Not Found ===");
+	    AdminEvent adminEvent = new AdminEvent();
+	    adminEvent.setName("SettingsEvent");
+	    adminEvent.setDescription("Change a system setting to a new value");
+	    Collection<EventParameter> eventParameterColl = new ArrayList<EventParameter>();
+
+	    EventParameter eventParameter = new EventParameter();
+	    eventParameter.setRequired(new Boolean("true"));
+	    eventParameter.setName("key");
+	    eventParameter.setDescription("key name of the system setting");
+	    eventParameterColl.add(eventParameter);
+
+	    EventParameter eventParameter2 = new EventParameter();
+	    eventParameter2.setRequired(new Boolean("true"));
+	    eventParameter2.setName("value");
+	    eventParameter2.setDescription("value of the new system setting");
+	    eventParameterColl.add(eventParameter2);
+
+	    adminEvent.setEventParameter(eventParameterColl);
+	    Long adminEventId = eventService.addAdminEvent(adminEvent);
+	    if (adminEventId > 0)
+		log.info("=== SettingsEvent Created ===");
+	    else
+		log.info("=== SettingsEvent Creation Error ===");
+	}
+
+	// the default message data in the event is used for the email message
+	checkAdminEvent = eventService.getAdminEventbyName("EmailEvent");
+	if (checkAdminEvent == null) {
+	    log.info("=== EmailEvent Not Found ===");
+	    AdminEvent adminEvent = new AdminEvent();
+	    adminEvent.setName("EmailEvent");
+	    adminEvent.setDescription("Fire event to trigger an email");
+	    Collection<EventParameter> eventParameterColl = new ArrayList<EventParameter>();
+
+	    EventParameter eventParameter = new EventParameter();
+	    eventParameter.setRequired(new Boolean("true"));
+	    eventParameter.setName("To");
+	    eventParameter.setDescription("enter emails to send to, must be comma separated");
+	    eventParameterColl.add(eventParameter);
+
+	    EventParameter eventParameter2 = new EventParameter();
+	    eventParameter2.setRequired(new Boolean("false"));
+	    eventParameter2.setName("Cc");
+	    eventParameter2.setDescription("enter the emails to copy to, must be comma separated");
+	    eventParameterColl.add(eventParameter2);
+
+	    EventParameter eventParameter3 = new EventParameter();
+	    eventParameter3.setRequired(new Boolean("false"));
+	    eventParameter3.setName("Bcc");
+	    eventParameter3.setDescription("enter the emails to blind copy to, must be comma separated");
+	    eventParameterColl.add(eventParameter3);
+
+	    EventParameter eventParameter4 = new EventParameter();
+	    eventParameter4.setRequired(new Boolean("true"));
+	    eventParameter4.setName("Subject");
+	    eventParameter4.setDescription("enter the email subject");
+	    eventParameterColl.add(eventParameter4);
+
+	    adminEvent.setEventParameter(eventParameterColl);
+	    Long adminEventId = eventService.addAdminEvent(adminEvent);
+	    if (adminEventId > 0)
+		log.info("=== EmailEvent Created ===");
+	    else
+		log.info("=== EmailEvent Creation Error ===");
+	}
+
+	// the default message data in the event is used for the SMS message
+	checkAdminEvent = eventService.getAdminEventbyName("SmsEvent");
+	if (checkAdminEvent == null) {
+	    log.info("=== SmsEvent Not Found ===");
+	    AdminEvent adminEvent = new AdminEvent();
+	    adminEvent.setName("SmsEvent");
+	    adminEvent.setDescription("Fire event to trigger an SMS");
+	    Collection<EventParameter> eventParameterColl = new ArrayList<EventParameter>();
+
+	    EventParameter eventParameter = new EventParameter();
+	    eventParameter.setRequired(new Boolean("true"));
+	    eventParameter.setName("To");
+	    eventParameter.setDescription("enter phone # to send to, must start with +");
+	    eventParameterColl.add(eventParameter);
+
+	    adminEvent.setEventParameter(eventParameterColl);
+	    Long adminEventId = eventService.addAdminEvent(adminEvent);
+	    if (adminEventId > 0)
+		log.info("=== SmsEvent Created ===");
+	    else
+		log.info("=== SmsEvent Creation Error ===");
+	}
+
+
+    }
+
+}

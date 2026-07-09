@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><appApps>
+
+  <appsHome appsName="security" appsDesc="Security Home" appsPng="security_logo.png" appsHomeURL="/security/do?op=Home"/>
+
+  <appsHome appsName="social" appsDesc="Social Home" appsPng="social_logo.png" appsHomeURL="/social/do?op=Home"/>
+
+</appApps>

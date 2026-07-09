@@ -1,0 +1,65 @@
+<appProcs>
+  <appProc fileName='home.jsp' procName='createMultiUrlProc' codeType='Code'/>
+
+  <appProc fileName='ControllerEnums.java' procName='createMultiFunctionProc' codeType='Code'/>
+  <appProc fileName='ControllerServlet.java' procName='createMultiFunctionProc' codeType='Code'/>
+  <appProc fileName='index.jsp' procName='createMultiFunctionProc' codeType='Code'/>
+  <appProc fileName='adminIndex.jsp' procName='createMultiFunctionProc' codeType='Code'/>
+  <appProc fileName='import.sql' procName='createMultiFunctionProc' codeType='Code'/>
+
+  <appProc fileName='Report.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='RptList.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='RptParam.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='RptSort.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='ReportService.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='BaseException.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='BaseReport.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='Constants.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='ConstRpt.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='DatePickerEnum.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='JasperReport.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='MimeType.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='ReportField.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='ReportFormat.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='ReportParameter.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='ReportParamTypeEnum.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='ReportTypeEnum.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='StringUtils.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='ReportServlet.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='RptDataHelper.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='RptParamEdit.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='RptParamOption.java' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='reportIndex.jsp' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='AdminRptAdd.jsp' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='AdminRptDelete.jsp' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='AdminRptEdit.jsp' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='AdminRptList.jsp' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='AdminRptView.jsp' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='ReportGen.jsp' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='ReportList.jsp' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='RptListList.jsp' procName='createMultiFilesProc' codeType='Report'/>
+  <appProc fileName='RptListDelete.jsp' procName='createMultiFilesProc' codeType='Report'/>
+
+  <appProc fileName='Yyyyy.java' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyDto.java' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyService.java' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyServlet.java' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyDataHelper.java' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyErrorHelper.java' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyString.java' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyOption.java' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyRestService.java' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyDeletedRestService.java' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyRestSync.java' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyEnum.java' procName='createMultiFilesProc' codeType='Code'/>
+
+  <appProc fileName='YyyyyAdd.jsp' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyDelete.jsp' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyEdit.jsp' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyList.jsp' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyParentList.jsp' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyyView.jsp' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyySearch.jsp' procName='createMultiFilesProc' codeType='Code'/>
+  <appProc fileName='YyyyySearchList.jsp' procName='createMultiFilesProc' codeType='Code'/>
+
+</appProcs>

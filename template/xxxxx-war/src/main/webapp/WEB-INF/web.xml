@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+   version="3.0">
+  <error-page>
+    <error-code>401</error-code>
+    <location>/unauthorized.html</location>
+  </error-page>
+  <error-page>
+    <exception-type>java.lang.SecurityException</exception-type>
+    <location>/unauthorized.html</location>
+  </error-page>
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <realm-name>other</realm-name>
+    <form-login-config>
+      <form-login-page>/login.jsp</form-login-page>
+      <form-error-page>/login-error.html</form-error-page>
+    </form-login-config>
+  </login-config>
+  <session-config> <session-timeout>60</session-timeout> </session-config>
+</web-app>
+

@@ -1,0 +1,3 @@
+<appApps>
+  <appsHome appsName="security" appsDesc="Security Home" appsPng="security_logo.png" appsHomeURL="/security/do?op=Home"/>
+</appApps>

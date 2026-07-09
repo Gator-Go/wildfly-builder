@@ -1,0 +1,1409 @@
+import groovy.xml.XmlParser
+
+def APP_NAMES = new File("./DROID_APP_NAMES.xml").text
+def APP_CODE_TYPES = new File("./APP_CODE_TYPES.xml").text
+def APP_PROCS = new File("./APP_PROCS.xml").text
+def APP_TABLES = new File("./APP_TABLES.xml").text
+def APP_FUNCS = new File("./APP_FUNCS.xml").text
+def APP_CODES = new File("./APP_CODES.xml").text
+def APP_ENUMS = new File("./APP_ENUMS.xml").text
+def APP_APPS = new File("./APP_APPS.xml").text
+def APP_EVENTS = new File("./APP_EVENTS.xml").text
+def APP_EVENT_CODES = new File("./APP_EVENT_CODES.xml").text
+
+println "parse APP_NAMES"
+appNames = new XmlParser().parseText(APP_NAMES)
+println "parse APP_CODE_TYPES"
+appCodeTypes = new XmlParser().parseText(APP_CODE_TYPES)
+println "parse APP_PROCS"
+appProcs = new XmlParser().parseText(APP_PROCS)
+println "parse APP_TABLES"
+appTables = new XmlParser().parseText(APP_TABLES)
+println "parse APP_FUNCS"
+appFuncs = new XmlParser().parseText(APP_FUNCS)
+println "parse APP_CODES"
+appCodes = new XmlParser().parseText(APP_CODES)
+println "parse APP_ENUMS"
+appEnums = new XmlParser().parseText(APP_ENUMS)
+println "parse APP_APPS"
+appApps = new XmlParser().parseText(APP_APPS)
+println "parse APP_EVENTS"
+appEvents = new XmlParser().parseText(APP_EVENTS)
+println "parse APP_EVENTS_CODES"
+appEventCodes = new XmlParser().parseText(APP_EVENT_CODES)
+
+def appDir = "./" + appNames.appName[1].'@newName'
+
+def d1= new File(appDir)
+d1.mkdir()
+
+def templatePath = "./template"
+
+public class MyData {
+  def theOrder = ""
+  def theData = ""
+  def theType = ""
+  def theFormat = ""
+  def theName = ""
+}
+MyData myData = new MyData()
+
+
+def createMultiUrlProc(fileName, thePath, theDir) {
+
+    def theCode = new StringBuilder()
+    def NL = System.lineSeparator()
+    def char tab = '\t'
+    def count = 0
+    for (node in appApps.appsHome) {
+        theCode.with {
+            append "${tab}<td><a href='${node.@appsHomeURL}' class='app-link'>"
+            append "<div class='app-item'>"
+            append "<img border='0' src='resources/gfx/${node.@appsPng}' class='app-logo'/>"
+            append "<span class='app-label'>${node.@appsDesc}</span>"
+            append "</div></a></td>"
+	    count++
+	    if (count > 3) {
+		append "</tr><tr>${NL}${NL}"
+		count = 0
+	    } else {
+		append "${NL}${NL}"
+	    }
+        }
+    }
+
+    def oldFilePath = thePath + "/" + fileName
+    def newFilePath = theDir + "/" + fileName
+
+    def oldFile = new File(oldFilePath).text
+    def newFile = ""
+
+    if (oldFile.contains("___JSP_HOME_URLS___")) {
+       newFile = oldFile.replaceAll("___JSP_HOME_URLS___", theCode)
+    }
+
+    new File(newFilePath).write(newFile)
+
+}
+
+
+
+def createEventCode(appEvent, appEventCode) {
+
+   def char myReturn = '\r'
+   def char newLine = '\n'
+   def codeType = appEventCode.'@codeType'
+   def myCode = ""
+
+   if (codeType == "Event") {
+
+        def theCode = ""
+        for ( cc in appEventCode.code ) {
+
+           def int x = cc.'@indent' as int
+           def indent = ""
+           while ( x-- > 0 ) {
+             indent = indent + " "
+           }
+
+           theCode = theCode + indent
+           theCode = theCode + cc.text() + myReturn + newLine
+        }
+
+      def oldCode = theCode
+      def newCode = ""
+
+      newCode = oldCode.replaceAll("Eeeee", appEvent.'@eventName')
+      oldCode = newCode
+      newCode = oldCode.replaceAll("Edddd", appEvent.'@eventDescription')
+      oldCode = newCode
+
+      newCode = oldCode.replaceAll("LLLLL", "<")
+      oldCode = newCode
+      newCode = oldCode.replaceAll("GGGGG", ">")
+      oldCode = newCode
+
+      myCode = myCode + newCode
+
+   }
+
+   if (codeType == "Parameter") {
+      for ( p in appEvent.eventParameter ) {
+
+         def theCode = ""
+         for ( cc in appEventCode.code ) {
+
+            def int x = cc.'@indent' as int
+            def indent = ""
+            while ( x-- > 0 ) {
+              indent = indent + " "
+            }
+
+            theCode = theCode + indent
+            theCode = theCode + cc.text() + myReturn + newLine
+         }
+
+         def oldCode = theCode
+         def newCode = ""
+
+         newCode = oldCode.replaceAll("Eeeee", appEvent.'@eventName')
+         oldCode = newCode
+         newCode = oldCode.replaceAll("Edddd", appEvent.'@eventDescription')
+         oldCode = newCode
+
+         newCode = oldCode.replaceAll("Ppppp", p.'@parameterName')
+         oldCode = newCode
+         newCode = oldCode.replaceAll("Pdddd", p.'@parameterDescription')
+         oldCode = newCode
+         newCode = oldCode.replaceAll("Prrrr", p.'@parameterRequired')
+
+         oldCode = newCode
+         newCode = oldCode.replaceAll("LLLLL", "<")
+         oldCode = newCode
+         newCode = oldCode.replaceAll("GGGGG", ">")
+         oldCode = newCode
+
+         myCode = myCode + newCode
+      }
+   }
+
+   myCode
+}
+
+
+def createFileEventProc(String fileName, String templateContent, String theDir, def appEvent) {
+    
+    String content = templateContent
+    
+    content = insertAppCopyrights(content) ?: content
+    content = insertAppAuthors(content) ?: content
+    content = insertAppNames(content) ?: content
+    content = insertAppPackages(content) ?: content
+    
+    content = content.replaceAll("Eeeee", appEvent.'@eventName' ?: "")
+    content = content.replaceAll("Edddd", appEvent.'@eventDescription' ?: "")
+    
+    for (c in appEventCodes.appCode) {
+        def theCodeKey = c.'@codeKey'
+        if (content.contains(theCodeKey)) {
+            def insertCode = createEventCode(appEvent, c)
+            content = content.replaceAll(theCodeKey, insertCode ?: "")
+        }
+    }
+    
+    def newFilePath = "${theDir}/${fileName}"
+    def finalContent = content  // extra safety
+    new File(newFilePath).write(finalContent)
+    
+}
+
+
+
+def createFileEventProcOne(fileName, thePath, theDir) {
+
+   def oldFilePath = thePath + "/" + fileName
+   def oldFile = new File(oldFilePath).text
+      def newFile = ""
+
+      def char myReturn = '\r'
+      def char newLine = '\n'
+
+      newFile = insertAppCopyrights(oldFile)
+      oldFile = newFile
+      newFile = insertAppAuthors(oldFile)
+      oldFile = newFile
+      newFile = insertAppNames(oldFile)
+      oldFile = newFile
+      newFile = insertAppPackages(oldFile)
+      def theNewFile = newFile
+      def theOldFile = newFile
+
+      for ( c in appEventCodes.appCode ) {
+
+         def theCodeKey = c.'@codeKey'
+
+         def events = appEvents.appEvent
+
+         for (int i = 0; i < events.size(); i++) {
+            def e = events[i]
+            def oldInsertCode = ""
+            def newInsertCode = ""   
+
+            if (theOldFile.contains(theCodeKey)) {
+               newInsertCode = createEventCode(e, c)
+               oldInsertCode = newInsertCode
+            }
+
+            newInsertCode = oldInsertCode.replaceAll("Eeeee", e.'@eventName')
+            oldInsertCode = newInsertCode
+            newInsertCode = oldInsertCode.replaceAll("Edddd", e.'@eventDescription')
+            oldInsertCode = newInsertCode
+
+            for ( cc in appEventCodes.appCode ) {
+               def theCodeKey2 = cc.'@codeKey'
+
+               if (newInsertCode.contains(theCodeKey2)) {
+                  def insertCode2 = createEventCode(e, cc)
+                  newInsertCode = oldInsertCode.replaceAll(theCodeKey2, insertCode2)
+                  oldInsertCode = newInsertCode
+               }
+            }
+
+            if (i < events.size() - 1) {
+               newInsertCode = oldInsertCode + theCodeKey
+               oldInsertCode = newInsertCode
+            }
+            theNewFile = theOldFile.replaceAll(theCodeKey, newInsertCode)
+            theOldFile = theNewFile
+
+         }
+
+      }
+   
+   def newFilePath = theDir + "/" + fileName
+   new File(newFilePath).write(theNewFile)
+}
+
+
+
+def createMultiEventProc(fileName, thePath, theDir) {
+    def oldFilePath = thePath + "/" + fileName
+    def oldFile = new File(oldFilePath).text
+   
+    if (fileName.contains("Eeeee")) {
+        for (e in appEvents.appEvent) {
+            def newFileName = fileName.replaceAll("Eeeee", e.'@eventName')
+            def newFile = oldFile
+            
+            createFileEventProc(newFileName, newFile, theDir, e)
+        }
+    } else {
+        createFileEventProcOne(fileName, thePath, theDir)
+    }
+
+}
+
+
+
+
+
+def loadJspListHeading(theTable) {
+
+   def sortClass = []
+   for ( t in appTables.appTable ) {
+      def tableClass = t.'@className'
+      if (tableClass.equals(theTable)) {
+
+         for ( f in t.appField ) {
+            if (f.'@listFlag'.equals("yes")) {
+               myData = new MyData()
+               myData.theOrder = f.'@listOrder'
+               myData.theType = f.'@codeType'
+               myData.theName = f.'@classFieldName'
+               sortClass.add(myData)
+            }
+         }
+      }
+   }
+   sortClass.sort{it.theOrder}
+
+   def theCode = ""
+   for ( i in sortClass ) {
+      if (i.theType.equals("String")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_STRING___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Enum")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_ENUM___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Clob")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_CLOB___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Integer")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_INTEGER___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Long")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_LONG___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Double")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_DOUBLE___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("BigDecimal")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_BIG_DECIMAL___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Money")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_MONEY___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Loc")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_LOC___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("CurrentLoc")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_CURRENT_LOC___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Date")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_DATE___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("DateTime")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_DATE_TIME___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Camera")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_CAMERA___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Video")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_VIDEO___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Thumbnail")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_THUMBNAIL___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Post")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_POST___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("One2ManyParent")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_ONE2MANY_PARENT___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("One2ManyParentAlert")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_ONE2MANY_PARENT_ALERT___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("One2ManyChild")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_ONE2MANY_CHILD___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("One2ManyChildAlert")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_HEAD_ONE2MANY_CHILD_ALERT___", i.theName)
+         theCode = theCode + insertCode
+      }
+   }
+   theCode
+}
+
+
+def loadJspListBody(theTable) {
+
+   def sortClass = []
+   for ( t in appTables.appTable ) {
+      def tableClass = t.'@className'
+      if (tableClass.equals(theTable)) {
+
+         for ( f in t.appField ) {
+            if (f.'@listFlag'.equals("yes")) {
+               myData = new MyData()
+               myData.theOrder = f.'@listOrder'
+               myData.theType = f.'@codeType'
+               myData.theName = f.'@classFieldName'
+               sortClass.add(myData)
+            }
+         }
+      }
+   }
+   sortClass.sort{it.theOrder}
+
+   def theCode = ""
+   for ( i in sortClass ) {
+
+      if (i.theType.equals("String")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_STRING___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Enum")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_ENUM___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Clob")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_CLOB___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Integer")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_INTEGER___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Long")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_LONG___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Double")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_DOUBLE___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("BigDecimal")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_BIG_DECIMAL___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Money")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_MONEY___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Loc")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_LOC___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("CurrentLoc")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_CURRENT_LOC___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Date")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_DATE___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("DateTime")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_DATE_TIME___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Camera")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_CAMERA___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Video")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_VIDEO___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Thumbnail")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_THUMBNAIL___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("Post")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_POST___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("One2ManyParent")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_ONE2MANY_PARENT___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("One2ManyParentAlert")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_ONE2MANY_PARENT_ALERT___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("One2ManyChild")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_ONE2MANY_CHILD___", i.theName)
+         theCode = theCode + insertCode
+      }
+      else if (i.theType.equals("One2ManyChildAlert")) {
+         def insertCode = createCode(theTable, "___JSP_LIST_BODY_ONE2MANY_CHILD_ALERT___", i.theName)
+         theCode = theCode + insertCode
+      }
+   }
+   theCode
+}
+
+
+def loadListHeading(theTable) {
+
+   def sortClass = []
+   for ( t in appTables.appTable ) {
+      def tableClass = t.'@className'
+      if (tableClass.equals(theTable)) {
+
+         for ( f in t.appField ) {
+            if (f.'@listFlag'.equals("yes") && !(f.'@codeType'.equals("Camera")
+                                              || f.'@codeType'.equals("Post")
+                                              || f.'@codeType'.equals("Video")
+                                              || f.'@codeType'.equals("Thumbnail"))) {
+               myData = new MyData()
+               myData.theOrder = f.'@listOrder'
+               myData.theData = f.'@displayName'
+               sortClass.add(myData)
+            }
+
+         }
+      }
+   }
+   sortClass.sort{it.theOrder}
+
+   def theCode = " ID"
+   for ( i in sortClass ) {
+      theCode = theCode + " | " + i.theData
+   }
+   theCode
+}
+
+
+def loadListFields(theTable) {
+
+   def char myReturn = '\r'
+   def char newLine = '\n'
+
+   def sortClass = []
+   for ( t in appTables.appTable ) {
+      def tableClass = t.'@className'
+      if (tableClass.equals(theTable)) {
+
+         for ( f in t.appField ) {
+            if (f.'@listFlag'.equals("yes") && !(f.'@codeType'.equals("Camera")
+                                              || f.'@codeType'.equals("Post")
+                                              || f.'@codeType'.equals("Video")
+                                              || f.'@codeType'.equals("Thumbnail"))) {
+               myData = new MyData()
+               myData.theOrder = f.'@listOrder'
+               myData.theType = f.'@codeType'
+               myData.theName = f.'@classFieldName'
+               myData.theFormat = f.'@format'
+               sortClass.add(myData)
+            }
+         }
+      }
+   }
+   sortClass.sort{it.theOrder}
+
+   def theTypeS = "\"%d"
+   def theNameS = "         obj.getId()"
+   for ( i in sortClass ) {
+      theTypeS = theTypeS + " | "
+      theNameS = theNameS + ", "
+
+      if (i.theType.equals("Date")) {
+         theTypeS = theTypeS + "%s"
+         theNameS = theNameS + "formatDate.format(obj.get" + i.theName + "())"
+      }
+      else if (i.theType.equals("DateTime")) {
+         theTypeS = theTypeS + "%s"
+         theNameS = theNameS + "formatDateTime.format(obj.get" + i.theName + "())"
+      }
+      else if (i.theType.equals("Money")) {
+         theTypeS = theTypeS + "%s"
+         theNameS = theNameS + "DecimalFormat.getCurrencyInstance().format(obj.get" + i.theName + "())"
+      }
+      else
+      {
+         theTypeS = theTypeS + i.theFormat
+         theNameS = theNameS + "obj.get" + i.theName + "()"
+      }
+   }
+   theTypeS = theTypeS + "\","
+
+   theTypeS + myReturn + newLine + theNameS
+}
+
+
+def loadDisplayFields(theTable) {
+
+   def char myReturn = '\r'
+   def char newLine = '\n'
+
+   def sortClass = []
+   for ( t in appTables.appTable ) {
+      def tableClass = t.'@className'
+      if (tableClass.equals(theTable)) {
+
+         for ( f in t.appField ) {
+            if (f.'@listFlag'.equals("yes") && !(f.'@codeType'.equals("Camera")
+                                              || f.'@codeType'.equals("Post")
+                                              || f.'@codeType'.equals("Video")
+                                              || f.'@codeType'.equals("Thumbnail"))) {
+               myData = new MyData()
+               myData.theOrder = f.'@listOrder'
+               myData.theType = f.'@codeType'
+               myData.theName = f.'@objFieldName'
+               myData.theFormat = f.'@format'
+               sortClass.add(myData)
+            }
+         }
+      }
+   }
+   sortClass.sort{it.theOrder}
+
+   def firstTime = 1
+   def theTypeS = "\""
+   def theNameS = "         "
+   for ( i in sortClass ) {
+      if (firstTime == 1) {
+        firstTime = 0
+      } else {
+        theTypeS = theTypeS + " "
+        theNameS = theNameS + ", "
+      }
+      if (i.theType.equals("Date")) {
+         theTypeS = theTypeS + "%s"
+         theNameS = theNameS + "formatDate.format(" + i.theName + ")"
+      }
+      else if (i.theType.equals("DateTime")) {
+         theTypeS = theTypeS + "%s"
+         theNameS = theNameS + "formatDateTime.format(" + i.theName + ")"
+      }
+      else if (i.theType.equals("Money")) {
+         theTypeS = theTypeS + "%s"
+         theNameS = theNameS + "DecimalFormat.getCurrencyInstance().format(" + i.theName + ")"
+      }
+      else
+      {
+         theTypeS = theTypeS + i.theFormat
+         theNameS = theNameS + i.theName
+      }
+   }
+   theTypeS = theTypeS + "\","
+
+   theTypeS + myReturn + newLine + theNameS
+}
+
+
+
+def createEnums(theField) {
+
+   def char myReturn = '\r'
+   def char newLine = '\n'
+   def theCode = ""
+   for ( e in appEnums.appEnum ) {
+      def appField = e.'@appField'
+      if (appField.equals(theField)) {
+
+         def firstTime = "yes"
+         for ( ee in e.theEnum ) {
+
+            if (firstTime.equals("yes")) {
+               firstTime = "no"
+            }
+            else {
+               theCode = theCode + "," + myReturn + newLine
+            }
+            theCode = theCode + "     " + ee.'@classValue' + "(\"" + ee.'@codeValue' + "\")"
+         }
+         theCode = theCode + ";" + myReturn + newLine
+      }
+   }
+   theCode
+}
+
+
+def createCode(theTable, theCodeKey, theField) {
+
+   def char myReturn = '\r'
+   def char newLine = '\n'
+   def myCode = ""
+
+   for ( c in appCodes.appCode ) {
+      def codeKey = c.'@codeKey'
+      def codeType = c.'@codeType'
+      if (codeKey.equals(theCodeKey)) {
+
+         def theCode = ""
+         for ( cc in c.code ) {
+
+            def int x = cc.'@indent' as int
+            def indent = ""
+            while ( x-- > 0 ) {
+              indent = indent + " "
+            }
+
+            theCode = theCode + indent
+            theCode = theCode + cc.text() + myReturn + newLine
+         }
+
+         for ( t in appTables.appTable ) {
+           def tableClass = t.'@className'
+           if (tableClass.equals(theTable)) {
+             for ( f in t.appField ) {
+               if (codeType.equals("ALL") || codeType.equals(f.'@codeType') &&
+                  (theField.equals("ALL") ||theField.equals(f.'@classFieldName')))
+               {
+                  def oldCode = theCode
+                  def newCode = ""
+
+                  if (oldCode.contains("___LOAD_ENUMS___")) {
+                     def insertEnums = createEnums(f.'@classFieldName')
+                     newCode = oldCode.replaceAll("___LOAD_ENUMS___", insertEnums)
+                     oldCode = newCode
+                  }
+
+                  if (oldCode.contains("___DAO_SET_SEQ___")) {
+                     newCode = oldCode.replace("___DAO_SET_SEQ___", daoSetSeq.toString())
+                     oldCode = newCode
+                     daoSetSeq++
+                  }
+
+                  if (oldCode.contains("___PP_DAO_SET_SEQ___")) {
+                     newCode = oldCode.replace("___PP_DAO_SET_SEQ___", daoSetSeq.toString())
+                     oldCode = newCode
+                     daoSetSeq++
+                  }
+
+                  if (oldCode.contains("___STATIC_SET_SEQ___")) {
+                     newCode = oldCode.replace("___STATIC_SET_SEQ___", staticSetSeq.toString())
+                     oldCode = newCode
+                     staticSetSeq++
+                  }
+
+                  if (oldCode.contains("___PP_STATIC_SET_SEQ___")) {
+                     newCode = oldCode.replace("___PP_STATIC_SET_SEQ___", staticSetSeq.toString())
+                     oldCode = newCode
+                     staticSetSeq++
+                  }
+
+                  if (oldCode.contains("___PP_PP_STATIC_SET_SEQ___")) {
+                     newCode = oldCode.replace("___PP_PP_STATIC_SET_SEQ___", staticSetSeq.toString())
+                     oldCode = newCode
+                     staticSetSeq++
+                  }
+
+                  if (oldCode.contains("___PP_PP_PP_STATIC_SET_SEQ___")) {
+                     newCode = oldCode.replace("___PP_PP_PP_STATIC_SET_SEQ___", staticSetSeq.toString())
+                     oldCode = newCode
+                     staticSetSeq++
+                  }
+
+                  if (oldCode.contains("___JSP_TR_START_SEQ_3___")) {
+                     if (seq3nbr == 1)
+                        newCode = oldCode.replace("___JSP_TR_START_SEQ_3___", "            <tr>")
+                     else
+                        newCode = oldCode.replace("___JSP_TR_START_SEQ_3___", "___skip___")
+                     oldCode = newCode
+                  }
+
+                  if (oldCode.contains("___JSP_TR_DETAIL_SEQ_3___")) {
+                     if (seq3nbr == 1)
+                        newCode = oldCode.replace("___JSP_TR_DETAIL_SEQ_3___", "            <tr class='detail' style='display:none;'>")
+                     else
+                        newCode = oldCode.replace("___JSP_TR_DETAIL_SEQ_3___", "___skip___")
+                     oldCode = newCode
+                  }
+
+                  if (oldCode.contains("___JSP_TR_END_SEQ_3___")) {
+                     if (seq3nbr == 3) {
+                        newCode = oldCode.replace("___JSP_TR_END_SEQ_3___", "            </tr>")
+                        seq3nbr = 1
+                     } else {
+                        newCode = oldCode.replace("___JSP_TR_END_SEQ_3___", "___skip___")
+                        seq3nbr++
+                     }
+                     oldCode = newCode
+                  }
+
+                  if (oldCode.contains("___JSP_TR_FINALLY_3___")) {
+                     if (seq3nbr == 1) {
+                        newCode = oldCode.replace("___JSP_TR_FINALLY_3___", "")
+                     } else {
+                        newCode = oldCode.replace("___JSP_TR_FINALLY_3___", "            </tr>")
+                        seq3nbr = 1
+                     }
+                     oldCode = newCode
+                  }
+
+                  newCode = oldCode.replaceAll("FFFFF", f.'@dbName')
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("Fffff", f.'@classFieldName')
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("fffff", f.'@objFieldName')
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("ttttt", f.'@fieldType')
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("sssss", f.'@fieldSize')
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("ddddd", f.'@scale')
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("DFDFD", f.'@displayName')
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("BFBFB", f.'@blobNameFld')
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("FTFTF", f.'@format')
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("CPCPC", f.'@classPlural')
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("MMMMM", "\\\\\\\$")
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("AAAAA", "&")
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("LLLLL", "<")
+                  oldCode = newCode
+                  newCode = oldCode.replaceAll("GGGGG", ">")
+                  oldCode = newCode
+                  newLineCode = ""
+                  oldCode.eachLine { line->
+                    if (line.contains("___TEST_DATA___") || line.contains("___TEST_DATA2___")) {
+                      def newCodeLine = loadTestData(line, f)
+                      newLineCode = newLineCode + newCodeLine + myReturn + newLine
+                    }
+                    else
+                      newLineCode = newLineCode + line + myReturn + newLine
+                  }
+                  myCode = myCode + newLineCode
+               }
+             }
+           }
+         }
+
+      }
+   }
+   myCode
+}
+
+
+def createMultiFilesProc(fileName, thePath, theDir) {
+
+
+
+   for ( n in appTables.appTable ) {
+      seq3nbr = 1
+      daoSetSeq = 1
+      staticSetSeq = 700
+      newFileName = fileName.replaceAll("Yyyyy", n.'@className')
+      if (newFileName.contains("yfyfy")) {
+         fileName = newFileName
+         newFileName = fileName.replaceAll("yfyfy", n.'@fileName')
+      }
+
+      def oldFilePath = thePath + "/" + fileName
+      def newFilePath = theDir + "/" + newFileName
+
+      def oldFile = new File(oldFilePath).text
+      def newFile = ""
+
+      for ( c in appCodes.appCode ) {
+         def theCodeKey = c.'@codeKey'
+
+         if (oldFile.contains(theCodeKey)) {
+
+            def insertCode = createCode(n.'@className', theCodeKey, "ALL")
+            if (insertCode.equals("")) {
+              def upFile = oldFile.replaceAll(theCodeKey, "___skip___")
+              oldFile = upFile
+            } else {
+              def upFile = oldFile.replaceAll(theCodeKey, insertCode)
+              oldFile = upFile
+            }
+         }
+         if (oldFile.contains("___JSP_LIST_HEADING___")) {
+            def insertJspListHeading = loadJspListHeading(n.'@className')
+            def upFile = oldFile.replaceAll("___JSP_LIST_HEADING___", insertJspListHeading)
+            oldFile = upFile
+         }
+         if (oldFile.contains("___JSP_LIST_BODY___")) {
+            def insertJspListBody = loadJspListBody(n.'@className')
+            def upFile = oldFile.replaceAll("___JSP_LIST_BODY___", insertJspListBody)
+            oldFile = upFile
+         }
+         if (oldFile.contains("___LOAD_LIST_HEADING___")) {
+            def insertListHeading = loadListHeading(n.'@className')
+            def upFile = oldFile.replaceAll("___LOAD_LIST_HEADING___", insertListHeading)
+            oldFile = upFile
+         }
+         if (oldFile.contains("___LOAD_LIST_FIELDS___")) {
+            def insertListFields = loadListFields(n.'@className')
+            def upFile = oldFile.replaceAll("___LOAD_LIST_FIELDS___", insertListFields)
+            oldFile = upFile
+         }
+         if (oldFile.contains("___LOAD_DISPLAY_FIELDS___")) {
+            def insertDisplayFields = loadDisplayFields(n.'@className')
+            def upFile = oldFile.replaceAll("___LOAD_DISPLAY_FIELDS___", insertDisplayFields)
+            oldFile = upFile
+         }
+      }
+
+      newFile = insertAppCopyrights(oldFile)
+      oldFile = newFile
+      newFile = insertAppAuthors(oldFile)
+      oldFile = newFile
+      newFile = insertAppNames(oldFile)
+      oldFile = newFile
+      newFile = insertAppPackages(oldFile)
+      oldFile = newFile
+      newFile = oldFile.replaceAll("yyyyys", n.'@objPlural')
+      oldFile = newFile
+      newFile = oldFile.replaceAll("Yyyyys", n.'@classPlural')
+      oldFile = newFile
+      newFile = oldFile.replaceAll("yyyyy", n.'@objName')
+      oldFile = newFile
+      newFile = oldFile.replaceAll("Yyyyy", n.'@className')
+      oldFile = newFile
+      newFile = oldFile.replaceAll("YYYYY", n.'@dbName')
+      oldFile = newFile
+      newFile = oldFile.replaceAll("yfyfy", n.'@fileName')
+      oldFile = newFile
+      newFile = oldFile.replaceAll("DDDDD", n.'@displayName')
+
+      def char myReturn = '\r'
+      def char newLine = '\n'
+      def cleanFile = ""
+      def titTat = "tit"
+      newFile.eachLine { line->
+        if (!line.equals("___skip___"))
+          if (line.equals("___DIV_CLASS___")) {
+            if (titTat.equals("tit")) {
+              cleanFile = cleanFile + "<div class='pojo-section-alternate'>" + myReturn + newLine
+              titTat = "tat"
+            }
+            else {
+              cleanFile = cleanFile + "<div class='pojo-section-body'>" + myReturn + newLine
+              titTat = "tit"
+            }
+          }
+          else
+            cleanFile = cleanFile + line + myReturn + newLine
+      }
+      new File(newFilePath).write(cleanFile)
+   }
+}
+
+
+
+
+
+def insertAppPackages(theText) {
+   oldPackage = theText
+   newPackage = ""
+   for ( n in appNames.appPackage ) {
+      newPackage = oldPackage.replaceAll(n.'@oldPackage', n.'@newPackage')
+      oldPackage = newPackage
+   }
+   newPackage
+}
+
+def insertAppNames(theText) {
+   oldName = theText
+   newName = ""
+
+   for ( n in appNames.appName ) {
+      newName = oldName.replaceAll(n.'@oldName', n.'@newName')
+      oldName = newName
+   }
+   newName
+}
+
+def insertAppAuthors(theText) {
+   oldAuthor = theText
+   newAuthor = ""
+
+   for ( n in appNames.appAuthor ) {
+      newAuthor = oldAuthor.replaceAll(n.'@oldAuthor', n.'@newAuthor')
+      oldAuthor = newAuthor
+   }
+   newAuthor
+}
+
+def insertAppCopyrights(theText) {
+   oldCopyright = theText
+   newCopyright = ""
+
+   for ( n in appNames.appCopyright ) {
+      newCopyright = oldCopyright.replaceAll(n.'@oldCopyright', n.'@newCopyright')
+      oldCopyright = newCopyright
+   }
+   newCopyright
+}
+
+
+def defaultCodeProc(fileName, thePath, theDir) {
+
+   newFileName = insertAppNames(fileName)
+
+   def oldFilePath = thePath + "/" + fileName
+   def newFilePath = theDir + "/" + newFileName
+
+   def oldFile = new File(oldFilePath).text
+   def newFile = ""
+
+   newFile = insertAppCopyrights(oldFile)
+   newFile = insertAppAuthors(newFile)
+   newFile = insertAppNames(newFile)
+   newFile = insertAppPackages(newFile)
+
+   new File(newFilePath).write(newFile)
+}
+
+
+def insertTableNames(theText) {
+   oldName = theText
+   newName = ""
+   for ( n in appTables.appTable ) {
+      newName = oldName.replaceAll("yyyyys", n.'@objPlural')
+      oldName = newName
+      newName = oldName.replaceAll("Yyyyys", n.'@classPlural')
+      oldName = newName
+      newName = oldName.replaceAll("yyyyy", n.'@objName')
+      oldName = newName
+      newName = oldName.replaceAll("Yyyyy", n.'@className')
+      oldName = newName
+      newName = oldName.replaceAll("YYYYY", n.'@dbName')
+      oldName = newName
+      newName = oldName.replaceAll("yfyfy", n.'@fileName')
+      oldName = newName
+      newName = oldName.replaceAll("DDDDD", n.'@displayName')
+   }
+   newName
+}
+
+
+
+
+def createFunc(theFuncKey) {
+
+   def char myReturn = '\r'
+   def char newLine = '\n'
+   def theFunc = ""
+
+   for ( f in appFuncs.appFunc ) {
+      def funcKey = f.'@funcKey'
+
+      if (funcKey.equals(theFuncKey)) {
+
+         for ( ff in f.func ) {
+            def int x = ff.'@indent' as int
+            def indent = ""
+            while ( x-- > 0 ) {
+              indent = indent + " "
+            }
+
+            theFunc = theFunc + indent
+            theFunc = theFunc + ff.text() + myReturn + newLine
+
+         }
+      }
+   }
+
+   def newFunc = theFunc
+
+   theFunc = newFunc.replaceAll("LLLLL", "<")
+   newFunc = theFunc
+   theFunc = newFunc.replaceAll("GGGGG", ">")
+   newFunc = theFunc
+   theFunc = newFunc.replaceAll("MMMMM", "\\\\\\\$")
+
+//   theFunc + "E" + myReturn + newLine
+}
+
+
+
+
+def createMultiFunctionProc(fileName, thePath, theDir, allCodeTypes) {
+
+   jspSetSeq = 2
+   jspSetAdminSeq = 4
+
+   newFileName = insertAppNames(fileName)
+   newFileName = insertTableNames(newFileName)
+
+   def oldFilePath = thePath + "/" + fileName
+   def newFilePath = theDir + "/" + newFileName
+
+   def oldFile = new File(oldFilePath).text
+   def newFile = ""
+
+
+   for ( f in appFuncs.appFunc ) {
+
+      if (!allCodeTypes.contains(f.'@codeType')) {
+         continue }
+
+      def theFuncKey = f.'@funcKey'
+      def tblOrder = f.'@tblOrder'
+      def codeNbr = f.'@codeNbr'
+
+      def theFunc = ""
+      if (oldFile.contains(theFuncKey)) {
+
+         def insertFunc = createFunc(theFuncKey)
+         def newFunc = ""
+         def oldFunc = ""
+
+
+
+
+         if (codeNbr.equals("Table")) {
+
+           int rr = appTables.appTable.size()
+           for (int ff = 0; rr > 0; ff++) {
+            rr--
+            if (tblOrder.equals("reverse"))
+               n = appTables.appTable.get(rr)
+            else
+               n = appTables.appTable.get(ff)
+
+            oldFunc = insertFunc
+            for ( c in appCodes.appCode ) {
+               def theCodeKey = c.'@codeKey'
+
+               if (oldFunc.contains(theCodeKey)) {
+                  def insertCode = createCode(n.'@className', theCodeKey, "ALL")
+                  if (!insertCode.equals("")) {
+                    newFunc = oldFunc.replaceAll(theCodeKey, insertCode)
+                    oldFunc = newFunc
+                  }
+               }
+
+            }
+
+            newFunc = oldFunc.replaceAll("yyyyys", n.'@objPlural')
+            oldFunc = newFunc
+            newFunc = oldFunc.replaceAll("Yyyyys", n.'@classPlural')
+            oldFunc = newFunc
+            newFunc = oldFunc.replaceAll("yyyyy", n.'@objName')
+            oldFunc = newFunc
+            newFunc = oldFunc.replaceAll("Yyyyy", n.'@className')
+            oldFunc = newFunc
+            newFunc = oldFunc.replaceAll("YYYYY", n.'@dbName')
+            oldFunc = newFunc
+            newFunc = oldFunc.replaceAll("DDDDD", n.'@displayName')
+            oldFunc = newFunc
+
+            if (oldFunc.contains("___JSP_SET_SEQ___")) {
+              newFunc = oldFunc.replaceAll("___JSP_SET_SEQ___", jspSetSeq.toString())
+              oldFunc = newFunc
+              jspSetSeq++
+            }
+
+            if (oldFunc.contains("___JSP_SET_ADMIN_SEQ___")) {
+              newFunc = oldFunc.replaceAll("___JSP_SET_ADMIN_SEQ___", jspSetAdminSeq.toString())
+              oldFunc = newFunc
+              jspSetAdminSeq++
+            }
+
+            if (!newFunc.equals(insertFunc))
+              theFunc = theFunc + newFunc
+
+           }
+
+           def upFile = oldFile.replaceAll(theFuncKey, theFunc)
+           oldFile = upFile
+         }
+
+
+         if (codeNbr.equals("Once")) {
+
+            if (insertFunc.contains("___JSP_SEQ___")) {
+              newFunc = insertFunc.replaceAll("___JSP_SEQ___", jspSetSeq.toString())
+              insertFunc = newFunc
+            }
+
+            if (insertFunc.contains("___JSP_SET_SEQ___")) {
+              newFunc = insertFunc.replaceAll("___JSP_SET_SEQ___", jspSetSeq.toString())
+              insertFunc = newFunc
+              jspSetSeq++
+            }
+
+            if (insertFunc.contains("___JSP_SET_ADMIN_SEQ___")) {
+              newFunc = insertFunc.replaceAll("___JSP_SET_ADMIN_SEQ___", jspSetAdminSeq.toString())
+              insertFunc = newFunc
+              jspSetAdminSeq++
+            }
+
+            def upFile = oldFile.replaceAll(theFuncKey, insertFunc)
+            oldFile = upFile
+
+         }
+
+      }
+
+   }
+
+
+   newFile = insertAppCopyrights(oldFile)
+   newFile = insertAppAuthors(newFile)
+   newFile = insertAppNames(newFile)
+   newFile = insertAppPackages(newFile)
+   newFile = insertTableNames(newFile)
+
+   def char myReturn = '\r'
+   def char newLine = '\n'
+   def cleanFile = ""
+   newFile.eachLine { line->
+     if (!line.startsWith("___"))
+       cleanFile = cleanFile + line + myReturn + newLine
+   }
+
+   new File(newFilePath).write(cleanFile)
+
+}
+
+
+
+
+def createMultiFilesCodeTypeProc(fileName, thePath, theDir, codeType) {
+
+   for ( n in appTables.appTable ) {
+
+      for ( f in n.appField ) {
+
+         if (codeType.equals(f.'@codeType')) {
+
+            def theFileName = fileName.replaceAll("Yyyyy", n.'@className')
+            def newFileName = theFileName.replaceAll("Fffff", f.'@classFieldName')
+
+            def oldFilePath = thePath + "/" + fileName
+            def newFilePath = theDir + "/" + newFileName
+
+            def oldFile = new File(oldFilePath).text
+            def newFile = ""
+
+            if (oldFile.contains("___LOAD_LIST_HEADING_M2M___")) {
+               def insertListHeading = loadListHeading(f.'@classFieldName')
+               def upFile = oldFile.replaceAll("___LOAD_LIST_HEADING_M2M___", insertListHeading)
+               oldFile = upFile
+            }
+            if (oldFile.contains("___LOAD_LIST_FIELDS_M2M___")) {
+               def insertListFields = loadListFieldsM2M(f.'@classFieldName')
+               def upFile = oldFile.replaceAll("___LOAD_LIST_FIELDS_M2M___", insertListFields)
+               oldFile = upFile
+            }
+            if (codeType.equals("Many2ManyOwner")) {
+               def many2many = getMany2Many(f.'@classFieldName', n.'@className')
+               if (many2many != null) {
+                  def upFile = oldFile.replaceAll("RRRRR_NUMBER", many2many.'@number')
+                  oldFile = upFile
+               }
+            }
+
+            newFile = insertAppCopyrights(oldFile)
+            oldFile = newFile
+            newFile = insertAppAuthors(oldFile)
+            oldFile = newFile
+            newFile = insertAppNames(oldFile)
+            oldFile = newFile
+            newFile = insertAppPackages(oldFile)
+            oldFile = newFile
+            newFile = oldFile.replaceAll("yyyyys", n.'@objPlural')
+            oldFile = newFile
+            newFile = oldFile.replaceAll("Yyyyys", n.'@classPlural')
+            oldFile = newFile
+            newFile = oldFile.replaceAll("yyyyy", n.'@objName')
+            oldFile = newFile
+            newFile = oldFile.replaceAll("Yyyyy", n.'@className')
+            oldFile = newFile
+            newFile = oldFile.replaceAll("YYYYY", n.'@dbName')
+            oldFile = newFile
+            newFile = oldFile.replaceAll("DDDDD", n.'@displayName')
+            oldFile = newFile
+            newFile = oldFile.replaceAll("FFFFF", f.'@dbName')
+            oldFile = newFile
+            newFile = oldFile.replaceAll("Fffff", f.'@classFieldName')
+            oldFile = newFile
+            newFile = oldFile.replaceAll("fffff", f.'@objFieldName')
+            oldFile = newFile
+            newFile = oldFile.replaceAll("ttttt", f.'@fieldType')
+            oldFile = newFile
+            newFile = oldFile.replaceAll("sssss", f.'@fieldSize')
+
+            new File(newFilePath).write(newFile)
+
+         }
+      }
+   }
+}
+
+
+
+
+
+void createApp ( templatePath, appDir ) {
+
+   def fileList = new File(templatePath).list().toList()
+   def appPackageList = new ArrayList(appNames.appPackage.'@newPackage')
+   def appPackageIt = appPackageList.iterator()
+//while(appPackageIt.hasNext())
+//   println "Package name '" + appPackageIt.next().toString() + "'"
+
+   for ( i in fileList ) {
+      def inFile = templatePath + "/" + i
+      def f1= new File(inFile)
+      if ( f1.isDirectory() ) {
+println "found directory " + i
+        newDir = insertAppPackages(i)
+        newDir = insertAppNames(newDir)
+        
+        boolean isPackage = false
+        appPackageIt = appPackageList.iterator()
+        while(appPackageIt.hasNext() && !isPackage)
+             isPackage = newDir.equals(appPackageIt.next().toString())
+
+        def newAppDir
+        if (isPackage) {
+println "Found a package called '" + newDir + "'"
+           newAppDir = appDir
+           int startIndex=0, endIndex=0
+           while(endIndex != -1) {
+                endIndex = newDir.indexOf("/", startIndex)
+                if (endIndex != -1)
+                   newAppDir += "/" + newDir.substring(startIndex, endIndex)
+                else
+                   newAppDir += "/" + newDir.substring(startIndex)
+                def mkdir= new File(newAppDir)
+                mkdir.mkdir()
+                startIndex = endIndex + 1
+           } 
+        }
+        else {
+           def mkdir= new File(appDir + "/" + newDir)
+           mkdir.mkdir()
+           newAppDir = appDir + "/" + newDir
+        }
+
+        createApp ( inFile, newAppDir )
+
+      } else {
+println "found file " + i
+
+        if(i.endsWith(".gif") || i.endsWith(".jar") || i.endsWith(".png") || i.endsWith(".jpg")) {
+           File src = new File(templatePath + "/" + i)
+           new File(appDir + "/" + i).withOutputStream { out ->
+              out.write src.readBytes()
+           }
+        } else {
+           def defaultCode = "yes"
+           for ( p in appProcs.appProc ) {
+              def fileName = p.'@fileName'
+
+               if (fileName.equals(i)) {
+                  def procName = p.'@procName'
+                  def codeType = p.'@codeType'
+                  def allCodeTypes = appCodeTypes.appCodeType.'@codeType'*.toString()
+
+                  if (!allCodeTypes.contains(codeType)) {
+                     defaultCode = "no"
+                     continue
+                  }
+
+                  if (procName.equals("createMultiEventProc")) {
+
+                     createMultiEventProc(i, templatePath, appDir)
+                     defaultCode = "no"
+                  }
+
+                  if (procName.equals("createMultiUrlProc")) {
+
+                     createMultiUrlProc(i, templatePath, appDir)
+                     defaultCode = "no"
+                  }
+
+                  if (procName.equals("createMultiFilesProc")) {
+
+                     createMultiFilesProc(i, templatePath, appDir)
+                     defaultCode = "no"
+                  }
+
+                  if (procName.equals("createMultiFunctionProc")) {
+
+                     createMultiFunctionProc(i, templatePath, appDir, allCodeTypes)
+                     defaultCode = "no"
+                  }
+
+                  if (procName.equals("createMultiFilesCodeTypeProc")) {
+
+                     createMultiFilesCodeTypeProc(i, templatePath, appDir, codeType)
+                     defaultCode = "no"
+                  }
+
+               }
+           }
+
+           if (defaultCode.equals("yes")) {
+println "found default file " + i
+             defaultCodeProc(i, templatePath, appDir)
+           }
+        }
+     }
+   }
+}
+
+createApp ( templatePath, appDir )

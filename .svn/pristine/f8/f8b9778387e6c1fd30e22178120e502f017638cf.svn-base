@@ -1,0 +1,32 @@
+<%@ page import="ppp.ppp.ppp.servlet.ControllerEnums" %>
+<%
+String op = (String)request.getAttribute("op");
+if (op == null) {
+  op = "Home";
+}
+String jsp = ControllerEnums.Calls.get(op).getJsp();
+String tabIdx2 = ControllerEnums.Calls.get(op).getTabIdx2();
+%>
+<div class='pojo-section'>
+<div class='pojo-section-body'>
+<div id="reportTabs">
+	<ul>
+		<li><a href="#GenReport">Generate Report</a></li>
+		<li><a href="#ReportList">Report List</a></li>
+	</ul>
+
+	<div id="GenReport">
+<% if (tabIdx2 == "0") { %>
+<jsp:include page="<%= jsp %>" />
+<% } %>
+	</div>
+
+	<div id="ReportList">
+<% if (tabIdx2 == "1") { %>
+<jsp:include page="<%= jsp %>" />
+<% } %>
+	</div>
+
+</div>
+</div>
+</div>

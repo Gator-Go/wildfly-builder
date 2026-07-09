@@ -1,0 +1,212 @@
+package ppp.ppp.ppp.servlet.helper;
+
+import ppp.ppp.ppp.entity.AdminEvent;
+import ppp.ppp.ppp.service.EventService;
+import ppp.ppp.ppp.entity.UserEmail;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Collection;
+import java.util.Set;
+import java.util.HashSet;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+
+/**
+ * This class provides common methods to manage data in the EmailSubsServlet.
+ *
+ * @author Ron Kanengieter
+ * @author <a href="mailto:ron@usgs.gov">Ron Kanengieter</a>
+ * @version 1.0
+ * @version $Id$
+ */
+@RequestScoped
+public class EmailSubsDataHelper
+{
+
+    @Inject
+    private EventService eventService;
+
+
+   /**
+    * This method loads Event EmailSubs selection data to the req attributes.
+    *
+    * @param req A HttpServletRequest object to be loaded with default data.
+    */
+   public void loadEventEmailSubsData(HttpServletRequest req)
+   {
+
+      List<OptionId> events = new ArrayList<OptionId>();
+      OptionId option1 = new OptionId();
+      option1.setOption("Select Event To Add");
+      option1.setId("0");
+      option1.setSelected("selected");
+      events.add(option1);
+
+      List<AdminEvent> adminEvents = eventService.findAllAdminEvents();
+      Iterator <AdminEvent> i = adminEvents.iterator();
+      while(i.hasNext())
+      {
+         AdminEvent adminEvent = i.next();
+         // sending an email on an email event would put us in a loop same with sms
+         if (adminEvent.getName().equals("EmailEvent") 
+		|| adminEvent.getName().equals("GetEmailEvent")
+		|| adminEvent.getName().equals("SmsEvent"))
+           continue;
+         OptionId option = new OptionId();
+         option.setOption(adminEvent.getName());
+         option.setId(adminEvent.getId().toString());
+         events.add(option);
+      }
+      req.setAttribute("eventSelects", events);
+   }
+
+
+
+
+
+   /**
+    * This method loads LandDatabase req parameter data to the req attribute date.
+    * Would be used after an error and to re-show the data entered on the form.
+    *
+    * @param req A HttpServletRequest object to be loaded with parameter data.
+    */
+
+   public void loadEmailSubsDataFromReq(HttpServletRequest req, String newEmailSubsId)
+   {
+      req.setAttribute("returnOp", req.getParameter("returnOp"));
+      req.setAttribute("returnAction", req.getParameter("returnAction"));
+      req.setAttribute("id", req.getParameter("id"));
+      req.setAttribute("firstName", req.getParameter("firstName"));
+      req.setAttribute("lastName", req.getParameter("lastName"));
+      req.setAttribute("email", req.getParameter("email"));
+
+      List<EmailSubsFmt> subscriptFmts = new ArrayList<EmailSubsFmt>();
+      if (newEmailSubsId != null) {
+        Long adminEventId = new Long(newEmailSubsId);
+        AdminEvent adminEvent = eventService.getAdminEvent(adminEventId);
+
+        EmailSubsFmt subscriptFmt = new EmailSubsFmt();
+        subscriptFmt.setDeleteFlag("false");
+        subscriptFmt.setId(adminEvent.getId().toString());
+        subscriptFmt.setName(adminEvent.getName());
+        subscriptFmt.setDescription(adminEvent.getDescription());
+        subscriptFmts.add(subscriptFmt);
+      }
+
+      int opRows = Integer.parseInt(req.getParameter("nbrOp"));
+      for ( int x = 0; x < opRows; x++) {
+        String deleteFlag = "false";
+        String deleteId = "deleteFlag" + x;
+        String delete = req.getParameter(deleteId);
+        if (delete != null && delete.equals("true"))
+          deleteFlag = "true";
+
+        String idId = "id" + x;
+        String id = req.getParameter(idId);
+
+        String nameId = "name" + x;
+        String name = req.getParameter(nameId);
+
+        String descriptionId = "description" + x;
+        String description = req.getParameter(descriptionId);
+
+        EmailSubsFmt subscriptFmt = new EmailSubsFmt();
+        subscriptFmt.setDeleteFlag(deleteFlag);
+        subscriptFmt.setId(id);
+        subscriptFmt.setName(name);
+        subscriptFmt.setDescription(description);
+        subscriptFmts.add(subscriptFmt);
+      }
+      req.setAttribute("subscriptFmts", subscriptFmts);
+      String opSize = "" + subscriptFmts.size();
+      req.setAttribute("nbrOp", opSize);
+
+   }
+
+
+   /**
+    * This method loads data from a req object to a AdminEmailSubs object.
+    *
+    * @param adminEmailSubs A AdminEmailSubs object to be loaded with data.
+    * @param req A HttpServletRequest object containing the data.
+    */
+
+   public void loadUserEmail(UserEmail userEmail, HttpServletRequest req)
+   {
+
+      if(!req.getParameter("firstName").isEmpty())
+      {
+         String firstName = req.getParameter("firstName");
+         userEmail.setFirstName(firstName);
+      }
+
+      if(!req.getParameter("lastName").isEmpty())
+      {
+         String lastName = req.getParameter("lastName");
+         userEmail.setLastName(lastName);
+      }
+
+      if(!req.getParameter("email").isEmpty())
+      {
+         String email = req.getParameter("email");
+         userEmail.setEmail(email);
+      }
+
+      Set<AdminEvent> events = new HashSet<AdminEvent>();
+      int paramRows = Integer.parseInt(req.getParameter("nbrOp"));
+      for ( int x = 0; x < paramRows; x++) {
+
+        String idId = "id" + x;
+        String id = req.getParameter(idId);
+        Long adminEventId = new Long(id);
+        AdminEvent adminEvent = eventService.getAdminEvent(adminEventId);
+
+        events.add(adminEvent);
+      }
+      userEmail.setEvents(events);
+
+   }
+
+
+
+   /**
+    * This method loads data from a AdminEmailSubs object to a req object.
+    *
+    * @param adminEmailSubs A AdminEmailSubs object containing the data.
+    * @param req A HttpServletRequest object to be loaded with data.
+    */
+
+   public void loadEmailSubsFormData(UserEmail userEmail, HttpServletRequest req)
+   {
+      req.setAttribute("id", userEmail.getId().toString());
+      req.setAttribute("firstName", userEmail.getFirstName());
+      req.setAttribute("lastName", userEmail.getLastName());
+      req.setAttribute("email", userEmail.getEmail());
+
+      List<EmailSubsFmt> subscriptFmts = new ArrayList<EmailSubsFmt>();
+      Set<AdminEvent> events = userEmail.getEvents();
+      Iterator <AdminEvent> i = events.iterator();
+      while(i.hasNext())
+      {
+         AdminEvent adminEvent = i.next();
+         EmailSubsFmt subscriptFmt = new EmailSubsFmt();
+         subscriptFmt.setDeleteFlag("false");
+         subscriptFmt.setId(adminEvent.getId().toString());
+         subscriptFmt.setName(adminEvent.getName());
+         subscriptFmt.setDescription(adminEvent.getDescription());
+         subscriptFmts.add(subscriptFmt);
+      }
+      req.setAttribute("subscriptFmts", subscriptFmts);
+      String opSize = "" + subscriptFmts.size();
+      req.setAttribute("nbrOp", opSize);
+
+   }
+
+}

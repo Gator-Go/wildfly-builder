@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<datasources xmlns="http://www.jboss.org/ironjacamar/schema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.jboss.org/ironjacamar/schema http://docs.jboss.org/ironjacamar/schema/datasources_1_0.xsd">
+
+   <datasource jndi-name="java:jboss/datasources/XxxxxDS"
+      pool-name="xxxxx-jsp" enabled="true"
+      use-java-context="true">
+      <connection-url>jdbc:postgresql://127.0.0.1:5432/berrydb</connection-url>
+      <driver>postgresql</driver>
+      <security>
+         <user-name>admin</user-name>
+         <password>postDa!syPI</password>
+      </security>
+   </datasource>
+
+</datasources>
+ 

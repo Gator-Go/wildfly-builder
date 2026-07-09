@@ -1,0 +1,74 @@
+package ppp.ppp.ppp.event;
+
+import ppp.ppp.ppp.service.EventService;
+
+// Events
+import ppp.ppp.ppp.event.msg.XxxxxAlertEvent;
+import ppp.ppp.ppp.event.msg.SettingsEvent;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
+import jakarta.servlet.RequestDispatcher;
+
+import java.text.ParseException;
+import java.util.Map;
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Logger;
+
+/**
+ * Servlet implementation class FireEvent
+ */
+@RequestScoped
+public class FireEvent {
+    private static final long serialVersionUID = 1L;
+
+    @Inject
+    private Logger logger;
+
+    @Inject
+    private EventService eventService;
+
+
+// Events
+    // Create the SettingsEvent msg
+    @Inject
+    private Event<SettingsEvent> settingsEventMsg;
+
+    // Create the XxxxxAlertEvent msg
+    @Inject
+    private Event<XxxxxAlertEvent> xxxxxAlertEventMsg;
+
+
+    /**
+     * Default constructor.
+     */
+    public FireEvent() {
+        // TODO Auto-generated constructor stub
+    }
+
+    public void fireEvent(String eventName, Map<String, String> parameterData) {
+
+	if (parameterData == null)
+            logger.info("Fire the Event: " + eventName);
+	else
+            logger.info("Fire the " + eventName + " event with parmeters: " + parameterData.toString());
+
+        if (eventName.equalsIgnoreCase("SettingsEvent"))
+        {
+           SettingsEvent settingsEvent = new SettingsEvent();
+           settingsEvent.setName(eventName);
+
+           settingsEvent.setKey(parameterData.get("key"));
+           settingsEvent.setValue(parameterData.get("value"));
+
+           settingsEventMsg.fire(settingsEvent);
+        }
+
+
+    }
+}
