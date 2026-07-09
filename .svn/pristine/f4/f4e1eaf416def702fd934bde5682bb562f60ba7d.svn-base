@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><appApps>
-    
-  <appsHome appsName="security" appsDesc="Security Home" appsPng="security_logo.png" appsHomeURL="&lt;%= httpRoot %&gt;/security/do?op=Home"/>
-    
-  <appsHome appsName="social" appsDesc="Social Home" appsPng="social_logo.png" appsHomeURL="&lt;%= httpRoot %&gt;/social/do?op=Home"/>
-  
-</appApps>
