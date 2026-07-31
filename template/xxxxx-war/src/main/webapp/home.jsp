@@ -24,10 +24,10 @@ ___JSP_HOME_URLS___
 	</tr>
 	</table>
 
-	<H3>Link To App Store And Setup Guide</H3><br>
+	<H3>Link To App Store And Setup Guides</H3><br>
 
-	<a href='http://homeberrycloud.com' target='_blank'>
-	   <img border="0" src="resources/gfx/store_help.png" alt="Home Berry Cloud Inc." /><br>
+	<a href='https://sw-builder.com' target='_blank'>
+	   <img border="0" src="resources/gfx/sw-builder.png" alt="sw-builder.com" /><br>
 	</a>
 
       </div>
