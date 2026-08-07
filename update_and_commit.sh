@@ -22,8 +22,16 @@ fi
 PNG_FILE="${PNG_FILES[0]}"
 cp "$PNG_FILE" "$SHARE_DIR/"
 
-PNG_FILES=("$SHARE_DIR/*.png")
-cp "$PNG_FILES" "$GFX_DIR/"
+shopt -s nullglob
+SHARE_PNGS=("$SHARE_DIR"/*.png)
+shopt -u nullglob
+
+if [[ ${#SHARE_PNGS[@]} -eq 0 ]]; then
+    echo "Error: no PNG files found in $SHARE_DIR" >&2
+    exit 1
+fi
+
+cp "${SHARE_PNGS[@]}" "$GFX_DIR/"
 
 # Check if the APP_SHARE_FILE exists
 if [ -f "$APP_SHARE_FILE" ]; then
