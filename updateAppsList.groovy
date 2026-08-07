@@ -2,8 +2,8 @@
 import groovy.xml.XmlParser
 import groovy.xml.XmlUtil
 
-def APP_APPS_FILE = "./APP_APPS.xml"
-def APP_HOME_FILE = "./APP_HOME.xml"
+def APP_APPS_FILE = "./build/APP_APPS.xml"
+def APP_HOME_FILE = "./options/APP_HOME.xml"
 
 try {
     // --- Read and parse XML ---

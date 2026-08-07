@@ -1,8 +1,8 @@
 # --- Configuration --------------------------------
 GROOVY_SCRIPT="./updateAppsList.groovy"
-APP_FILE="APP_APPS.xml"
+APP_FILE="build/APP_APPS.xml"
 APP_SHARE_FILE="../Share/APP_APPS.xml"
-HOME_FILE="APP_HOME.xml"
+HOME_FILE="options/APP_HOME.xml"
 SHARE_DIR="../Share"
 GFX_DIR="./template/xxxxx-war/src/main/webapp/resources/gfx"
 # -------------------------------------------------
