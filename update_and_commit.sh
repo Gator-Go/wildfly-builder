@@ -23,7 +23,7 @@ PNG_FILE="${PNG_FILES[0]}"
 cp "$PNG_FILE" "$SHARE_DIR/"
 
 PNG_FILES=("$SHARE_DIR/*.png")
-cp "$PNG_FILE" "$GFX_DIR/"
+cp "$PNG_FILES" "$GFX_DIR/"
 
 # Check if the APP_SHARE_FILE exists
 if [ -f "$APP_SHARE_FILE" ]; then
