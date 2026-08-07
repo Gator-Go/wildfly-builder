@@ -4,6 +4,7 @@ APP_FILE="build/APP_APPS.xml"
 APP_SHARE_FILE="../Share/APP_APPS.xml"
 HOME_FILE="options/APP_HOME.xml"
 SHARE_DIR="../Share"
+BUILD_DIR="./build"
 GFX_DIR="./template/xxxxx-war/src/main/webapp/resources/gfx"
 # -------------------------------------------------
 
@@ -32,7 +33,7 @@ else
     exit 1 
 fi
 
-cp "$APP_SHARE_FILE" .
+cp "$APP_SHARE_FILE" "$BUILD_DIR"
 
 echo "START"
 OUTPUT=$(groovy "$GROOVY_SCRIPT" 2>&1)
