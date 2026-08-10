@@ -42,7 +42,10 @@ def insertAppNames(String theText, def configs) {
 def insertAppCopyrights(String theText, def configs) {
     def result = theText
     configs.appNames.appCopyright.each { n ->
-        result = result.replace(n.'@oldCopyright' as String, n.'@newCopyright' as String)
+        def newCopyright = (n.'@newCopyright' as String)
+            .replace('\\n', System.lineSeparator())
+
+        result = result.replace(n.'@oldCopyright' as String, newCopyright)
     }
     result
 }

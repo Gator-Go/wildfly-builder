@@ -8,11 +8,9 @@ import jakarta.enterprise.context.RequestScoped;
 /**
  * Lllll
  *
- * Utility helper for creating directories and files used by the camera / picture
- * storage functionality.
- * <p>
- * Provides simple methods to ensure a target directory exists and to create
- * a writable file at a given path.
+ * Utility helper for creating directories and files used by the camera/picture
+ * storage functionality. Provides simple methods to ensure a target directory
+ * exists and to create a writable file at a given path.
  *
  * @author Aaaaa
  * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
