@@ -28,6 +28,20 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+/**
+ * Lllll
+ *
+ * This is a JPA entity mapped to the XXXXX_EVENT table.
+ * It represents an administrative event with a name, source, large message body, and description.
+ * It has a one-to-one relationship with EventSchedule, a one-to-many relationship with EventParameter,
+ * and many-to-many relationships with both UserEmail and UserSms (for notification recipients).
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Entity
 @XmlRootElement
 @Table(name = "XXXXX_EVENT")
