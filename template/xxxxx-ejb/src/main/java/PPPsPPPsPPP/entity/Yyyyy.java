@@ -30,6 +30,19 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import java.text.DecimalFormat;
 
+/**
+ * Lllll
+ *
+ * This is a JPA entity class mapped to the YYYYY database table.
+ * It represents the YYYYY class with fields for ID (auto-generated via sequence), device/IDs,
+ * and other database table fields. It includes the standard helper methods and a cloud ID.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Entity
 @XmlRootElement
 @Table(name = "YYYYY")

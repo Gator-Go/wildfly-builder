@@ -9,6 +9,19 @@ import java.math.BigDecimal;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Lllll
+ *
+ * The YyyyyDto is a simple Data Transfer Object (DTO) class.
+ * It holds class-related data and provides standard getters/setters.
+ * The @XmlRootElement annotation makes it ready for XML serialization
+ * (e.g. JAXB / REST responses).
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
 
 @XmlRootElement
 public class YyyyyDto implements Serializable {
