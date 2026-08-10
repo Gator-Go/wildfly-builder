@@ -19,6 +19,20 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+/**
+ * Lllll
+ *
+ * This is a JPA entity mapped to the XXXXX_EVENT_SCHEDULE table.
+ * It represents the schedule configuration for an AdminEvent, storing
+ * the schedule expression, last run time, enabled flag, and a message.
+ * It has a one-to-one relationship with its parent AdminEvent.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Entity
 @XmlRootElement
 @Table(name = "XXXXX_EVENT_SCHEDULE")

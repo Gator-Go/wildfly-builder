@@ -29,6 +29,20 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import java.text.DecimalFormat;
 
+/**
+ * Lllll
+ *
+ * This is a JPA entity mapped to the XXXXX_RPT_LIST table.
+ * It represents a named report list entry with device/report IDs,
+ * a soft-delete flag, and last-update timestamp. It includes helper
+ * methods to return a display string and a cloud ID.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Entity
 @XmlRootElement
 @Table(name = "XXXXX_RPT_LIST")

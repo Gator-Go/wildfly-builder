@@ -29,6 +29,20 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import java.text.DecimalFormat;
 
+/**
+ * Lllll
+ *
+ * This is a JPA entity mapped to the XXXXX_ALERT table.
+ * It represents an alert record with device ID, alert ID,
+ * type, source, a large message body, and the time it occurred.
+ * It also provides a helper method to build a cloud ID.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Entity
 @XmlRootElement
 @Table(name = "XXXXX_ALERT")

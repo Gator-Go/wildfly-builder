@@ -24,6 +24,21 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+/**
+ * Lllll
+ *
+ * This is a JPA entity mapped to the XXXXX_RPT_PARAM table.
+ * It represents a parameter for a report, storing its name,
+ * description, required flag, data type, input type, min/max values,
+ * list options, SQL statement, and date format. It has a many-to-one
+ * relationship with its parent Report.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Entity
 @XmlRootElement
 @Table(name = "XXXXX_RPT_PARAM")

@@ -27,6 +27,21 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+/**
+ * Lllll
+ *
+ * This is a JPA entity mapped to the XXXXX_USER_SMS table.
+ * It represents a user who can receive SMS notifications,
+ * storing first name, last name, and phone number. It has
+ * a many-to-many relationship with AdminEvent (the events
+ * the user is subscribed to).
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Entity
 @XmlRootElement
 @Table(name = "XXXXX_USER_SMS")
