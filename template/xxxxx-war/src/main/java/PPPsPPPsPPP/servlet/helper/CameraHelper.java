@@ -7,13 +7,12 @@ import jakarta.enterprise.context.RequestScoped;
 
 /**
  * Lllll
- *  
- */
-
-/**
- * This entity bean is used to manage the YYYYY database table.<br>
- * This class follows the POJO model so there is a standard get<br>
- * and set method on each data item.
+ *
+ * Utility helper for creating directories and files used by the camera / picture
+ * storage functionality.
+ * <p>
+ * Provides simple methods to ensure a target directory exists and to create
+ * a writable file at a given path.
  *
  * @author Aaaaa
  * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
