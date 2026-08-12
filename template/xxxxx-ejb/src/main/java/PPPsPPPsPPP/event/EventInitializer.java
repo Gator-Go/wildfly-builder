@@ -14,6 +14,22 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Lllll
+ *
+ * This is a startup singleton EJB that seeds the database with predefined event
+ * definitions on application startup.
+ * In its @PostConstruct method it checks (via EventService) whether SettingsEvent,
+ * EmailEvent, and SmsEvent already exist. If any is missing, it creates the corresponding
+ * AdminEvent along with its required/optional EventParameters (key/value, To/Cc/Bcc/Subject,
+ * To, etc.).
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Singleton
 @Startup
 public class EventInitializer {

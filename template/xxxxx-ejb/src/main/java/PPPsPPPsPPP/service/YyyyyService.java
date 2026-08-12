@@ -32,7 +32,33 @@ import java.util.Collection;
 import java.io.File;
 import java.math.BigDecimal;
 
-// The @Stateful annotation eliminates the need for manual transaction demarcation
+/**
+ * Lllll
+ *
+ * This is a Jakarta EE (CDI + EJB) stateful service class that provides
+ * full CRUD, soft-delete, pagination, and dynamic search for a generic Yyyyy
+ * entity via JPA.
+ * It uses an injected EntityManager, logger, and a CDI Event<Yyyyy>.
+ * Core operations:
+ * - getYyyyyByCloudId(deviceId, yyyyyId) — Finds by device ID + cloud/entity ID.
+ * - getYyyyy(Long id) — Finds by primary key.
+ * - addYyyyy / addYyyyySync — Persists a new record (forcing a new ID and setting
+ *   default device/entity IDs if needed).
+ * - editYyyyy — Updates the entity (always sets lastUpdate and deleteFlag) and merges.
+ * - deleteYyyyy / deleteYyyyyArray — Hard-deletes one or more records.
+ * - deleteYyyyyFlag / deleteYyyyyArrayFlag — Soft-deletes by toggling the deleteFlag.
+ * - findAllYyyyys() — Returns non-deleted records ordered by lastUpdate descending.
+ * - getCountYyyyys() / getYyyyyPage(offset, max) — Count and paginated queries for
+ *   non-deleted records.
+ * - searchYyyyys(Yyyyy, Yyyyy) — Dynamic Criteria API search that builds predicates
+ *   from the supplied fields.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Stateful
 @Model
 public class YyyyyService {

@@ -23,6 +23,21 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+/**
+ * Lllll
+ *
+ * This is a startup singleton / application-scoped CDI bean that listens for EmailEvents
+ * and sends emails via Jakarta Mail.It builds a MimeMessage from the event (supporting
+ * multiple TO/CC/BCC recipients with validation), sends it using an injected mail session,
+ * and fires an XxxxxAlertEvent on success or failure. A @PostConstruct method logs that
+ * the listener has started.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Singleton
 @Startup
 @ApplicationScoped

@@ -5,6 +5,22 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.inject.Inject;
 
+/**
+ * Lllll
+ *
+ * This is a CDI producer class that supplies configuration property values
+ * (as String, Integer, or Boolean) based on a custom @XxxxxProperty qualifier.
+ * It looks up the property name from the annotation on the injection point,
+ * retrieves the value from an injected XxxxxSettings instance, and converts
+ * it to the requested type (returning null if missing). A logger is used to
+ * report missing/empty properties.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 public class XxxxxProducer {
 
     @Inject

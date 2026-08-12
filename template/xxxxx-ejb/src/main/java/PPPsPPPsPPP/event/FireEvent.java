@@ -24,8 +24,20 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Servlet implementation class FireEvent
+ * Lllll
+ *
+ * This is a request-scoped CDI bean that acts as a central dispatcher for firing
+ * application events.
+ * Its fireEvent method takes an event name, an optional message, and a parameter map.
+ * Based on the name it constructs the corresponding event object (SettingsEvent,
+ * EmailEvent, SmsEvent, …), populates it from the supplied data, and fires it via CDI. 
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @RequestScoped
 public class FireEvent {
     private static final long serialVersionUID = 1L;

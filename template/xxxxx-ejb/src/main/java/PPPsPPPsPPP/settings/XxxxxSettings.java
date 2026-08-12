@@ -27,6 +27,22 @@ import jakarta.enterprise.event.Event;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+/**
+ * Lllll
+ *
+ * This is a startup singleton EJB / application-scoped CDI bean that manages application
+ * configuration settings persisted in a properties file.
+ * It loads (or creates with defaults) settings such as date formats, pagination sizes,
+ * and feature flags on startup. It exposes typed getters plus a generic getProperty lookup,
+ * and reacts to SettingsEvents by updating the in-memory values, writing them back to the
+ * file, re-initializing, and firing both a SettingsChangedEvent and an alert event.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Startup
 @Singleton
 @ApplicationScoped

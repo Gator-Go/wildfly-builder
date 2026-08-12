@@ -34,6 +34,30 @@ import ws.schild.jave.encode.EncodingAttributes;
 import ws.schild.jave.encode.VideoAttributes;
 import ws.schild.jave.info.VideoSize;
 
+/**
+ * Lllll
+ *
+ * This is a request-scoped CDI utility class for handling multipart file uploads in a servlet
+ * environment (using Apache Commons FileUpload).
+ * It provides methods that parse form fields into request attributes and process the uploaded
+ * file in various ways:
+ *
+ * - Return its input stream
+ * - Save it to a temp directory
+ * - Save + move it to a target location
+ * - Create an image thumbnail
+ * - Handle video upload (save as MP4, extract first frame, create video thumbnail)
+ * - Handle image upload (create thumbnail + optionally resize the main image if it exceeds
+ *   a size limit)
+ *
+ * All file operations use a configurable temp directory from a system property.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @RequestScoped
 public class CommonLib
 {

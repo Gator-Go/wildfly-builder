@@ -14,6 +14,21 @@ import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 import jakarta.inject.Inject;
 
+/**
+ * Lllll
+ *
+ * This is a startup singleton / application-scoped CDI bean that listens
+ * for GetEmailEvent and retrieves messages from a Gmail inbox via IMAP.
+ * It connects using an injected mail session and system-property credentials,
+ * opens the INBOX read-only, logs the message count and subjects, then cleanly
+ * closes the folder and store.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Singleton
 @Startup
 @ApplicationScoped

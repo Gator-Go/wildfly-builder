@@ -10,16 +10,17 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.enterprise.context.ApplicationScoped;
 
 /**
- * This class uses CDI to alias Java EE resources, such as the persistence context, to CDI beans
- * 
- * <p>
- * Example injection on a managed bean field:
- * </p>
- * 
- * <pre>
- * &#064;Inject
- * private EntityManager em;
- * </pre>
+ * Lllll
+ *
+ * This is a CDI producer bean (application-scoped) that supplies two injectable resources
+ * in a Jakarta EE application: An EntityManager obtained from the persistence context
+ * (via the @Produces + @PersistenceContext field) and A java.util.logging.Logger whose
+ * name is the fully-qualified class name of whatever is injecting it (via the produceLog method).
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
 
 @ApplicationScoped

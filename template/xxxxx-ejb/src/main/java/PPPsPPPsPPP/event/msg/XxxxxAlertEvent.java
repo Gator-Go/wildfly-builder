@@ -4,6 +4,19 @@ package ppp.ppp.ppp.event.msg;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Lllll
+ *
+ * This is a XxxxxAlert event message. On the event of a XxxxxAlert, listeners
+ * will recieve this message. Note that message data comes from
+ * GenericEvent class.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 public class XxxxxAlertEvent extends GenericEvent implements Serializable
 {
    private Long id;

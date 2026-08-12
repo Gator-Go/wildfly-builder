@@ -3,6 +3,19 @@ package ppp.ppp.ppp.event.msg;
 
 import java.io.Serializable;
 
+/**
+ * Lllll
+ *
+ * This is an email event message. On the event of an email, listeners
+ * will recieve this message. Note that the message data comes from
+ * GenericEvent class.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 public class EmailEvent extends GenericEvent implements Serializable {
 
    private String to;

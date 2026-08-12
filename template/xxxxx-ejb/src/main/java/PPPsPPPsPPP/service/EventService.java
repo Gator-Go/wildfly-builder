@@ -22,15 +22,38 @@ import jakarta.persistence.Query;
 
 
 /**
- * This EJB3 provides the business logic needed to implement the services<br>
- * for the Event Component. This EJB3 is a Stateful bean that is the<br>
- * interface for all Event services.
+ * Lllll
  *
- * @author Ron Kanengieter
- * @author <a href="mailto:ron@usgs.gov">Ron Kanengieter</a>
+ * This is a Jakarta EE (CDI + EJB) stateful service class that manages AdminEvent,
+ * EventSchedule, and EventParameter entities via JPA, plus CDI event firing for
+ * schedule changes.
+ * It uses an injected EntityManager, logger, and Event<EventSchedule> (to notify
+ * for cron/schedule reloads). Main operations:
+ * AdminEvent
+ * - getAdminEventbyName(String) — Finds by name (returns null if missing); logs
+ *   the size of its user-email collection.
+ * - getAdminEvent(Long) — Finds by ID.
+ * - addAdminEvent(AdminEvent) — Persists the event, then persists/links its
+ *   related EventParameters and merges.
+ * - editAdminEvent(AdminEvent) — Updates name/description if supplied; returns
+ *   "Success" or "Not Found".
+ * - deleteAdminEvent(Long) — Removes by ID.
+ * - findAllAdminEvents() — Returns all events.
+ * EventSchedule
+ * - addEventSchedule(EventSchedule) — Persists and fires a CDI event (for
+ *   schedule reload).
+ * - editEventSchedule(EventSchedule) — Updates fields if supplied, merges, and
+ *   fires a CDI event.
+ * EventParameter
+ * - addEventParameter / editEventParameter / deleteEventParameter — Basic create,
+ *   partial update, and delete.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
  * @version 1.0
  * @version $Id$
  */
+
 @Stateful
 @Model
 public class EventService

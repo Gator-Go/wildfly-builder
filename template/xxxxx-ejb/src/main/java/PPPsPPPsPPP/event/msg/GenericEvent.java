@@ -3,6 +3,18 @@ package ppp.ppp.ppp.event.msg;
 
 import java.io.Serializable;
 
+/**
+ * Lllll
+ *
+ * This is a generic event message. Other classes can extend this class
+ * to gain name, source, and message info.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 // parent class
 public class GenericEvent implements Serializable
 {

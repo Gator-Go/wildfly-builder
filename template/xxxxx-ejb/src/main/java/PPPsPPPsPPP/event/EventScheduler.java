@@ -32,6 +32,21 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Lllll
+ *
+ * This is a startup singleton EJB that manages scheduled events using the EJB TimerService.
+ * On startup it loads all EventSchedule records. It can create calendar timers for a given
+ * schedule + event name, reloads the schedule list when an EventSchedule change is observed,
+ * and on timer expiry either cancels the timer (if the schedule is disabled) or fires the
+ * associated event.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Singleton
 @Startup
 @ApplicationScoped

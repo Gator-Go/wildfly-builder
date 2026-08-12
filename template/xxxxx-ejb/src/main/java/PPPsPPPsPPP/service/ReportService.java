@@ -21,6 +21,40 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
+/**
+ * Lllll
+ *
+ * This is a Jakarta EE (CDI + EJB) stateful service class that manages
+ * report-related entities (Report, RptParam, RptSort, RptList) via JPA,
+ * with some file-system cleanup on deletes.
+ * It uses an injected EntityManager and logger. Main operations:
+ * Report
+ * - getReport(Long) — Finds by ID and logs sizes of its param/sort
+ *   collections.
+ * - addReport(Report) — Persists and returns the ID.
+ * - editReport(Report) — Updates name, description, filename, params,
+ *   or sorts if supplied.
+ * - deleteReport(Long) — Deletes the associated JRXML file (from a
+ *   system-property path) then removes the entity.
+ * - findAllReports() — Returns all reports.
+ * RptParam / RptSort
+ * - getRptParam, addRptParam, editRptParam (simple merge), addRptSort —
+ *   Basic create/read/update.
+ * RptList
+ * - getRptList(Long) — Finds by ID.
+ * - addRptList(RptList) — Persists (forcing a new ID), sets defaults for
+ *   device/list IDs if needed, merges, and handles exceptions.
+ * - deleteRptList(Long) — Deletes the report file (from a system-property
+ *   path) then removes the entity.
+ * - findAllRptListing() — Returns non-deleted lists (deleteFlag = FALSE).
+ * - getCountRptListing() / getRptListPage(offset, max) — Count and paginated
+ *   queries for non-deleted lists (ordered by ID descending).
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
 
 @Stateful
 @Model

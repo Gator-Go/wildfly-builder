@@ -19,15 +19,26 @@ import jakarta.persistence.Query;
 
 
 /**
- * This EJB3 provides the business logic needed to implement the services<br>
- * for the Webservice Component. This EJB3 is a Stateful bean that is the<br>
- * interface for all Webservice services.
+ * Lllll
  *
- * @author Ron Kanengieter
- * @author <a href="mailto:ron@usgs.gov">Ron Kanengieter</a>
+ * This is a Jakarta EE (CDI + EJB) stateful service class that provides
+ * basic CRUD operations for UserSms entities via JPA.
+ * It uses an injected EntityManager and logger. The methods are:
+ * - getUserSms(Long id) — Finds and returns a UserSms by ID (also logs
+ *   the size of its associated events collection).
+ * - addUserSms(UserSms) — Persists a new UserSms and returns its ID.
+ * - editUserSms(UserSms) — Updates first name, last name, SMS number, or events
+ *   if supplied; returns "Success" or "Not Found".
+ * - deleteUserSms(Long id) — Removes the entity by ID; returns "Success" or
+ *   "Not Found".
+ * - findAllUserSmss() — Returns a list of all UserSms entities.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
  * @version 1.0
  * @version $Id$
  */
+
 @Stateful
 @Model
 public class SmsSubsService

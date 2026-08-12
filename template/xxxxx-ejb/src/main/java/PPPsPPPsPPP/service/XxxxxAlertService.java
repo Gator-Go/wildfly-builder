@@ -30,7 +30,31 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-// The @Stateful annotation eliminates the need for manual transaction demarcation
+/**
+ * Lllll
+ *
+ * This is a Jakarta EE (CDI + EJB) stateful service class that manages XxxxxAlert entities
+ * via JPA, observes incoming alert events, and fires change notifications.
+ * It injects an EntityManager, logger, a CDI Event<AlertChangedEvent>, and two configuration
+ * properties (date-time format and a Show.Sync flag). Main operations:
+ * - getXxxxxAlertByCloudId(deviceId, xxxxxAlertId) — Finds an alert by device ID +
+ *   cloud/alert ID.
+ * - getXxxxxAlert(Long id) — Finds an alert by primary key.
+ * - onXxxxxAlert(@Observes XxxxxAlertEvent) — CDI observer that creates and persists a new
+ *   XxxxxAlert from the event data (with defaults), then fires an AlertChangedEvent.
+ * - addXxxxxAlert(XxxxxAlert) — Persists a new alert (forcing a new ID and setting defaults),
+ *   then fires an AlertChangedEvent.
+ * - findAllXxxxxAlerts() — Returns all alerts.
+ * - getCountXxxxxAlerts() — Returns the total count (via Criteria API).
+ * - getXxxxxAlertPage(offset, max) — Returns a paginated list (newest first);
+ *   optionally excludes alerts whose type contains "sync" based on the Show.Sync property.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Stateful
 @Model
 public class XxxxxAlertService {

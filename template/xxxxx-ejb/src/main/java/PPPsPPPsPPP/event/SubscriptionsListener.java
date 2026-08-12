@@ -22,6 +22,20 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.logging.Logger;
 
+/**
+ * Lllll
+ *
+ * This is a CDI/EJB singleton that manages and caches a list of alerts for the UI.
+ * On startup (@PostConstruct) and whenever settings or alerts change (via CDI events),
+ * it loads the latest alerts from the service, converts them into alert objects
+ * (with formatted timestamps), and exposes the list for the web page.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @Singleton
 @Startup
 @ApplicationScoped

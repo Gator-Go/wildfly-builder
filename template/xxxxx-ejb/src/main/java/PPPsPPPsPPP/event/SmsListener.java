@@ -19,6 +19,21 @@ import java.util.logging.Logger;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
+/**
+ * Lllll
+ *
+ * This is an application-scoped CDI bean that sends SMS messages via Twilio.
+ * On application startup it reads Twilio credentials from system properties
+ * and initializes the client (or disables SMS if they are missing). When an
+ * SmsEvent is observed it sends the message, logs the result, fires an
+ * XxxxxAlertEvent, and returns the Twilio message SID.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @ApplicationScoped
 public class SmsListener {
 

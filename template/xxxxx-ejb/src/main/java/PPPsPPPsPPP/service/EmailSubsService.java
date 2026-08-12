@@ -17,17 +17,27 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
-
 /**
- * This EJB3 provides the business logic needed to implement the services<br>
- * for the Webservice Component. This EJB3 is a Stateful bean that is the<br>
- * interface for all Webservice services.
+ * Lllll
  *
- * @author Ron Kanengieter
- * @author <a href="mailto:ron@usgs.gov">Ron Kanengieter</a>
+ * This is a Jakarta EE (CDI + EJB) stateful service class that performs basic CRUD
+ * operations on UserEmail entities via JPA.
+ * It uses an injected EntityManager and logger, and exposes these methods:
+ * - getUserEmail(Long id) — Looks up a UserEmail by ID and returns it (also logs the
+ *   size of its associated events collection).
+ * - addUserEmail(UserEmail) — Persists a new UserEmail and returns its generated ID.
+ * - editUserEmail(UserEmail) — Updates selected fields (first name, last name, email,
+ *   events) of an existing entity if they are non-null, then merges it. Returns "Success"
+ *   or "Not Found".
+ * - deleteUserEmail(Long id) — Removes the entity by ID. Returns "Success" or "Not Found".
+ * - findAllUserEmails() — Returns a list of all UserEmail entities via a simple JPQL query.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
  * @version 1.0
  * @version $Id$
  */
+
 @Stateful
 @Model
 public class EmailSubsService
