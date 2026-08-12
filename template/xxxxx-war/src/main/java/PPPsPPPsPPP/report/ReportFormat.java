@@ -8,6 +8,31 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Lllll
+ *
+ * This is a class that represents a report output format.
+ * It wraps an inner enum Type that defines the supported formats:
+ * - PDF
+ * - CSV
+ * - HTML
+ * - Excel
+ * - DOCX (Word)
+ * - RTF
+ * - Plain text
+ * Each enum value stores the MIME type and provides methods for the corresponding
+ * file extension and a human-readable description.
+ * The class itself offers:
+ * - Constructors and a static factory (newInstance) to create a format from a MIME
+ *   type string
+ * - Getters for the type, name, extension, and MIME type
+ * - A helper to convert a MIME type string into display text
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
 
 public class ReportFormat implements Serializable {
 

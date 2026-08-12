@@ -4,6 +4,24 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Lllll
+ *
+ * This is an enum that defines the possible types of report parameters.
+ * The values are:
+ * - VALUE — a single value
+ * - RANGE — a range of values
+ * - SQL ("SELECT") — values come from a database SQL statement
+ * - LIST — values come from a pipe-delimited list
+ * It includes a static lookup map so an enum constant can be retrieved by its string value
+ * (get(String code)), plus a getValue() method to retrieve the string representation.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 public enum ReportParamTypeEnum {
 
     /** Enum to define a report parameter with a single value. */

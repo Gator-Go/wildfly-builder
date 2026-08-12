@@ -18,10 +18,25 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
 /**
- * Servlet implementation class ControllerServlet
+ * Lllll
+ *
+ * This is the main front-controller servlet for the application (mapped to /sync).
+ * It is secured so only users with the ADMIN or USER role can access it.
+ * How it works:
+ * - Both GET and POST are handled by doPost.
+ * - It reads the op request parameter (defaults to "Test" if missing).
+ * - Looks up the corresponding entry in ControllerEnums.Calls to determine which servlet class
+ *   and method should handle the request.
+ * - Uses reflection to invoke that method, passing the request and response.
+ * - Contains a simple doTest method that just writes "test success".
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @WebServlet("/sync")
 @ServletSecurity(@HttpConstraint(rolesAllowed = { "ADMIN", "USER" }))
 public class ControllerServlet extends HttpServlet {

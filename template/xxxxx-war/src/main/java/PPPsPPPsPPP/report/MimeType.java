@@ -4,6 +4,27 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Lllll
+ *
+ * This is a simple wrapper class containing a nested enum MimeTypeEnum that defines
+ * supported report output file extensions.
+ * The enum values are:
+ * - PDF → "pdf"
+ * - CSV → "csv"
+ * - HTML → "html"
+ * - EXCEL → "xls"
+ * - WORD → "docx"
+ * - RICH_TEXT → "rtf"
+ * - TEXT → "txt"
+ * It includes a static lookup map so an enum constant can be retrieved by its string
+ * value (get(String code)), plus a getValue() method to retrieve the extension string.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
 
 public class MimeType
 {

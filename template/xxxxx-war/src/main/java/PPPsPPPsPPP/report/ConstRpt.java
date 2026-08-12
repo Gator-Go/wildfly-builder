@@ -3,6 +3,24 @@ package ppp.ppp.ppp.report;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * Lllll
+ *
+ * This is a constants class for the report module.
+ * It defines:
+ * - Operation/page names used for navigation and actions (e.g. report list,
+ *   generate report, admin add/edit/view/delete screens and their corresponding
+ *   action handlers).
+ * - Date/time formatters (SimpleDateFormat instances) covering various styles:
+ *   standard date/time, day-of-year (DOY) formats, CMS/archive/directory variants, etc.
+ * - Common request/parameter names and string literals used in forms and UI logic
+ *   (e.g. op, id, name, enabled, true/false, pagination keys, etc.).
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
 
 public class ConstRpt
 {

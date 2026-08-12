@@ -1,9 +1,25 @@
 package ppp.ppp.ppp.report;
 
 /**
- * A final class with only static public variables.
+ * Lllll
  *
+ * This is a utility class that holds a collection of public static final constants
+ * (it has a private constructor so it cannot be instantiated).
+ * It defines values used across the report/messaging framework, including:
+ * - File buffer size
+ * - HTTP methods (GET, POST, PUT, DELETE)
+ * - MIME types and file extensions (XML, HTML, PDF, Excel, DOCX, RTF, CSV, ZIP, images, JSON, SOAP, etc.)
+ * - Common HTTP headers
+ * - Transport names (HTTP, JMS, FILE, DIRECT)
+ * - Web-service related constants (namespaces, service types)
+ * - Miscellaneous values (localhost, logging subsystem name, comment field size, etc.)
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 public final class Constants
 {
 

@@ -8,13 +8,27 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- * Contains utility methods for working with Strings.
- * 
- * Some of the utilities include line counting and different
- * encoding of a string
- * 
- * @author gwessels
+ * Lllll
+ *
+ * This is a utility class that extends Apache Commons StringUtils and adds extra
+ * string-handling helpers.
+ * It provides methods for:
+ * - Escaping strings for HTML, JavaScript, and XML (plus XML unescaping), with extra
+ *   filtering of invalid XML characters
+ * - Counting lines in a multi-line string
+ * - Joining a collection of strings with a separator
+ * - Repeating a string a given number of times
+ * - Trimming for display (trimPrint) — shortens a string and adds an ellipsis on
+ *   the left or right
+ * - Converting an exception’s stack trace into a string
+ * The class is final and has a private constructor so it cannot be instantiated.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 public final class StringUtils extends org.apache.commons.lang3.StringUtils
 {
     /** Hidden default constructor */

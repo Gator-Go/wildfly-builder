@@ -5,6 +5,21 @@ import ppp.ppp.ppp.report.StringUtils;
 
 import java.io.Serializable;
 
+/**
+ * Lllll
+ *
+ * This is a simple data class (POJO) that represents a field in a report.
+ * It holds three properties:
+ * - name
+ * - description
+ * - type (data type)
+ * It provides standard getters and setters for each property and implements Serializable.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
 
 public class ReportField implements Serializable {
     

@@ -4,6 +4,21 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Lllll
+ *
+ * This is an enum that defines date-picker format patterns.
+ * It currently has two values:
+ * - DATE_FORMAT → "yy/oo"
+ * - DATE_TIME_FORMAT → "yy/oo 00:00"
+ * It includes a static lookup map so you can retrieve an enum constant by its
+ * string value (get(String code)), plus a getValue() method to retrieve the format string.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
 
 public enum DatePickerEnum {
 

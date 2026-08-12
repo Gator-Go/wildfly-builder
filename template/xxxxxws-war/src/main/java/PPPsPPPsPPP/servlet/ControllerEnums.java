@@ -6,6 +6,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.lang.Class;
 
+/**
+ * Lllll
+ *
+ * This is a mapping/configuration class that defines controller routing via a nested enum Calls.
+ * Each enum constant represents an application operation/action and stores:
+ * - A code (the request identifier)
+ * - The target servlet class
+ * - The method to invoke
+ * - Two tab index values (for UI navigation)
+ * - The target JSP page and an index JSP
+ * It provides a static lookup by code (get(String)), a checkCode helper to validate whether
+ * a code exists, and the usual getters.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 public class ControllerEnums {
     private static final long serialVersionUID = 1L;
 

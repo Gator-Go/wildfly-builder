@@ -4,6 +4,21 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Lllll
+ *
+ * This is an enum that defines the supported report engine types.
+ * Currently it has a single value:
+ * - JASPER → "JASPER"
+ * It includes a static lookup map so the enum constant can be retrieved by
+ * its string value (get(String code)), plus a getValue() method to retrieve
+ * the string representation.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
 
 public enum ReportTypeEnum {
 

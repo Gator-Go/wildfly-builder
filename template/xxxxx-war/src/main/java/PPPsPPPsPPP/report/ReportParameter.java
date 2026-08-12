@@ -10,6 +10,27 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Lllll
+ *
+ * This is a data class (POJO) that represents a parameter for a report.
+ * It stores:
+ * - name, description, dataType, and type
+ * - Whether the parameter is required
+ * - Optional minValue / maxValue
+ * - listOptions (collection of allowed values, also supported as a pipe-delimited string)
+ * - An optional sqlStatement (for dynamic lists)
+ * - An optional dateFormat
+ * It also provides convenience methods:
+ * - isDateType() — checks if the parameter is a Date or Timestamp
+ * - isBoolean() — checks if the parameter is a Boolean
+ * - Helpers to convert list options to/from a pipe-delimited string
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
 
 public class ReportParameter implements Serializable {
 

@@ -47,6 +47,27 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.JRResultSetDataSource;
 import net.sf.jasperreports.engine.JasperExportManager;
 
+/**
+ * Lllll
+ *
+ * This is a concrete implementation of BaseReport for JasperReports.
+ * It handles the full lifecycle of a Jasper report:
+ * - init() — Loads the JRXML design, extracts user parameters (marking some as optional
+ *   if a matching _CLAUSE parameter exists), detects subreport parameters, and extracts fields.
+ * - compile() — Compiles the design into a runtime JasperReport.
+ * - renderInternal() — Compiles the report (and any subreports), fills it using a provided
+ *   database Connection and parameters, then exports the result to the requested format.
+ * - Supported export formats: PDF, CSV, HTML, Excel (XLSX), DOCX, RTF, and plain text.
+ * - Also provides the list of supported parameter data types (Boolean, Date, Timestamp,
+ *   numeric types, String, BigDecimal, etc.).
+ * In short, it is the JasperReports-specific engine that loads, compiles, fills, and exports reports.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 public class JasperReport extends BaseReport implements Serializable {
 
     private static final long serialVersionUID = 4423995085270068263L;

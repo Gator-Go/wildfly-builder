@@ -22,10 +22,23 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
 /**
- * Servlet implementation class YyyyyServlet
+ * Lllll
+ *
+ * This is a request-scoped servlet that handles operations for the Yyyyy entity.
+ * It injects:
+ * - A Logger
+ * - The YyyyyService (for business/persistence logic)
+ * - A CommonLib utility
+ * - The actual request-handling methods (especially file upload / sync logic
+ *   for camera, video, thumbnail, and post)
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @RequestScoped
 public class YyyyyServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;

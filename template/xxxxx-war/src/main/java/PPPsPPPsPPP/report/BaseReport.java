@@ -22,6 +22,27 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 import jakarta.inject.Inject;
 
+/**
+ * Lllll
+ *
+ * This is an abstract base class for report handling (primarily JasperReports).
+ * It provides:
+ * - Factory methods (newInstance) that create a report instance from an
+ *   InputStream or byte array. Supports both single report files and ZIP archives
+ *   containing a main report + subreports.
+ * - Management of parameters, fields, formats, parameter data types, and subreports.
+ * - Methods to add/validate parameters and subreports, check for sort support, and
+ *   look up formats by MIME type.
+ * - Abstract methods that concrete subclasses must implement: getName(), getType(),
+ *   getFormats(), getParamDataTypes(), init(), compile(), and renderInternal().
+ * - A public render() method that validates inputs and delegates to the subclass’s
+ *   renderInternal() implementation (passing a database Connection and output stream).
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
 
 public abstract class BaseReport {
 
