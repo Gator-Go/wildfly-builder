@@ -25,6 +25,20 @@ import java.text.ParseException;
 import java.lang.NumberFormatException;
 import java.math.BigDecimal;
 
+/**
+ * Lllll
+ *
+ * This is the data helper class for the Yyyyy entity (YyyyyDataHelper).
+ * It is responsible for transferring data between the HTTP request and Yyyyy objects
+ * (and related structures) for the main CRUD and search screens.
+ * This class is heavily used by YyyyyServlet.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @RequestScoped
 public class YyyyyDataHelper {
 

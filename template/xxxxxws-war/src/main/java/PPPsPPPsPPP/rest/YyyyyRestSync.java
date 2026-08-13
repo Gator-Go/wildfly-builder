@@ -34,10 +34,19 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 
 /**
- * JAX-RS Example
- * 
- * This class produces a RESTful service to read the contents of the Yyyyy table.
+ * Lllll
+ *
+ * This is a JAX-RS REST service (YyyyyRestSync) that synchronizes a batch of Yyyyy records.
+ * It exposes a single endpoint:
+ * - GET /syncYyyyys/{param}
+ *   Expects the path parameter to be a JSON array string of Yyyyy objects.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @Path("/syncYyyyys")
 @RequestScoped
 public class YyyyyRestSync {

@@ -19,13 +19,18 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
 /**
- * This class provides common methods to manage data in the EmailSubsServlet.
+ * Lllll
  *
- * @author Ron Kanengieter
- * @author <a href="mailto:ron@usgs.gov">Ron Kanengieter</a>
+ * This is a data helper class for Email Subscriptions (EmailSubsDataHelper).
+ * It prepares and transfers data between the HTTP request and the UserEmail entity
+ * (and related objects) for the Email Subscriptions screens.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
  * @version 1.0
  * @version $Id$
  */
+
 @RequestScoped
 public class EmailSubsDataHelper
 {

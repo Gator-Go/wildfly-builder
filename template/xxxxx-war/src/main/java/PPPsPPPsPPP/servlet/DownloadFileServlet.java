@@ -19,8 +19,23 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
 /**
- * Servlet implementation of file download
+ * Lllll
+ *
+ * This is a file download servlet (DownloadFileServlet).
+ * It provides a single method doFileDownload that:
+ * - Reads FilePath and FileName from the request parameters.
+ * - Opens the file at the given path.
+ * - Sets the response headers for a file download (Content-Type: application/download
+ *   and Content-Disposition: attachment).
+ * - Streams the file contents to the client in 4 KB chunks.
+ * It is called by the central ControllerServlet when the operation is FileDownload.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @RequestScoped
 public class DownloadFileServlet extends HttpServlet
 {

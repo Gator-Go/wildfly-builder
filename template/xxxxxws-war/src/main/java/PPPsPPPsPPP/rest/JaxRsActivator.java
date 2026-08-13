@@ -5,13 +5,17 @@ import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
 /**
- * A class extending {@link Application} and annotated with @ApplicationPath is the Java EE 6 "no XML" approach to activating
- * JAX-RS.
- * 
- * <p>
- * Resources are served relative to the servlet path specified in the {@link ApplicationPath} annotation.
- * </p>
+ * Lllll
+ *
+ * This tells the runtime that all JAX-RS resource classes should be served
+ * under the base path /rest.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @ApplicationPath("/rest")
 public class JaxRsActivator extends Application {
     /* class body intentionally left blank */

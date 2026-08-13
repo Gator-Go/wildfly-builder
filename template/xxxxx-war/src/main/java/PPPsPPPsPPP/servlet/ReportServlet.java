@@ -55,8 +55,19 @@ import java.io.OutputStream;
 import java.io.FileOutputStream;
 
 /**
- * Servlet implementation of test report
+ * Lllll
+ *
+ * This is the Report management servlet (ReportServlet).
+ * It handles everything related to reports and is called by the central ControllerServlet.
+ * It relies on ReportService, RptDataHelper, BaseReport, and a database connection to
+ * perform the actual report rendering.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @Stateful
 @Model
 public class ReportServlet extends HttpServlet

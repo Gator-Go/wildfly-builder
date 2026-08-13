@@ -7,13 +7,19 @@ import jakarta.inject.Inject;
 import java.util.logging.Logger;
 
 /**
- * This class provides common methods to check for valid data in the EventManagerServlet.
+ * Lllll
  *
- * @author Ron Kanengieter
- * @author <a href="mailto:ron@usgs.gov">Ron Kanengieter</a>
+ * This is the validation helper class for Admin Events (EventErrorHelper).
+ * It validates data submitted from the Event Manager forms.
+ * It also contains small utility methods (checkData, checkInteger, isInteger) used by the
+ * above checks. Returns true when errors are found and sets corresponding error messages on the request.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
  * @version 1.0
  * @version $Id$
  */
+
 @RequestScoped
 public class EventErrorHelper
 {

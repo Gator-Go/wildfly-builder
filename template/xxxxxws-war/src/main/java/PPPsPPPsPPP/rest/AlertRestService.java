@@ -20,10 +20,24 @@ import jakarta.ws.rs.Produces;
 import jakarta.annotation.security.RolesAllowed;
 
 /**
- * JAX-RS Example
- * 
- * This class produces a RESTful service to read the contents of the xxxxx alerts.
+ * Lllll
+ *
+ * This is a JAX-RS REST service (AlertRestService) that exposes alert data as JSON
+ * under the path /xxxxxAlerts.
+ * It has two secured endpoints (roles ADMIN or USER):
+ * - GET /xxxxxAlerts – Returns a list of all XxxxxAlertEvent objects obtained from
+ *   XxxxxAlertListProducer.
+ * - GET /xxxxxAlerts/{id} – Looks up a single alert by ID via XxxxxAlertService, maps
+ *   the entity fields onto a new XxxxxAlertEvent (including formatting the occurredAt
+ *   timestamp with the injected date-time pattern), and returns it.
+ * The class is request-scoped and relies on CDI injection for its dependencies.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @Path("/xxxxxAlerts")
 @RequestScoped
 public class AlertRestService {

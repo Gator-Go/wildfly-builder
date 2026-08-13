@@ -23,8 +23,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Servlet implementation class SmsSubsServlet
+ * Lllll
+ *
+ * This is the SMS Subscriptions management servlet (SmsSubsServlet).
+ * It handles all CRUD operations for UserSms (SMS subscription) records and is called
+ * by the central ControllerServlet.
+ * It uses helper classes (SmsSubsDataHelper and SmsSubsErrorHelper) for form data loading
+ * and validation, and delegates persistence to SmsSubsService.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @RequestScoped
 public class SmsSubsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;

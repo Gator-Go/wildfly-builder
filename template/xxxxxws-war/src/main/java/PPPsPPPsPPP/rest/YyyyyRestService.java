@@ -24,10 +24,20 @@ import jakarta.ws.rs.Produces;
 import jakarta.annotation.security.RolesAllowed;
 
 /**
- * JAX-RS Example
- * 
- * This class produces a RESTful service to read the contents of the yyyyys table.
+ * Lllll
+ *
+ * This is a JAX-RS REST service (YyyyyRestService) that returns non-deleted
+ * Yyyyy records as DTOs for synchronization.
+ * It exposes a single secured endpoint:
+ * - GET /yyyyys/{param} (roles ADMIN or USER)
+ *   Expects a date string in the format dd-MM-yyyy as the path parameter.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @Path("/yyyyys")
 @RequestScoped
 public class YyyyyRestService {
@@ -43,7 +53,6 @@ public class YyyyyRestService {
     @Path("/{param}")
     @Produces("application/json")
     public List<YyyyyDto> listAllYyyyys(@PathParam("param") String lastSyncDateStr) {
-        @SuppressWarnings("unchecked")
 
         List<YyyyyDto> results = new ArrayList<YyyyyDto>();
 
@@ -56,13 +65,10 @@ public class YyyyyRestService {
             return results;
         }
 
-        List<Yyyyy> yyyyys;
-	if (em.createQuery("select m from Yyyyy m").getMaxResults() > 0)
-	    yyyyys = em.createQuery("select m from Yyyyy m where m.lastUpdate >= :syncDate AND m.deleteFlag = FALSE order by m.id")
-            .setParameter("syncDate", lastSyncDate, TemporalType.DATE)
-            .getResultList();
-	else
-	   yyyyys = new ArrayList<Yyyyy>();
+        List<Yyyyy> yyyyys = em.createQuery(
+            "select m from Yyyyy m where m.lastUpdate >= :syncDate AND m.deleteFlag = FALSE order by m.id")
+           .setParameter("syncDate", lastSyncDate, TemporalType.DATE)
+           .getResultList();
 
         for (Yyyyy yyyyy : yyyyys) {
 

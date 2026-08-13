@@ -1,27 +1,30 @@
-
 package ppp.ppp.ppp.rest;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.logging.Logger;
-
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.inject.Inject;
 
 /**
- * JAX-RS Example
- * 
- * This class produces a RESTful service to generate device sequence number.
+ * Lllll
+ *
+ * This is a JAX-RS REST service (NewDeviceRestService) that generates the next device ID.
+ * It exposes a single secured endpoint:
+ * - GET /newDevice (roles ADMIN or USER)
+ * Returns the next sequential integer ID.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
 @Path("/newDevice")
 @RequestScoped
@@ -30,50 +33,59 @@ public class NewDeviceRestService {
     @Inject
     private Logger log;
 
-    @RolesAllowed({"ADMIN","USER"})
+    @RolesAllowed({"ADMIN", "USER"})
     @GET
     @Produces("application/json")
-    public Integer listAllComments() {
-        @SuppressWarnings("unchecked")
-
-        Integer seq = new Integer(-1);
+    public Integer getDeviceID() {
+        Integer seq = -1;
         String httpRoot = System.getProperty("com.sw-builder.sync.app.data.dir");
-        String seqGeneratorFile = httpRoot + "/DeviceGenerator.dat";
 
+        if (httpRoot == null || httpRoot.isBlank()) {
+            log.warning("System property 'com.sw-builder.sync.app.data.dir' is not set");
+            return seq;
+        }
+
+        String seqGeneratorFile = httpRoot + "/DeviceGenerator.dat";
         RandomAccessFile seqFile = null;
+        FileLock lock = null;
+
         try {
             seqFile = new RandomAccessFile(seqGeneratorFile, "rw");
             FileChannel fc = seqFile.getChannel();
-            java.nio.channels.FileLock lock = fc.lock();
+            lock = fc.lock();
 
             try {
                 seq = seqFile.readInt();
             } catch (IOException ex) {
-                log.warning("IOException reading seqFile, reset sequence number to 2");
+                log.warning("IOException reading seqFile, resetting sequence number to 1");
                 seq = 1;
             }
-            seq++;
 
+            seq++;
             seqFile.seek(0);
             seqFile.writeInt(seq);
-            lock.release();
-            seqFile.close();
-            seqFile = null;
+
         } catch (FileNotFoundException ex) {
             log.warning("FileNotFoundException: " + ex.getMessage());
         } catch (IOException ex) {
             log.warning("IOException: " + ex.getMessage());
         } finally {
+            if (lock != null) {
+                try {
+                    lock.release();
+                } catch (IOException ex) {
+                    log.warning("IOException releasing lock: " + ex.getMessage());
+                }
+            }
             if (seqFile != null) {
                 try {
                     seqFile.close();
                 } catch (IOException ex) {
-                    log.warning("IOException in close: " + ex.getMessage());
+                    log.warning("IOException closing file: " + ex.getMessage());
                 }
             }
         }
 
         return seq;
     }
-
 }

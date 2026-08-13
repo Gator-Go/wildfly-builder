@@ -3,6 +3,19 @@ package ppp.ppp.ppp.servlet.helper;
 
 import java.io.Serializable;
 
+/**
+ * Lllll
+ *
+ * This is a simple formatting / transfer class (EmailSubsFmt).
+ * It is a lightweight serializable POJO used to display and manage the list of selected
+ * events on the Email Subscription add/edit forms along with standard getters and setters.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 public class EmailSubsFmt implements Serializable {
    private static final long serialVersionUID = 1L;
 

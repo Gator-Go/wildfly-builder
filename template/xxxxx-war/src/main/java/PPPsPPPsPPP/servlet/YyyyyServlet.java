@@ -33,8 +33,25 @@ import jakarta.servlet.http.HttpServletResponse;
 
 
 /**
- * Servlet implementation class YyyyyServlet
+ * Lllll
+ *
+ * This is the main CRUD + search servlet for the Yyyyy entity (YyyyyServlet).
+ * It is called by the central ControllerServlet and provides the full administrative
+ * interface for Yyyyy records.
+ * It also contains many code-generation placeholders for:
+ * - One-to-many child relationships
+ * - File uploads (camera, video, thumbnail, post)
+ * - Maps / location display
+ * - Enum and tag attributes
+ * The servlet uses YyyyyService for persistence, plus data and error helper classes for
+ * form handling and validation.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @RequestScoped
 public class YyyyyServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;

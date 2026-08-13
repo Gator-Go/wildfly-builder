@@ -9,13 +9,19 @@ import java.util.Set;
 import java.util.HashSet;
 
 /**
- * This class provides common methods to check for valid data in the SmsSubsServlet.
+ * Lllll
  *
- * @author Ron Kanengieter
- * @author <a href="mailto:ron@usgs.gov">Ron Kanengieter</a>
+ * This is a validation helper class for SMS Subscriptions (SmsSubsErrorHelper).
+ * It checks the data submitted from the SMS Subscription add/edit forms.
+ * If any validation fails, it sets error messages as request attributes and returns
+ * true (indicating errors were found).
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
  * @version 1.0
  * @version $Id$
  */
+
 @RequestScoped
 public class SmsSubsErrorHelper
 {

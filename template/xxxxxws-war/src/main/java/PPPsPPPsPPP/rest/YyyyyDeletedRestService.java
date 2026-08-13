@@ -22,10 +22,20 @@ import jakarta.ws.rs.Produces;
 import jakarta.annotation.security.RolesAllowed;
 
 /**
- * JAX-RS Example
- * 
- * This class produces a RESTful service to read the contents of the yyyyys table.
+ * Lllll
+ *
+ * This is a JAX-RS REST service (YyyyyDeletedRestService) that returns the IDs
+ * of deleted records.
+ * It exposes a single secured endpoint:
+ * - GET /yyyyysDeleted/{param} (roles ADMIN or USER)
+ *   Expects a date string in the format dd-MM-yyyy as the path parameter (lastSyncDateStr).
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @Path("/yyyyysDeleted")
 @RequestScoped
 public class YyyyyDeletedRestService {

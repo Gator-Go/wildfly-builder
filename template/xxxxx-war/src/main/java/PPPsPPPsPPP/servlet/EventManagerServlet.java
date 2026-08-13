@@ -30,8 +30,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Servlet implementation class ServiceLogManager
+ * Lllll
+ *
+ * This is the Event Manager servlet (EventManagerServlet).
+ * It handles all administration of AdminEvent records (and their schedules) and
+ * is invoked by the central ControllerServlet.
+ * It uses helper classes for form data loading/validation and delegates persistence
+ * and event firing to EventService, FireEvent, and EventScheduler.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @RequestScoped
 public class EventManagerServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;

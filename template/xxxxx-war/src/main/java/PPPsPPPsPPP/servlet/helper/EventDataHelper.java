@@ -18,14 +18,24 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
 /**
- * This class provides common methods to manage data in the ScienceManagerServlet.
+ * Lllll
  *
- * @author Ron Kanengieter
- * @author <a href="mailto:ron@usgs.gov">Ron Kanengieter</a>
- * @author <a href="mailto:kpostma@usgs.gov">Kory Postma</a>
+ * This is the data helper class for Admin Events (EventDataHelper).
+ * It handles loading, transforming, and transferring data between HTTP requests and the event-related entities (AdminEvent, EventParameter, EventSchedule) for the Event Manager screens.
+ * Main responsibilities:
+ * - Fire Event – Builds a parameter map from the request for immediate event firing.
+ * - Event Scheduling:
+ * - Loads default or existing schedule data
+ * - Rebuilds schedule form data from the request
+ * - Creates an EventSchedule entity from the submitted cron-like values
+ * It is heavily used by EventManagerServlet.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
  * @version 1.0
  * @version $Id$
  */
+
 @RequestScoped
 public class EventDataHelper
 {

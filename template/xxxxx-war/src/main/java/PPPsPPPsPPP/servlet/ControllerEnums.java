@@ -7,6 +7,26 @@ import java.util.Map;
 import java.lang.Class;
 ___JSP_REPORT_IMPORT_CONST_FUNCTION___
 
+/**
+ * Lllll
+ *
+ * This is a controller routing configuration class (ControllerEnums).
+ * It defines a large enum called Calls that acts as a central registry
+ * of all application “actions” / screens.
+ * Each enum constant represents one logical operation and stores:
+ * - A unique code (e.g. "Home", "AddEvent", "EditEmailSubsAction")
+ * - The servlet class that should handle it
+ * - The method name to invoke on that servlet
+ * - Two tab indexes (for UI navigation/highlighting)
+ * - The JSP page to display
+ * - The index/layout JSP to use
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 public class ControllerEnums {
     private static final long serialVersionUID = 1L;
 

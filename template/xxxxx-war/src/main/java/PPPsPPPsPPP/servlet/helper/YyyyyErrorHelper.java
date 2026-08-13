@@ -11,6 +11,20 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import java.math.BigDecimal;
 
+/**
+ * Lllll
+ *
+ * This is the validation helper class for the Yyyyy entity (YyyyyErrorHelper).
+ * It validates a Yyyyy object (typically after form submission) using Bean Validation (Validator)
+ * and additional custom checks.
+ * It is used by YyyyyServlet on add and edit actions.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @RequestScoped
 public class YyyyyErrorHelper {
 

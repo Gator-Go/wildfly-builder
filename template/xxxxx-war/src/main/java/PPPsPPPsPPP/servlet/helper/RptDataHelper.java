@@ -29,6 +29,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
+/**
+ * Lllll
+ *
+ * This is the data helper class for Reports (RptDataHelper).
+ * It prepares and transfers data between the HTTP request and report-related
+ * entities for the Report screens.
+ * It is used heavily by ReportServlet.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
 
 @RequestScoped
 public class RptDataHelper

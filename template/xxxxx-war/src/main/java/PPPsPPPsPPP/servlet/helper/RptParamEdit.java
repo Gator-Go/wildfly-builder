@@ -5,6 +5,19 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.Serializable;
 
+/**
+ * Lllll
+ *
+ * This is a formatting / transfer class used for editing report parameters (RptParamEdit).
+ * It is a serializable POJO that holds all the data needed to display and edit a single
+ * RptParam on the Admin Report Edit form along with standard getters and setters.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 public class RptParamEdit implements Serializable {
    private static final long serialVersionUID = 1L;
    private String paramId;

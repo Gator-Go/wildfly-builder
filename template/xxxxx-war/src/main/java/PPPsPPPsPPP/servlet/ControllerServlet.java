@@ -20,8 +20,28 @@ import jakarta.servlet.http.HttpServletResponse;
 ___JSP_REPORT_IMPORT_CONST_FUNCTION___
 
 /**
- * Servlet implementation class ControllerServlet
+ * Lllll
+ *
+ * This is the central Front Controller servlet (ControllerServlet).
+ * It is mapped to /do and acts as the single entry point for most application requests.
+ * Main responsibilities:
+ * - Reads the op request parameter (defaults to "Home" if missing).
+ * - Handles a special "logout" operation (invalidates the session and redirects).
+ * - Looks up the requested operation in ControllerEnums.Calls.
+ * - Uses reflection to invoke the corresponding method on the appropriate servlet
+ *   (itself, EventManagerServlet, EmailSubsServlet, SmsSubsServlet, DownloadFileServlet,
+ *   or other injected servlets via code-generation placeholders).
+ * - Sets the current user role (GUEST / USER / ADMIN) as a request attribute.
+ * - Forwards to index.jsp (except for file downloads).
+ * It also contains a simple doPass method used by some operations that only need
+ * to pass the op value through.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @WebServlet("/do")
 @ServletSecurity(@HttpConstraint(rolesAllowed = { "ADMIN", "USER", "GUEST" }))
 public class ControllerServlet extends HttpServlet {

@@ -23,8 +23,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Servlet implementation class EmailSubsServlet
+ * Lllll
+ *
+ * This is the Email Subscriptions management servlet (EmailSubsServlet).
+ * It handles all CRUD operations for UserEmail (email subscription) records and is
+ * called by the central ControllerServlet.
+ * It uses helper classes (EmailSubsDataHelper and EmailSubsErrorHelper) for form data
+ * loading and validation, and delegates persistence to EmailSubsService.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @RequestScoped
 public class EmailSubsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;

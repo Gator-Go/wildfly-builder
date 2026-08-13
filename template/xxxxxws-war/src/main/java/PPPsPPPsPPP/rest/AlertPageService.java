@@ -20,10 +20,23 @@ import jakarta.ws.rs.Produces;
 import jakarta.annotation.security.RolesAllowed;
 
 /**
- * JAX-RS Example
- * 
- * This class produces a RESTful service to page the Alerts.
+ * Lllll
+ *
+ * This is a JAX-RS REST endpoint that provides paginated alert data as JSON.
+ * Path: /xxxxxAlertPage/page/{pageStr}
+ * Method: GET
+ * Security: Restricted to users with the ADMIN or USER role
+ * Scope: Request-scoped
+ * It injects the XxxxxAlertService, a page-size setting (Rows.ToPage), and a date-time format.
+ * For a given page number it:
+ * - Calculates the offset
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
+
 @Path("/xxxxxAlertPage")
 @RequestScoped
 public class AlertPageService {

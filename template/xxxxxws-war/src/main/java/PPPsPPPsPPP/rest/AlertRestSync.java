@@ -1,79 +1,70 @@
-
 package ppp.ppp.ppp.rest;
 
 import ppp.ppp.ppp.entity.XxxxxAlert;
 import ppp.ppp.ppp.service.XxxxxAlertService;
-
-import ppp.ppp.ppp.event.msg.XxxxxAlertEvent;
-import jakarta.enterprise.event.Event;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Date;
-import java.text.ParseException;
-
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 /**
- * JAX-RS Example
- * 
- * This class produces a RESTful service to read the contents of the xxxxx alert table.
+ * Lllll
+ *
+ * REST endpoint for synchronizing Xxxxx alerts.
+ * Accepts a JSON array of alerts via POST and persists them.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
  */
 @Path("/syncXxxxxAlerts")
 @RequestScoped
 public class AlertRestSync {
 
-
     @Inject
     XxxxxAlertService xxxxxAlertService;
 
-    @Inject
-    private Event<XxxxxAlertEvent> xxxxxAlertEventMsg;
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response syncAlerts(String syncAlertsJson) {
+        try {
+            JSONArray jsonArray = new JSONArray(syncAlertsJson);
 
-    private JSONObject jsonObject;
-    private JSONArray jsonArray;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-    @GET
-    @Path("/{param}")
-    @Produces("application/json")
-    public Response printMessage(@PathParam("param") String syncAlerts) {
+                Long deviceId = jsonObject.getLong("deviceId");
+                String xxxxxAlertType = jsonObject.getString("xxxxxAlertType");
+                String xxxxxAlertSource = jsonObject.getString("xxxxxAlertSource");
+                String xxxxxAlertMessage = jsonObject.getString("xxxxxAlertMessage");
+                long occurredAtMillis = jsonObject.getLong("occurredAt");
+                Date occurredAt = new Date(occurredAtMillis);
 
-        String result = "Success";
+                XxxxxAlert xxxxxAlert = new XxxxxAlert();
+                xxxxxAlert.setDeviceId(deviceId);
+                xxxxxAlert.setXxxxxAlertType(xxxxxAlertType);
+                xxxxxAlert.setXxxxxAlertSource(xxxxxAlertSource);
+                xxxxxAlert.setXxxxxAlertMessage(xxxxxAlertMessage);
+                xxxxxAlert.setOccurredAt(occurredAt);
 
-        JSONArray jsonArray = new JSONArray(syncAlerts);
+                xxxxxAlertService.addXxxxxAlert(xxxxxAlert);
+            }
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            jsonObject = jsonArray.getJSONObject(i);
+            return Response.ok("{\"status\":\"Success\"}").build();
 
-            int deviceIdInt = jsonObject.getInt("deviceId");
-            Long deviceId = new Long(deviceIdInt);
-            String xxxxxAlertType = jsonObject.getString("xxxxxAlertType");
-            String xxxxxAlertSource = jsonObject.getString("xxxxxAlertSource");
-            String xxxxxAlertMessage = jsonObject.getString("xxxxxAlertMessage");
-            String occurredAtStr = jsonObject.getString("occurredAt");
-            Long occurredAtLong = new Long(occurredAtStr);
-            Date occurredAt = new Date(occurredAtLong.longValue());
-
-            XxxxxAlert xxxxxAlert = new XxxxxAlert();
-
-            xxxxxAlert.setDeviceId(deviceId);
-            xxxxxAlert.setXxxxxAlertType(xxxxxAlertType);
-            xxxxxAlert.setXxxxxAlertSource(xxxxxAlertSource);
-            xxxxxAlert.setXxxxxAlertMessage(xxxxxAlertMessage);
-            xxxxxAlert.setOccurredAt(occurredAt);
-
-            xxxxxAlertService.addXxxxxAlert(xxxxxAlert);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                           .entity("{\"status\":\"Error\",\"message\":\"" + e.getMessage() + "\"}")
+                           .build();
         }
-        return Response.status(200).entity(result).build();
     }
 }

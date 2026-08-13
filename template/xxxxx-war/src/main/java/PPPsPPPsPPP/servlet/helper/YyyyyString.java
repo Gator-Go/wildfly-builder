@@ -12,6 +12,19 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.enterprise.context.RequestScoped;
 
+/**
+ * Lllll
+ *
+ * This is a helper class for converting Yyyyy entities into display strings and
+ * dropdown options (YyyyyString).
+ * It is used when one entity needs to display or select related Yyyyy records.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 @RequestScoped
 public class YyyyyString {
 

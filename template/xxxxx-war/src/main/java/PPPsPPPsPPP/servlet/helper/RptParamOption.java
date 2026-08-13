@@ -5,6 +5,19 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.Serializable;
 
+/**
+ * Lllll
+ *
+ * This is a formatting / transfer class used when generating reports (RptParamOption).
+ * It is a serializable POJO that describes how a single report parameter should be
+ * rendered on the “Generate Report” form along with standard getters and setters.
+ *
+ * @author Aaaaa
+ * @author <a href="mailto:aaaaa@ddddd">Aaaaa</a>
+ * @version 1.0
+ * @version $Id$
+ */
+
 public class RptParamOption implements Serializable {
    private static final long serialVersionUID = 1L;
 
