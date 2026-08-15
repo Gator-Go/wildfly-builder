@@ -979,7 +979,7 @@ void createApp(String templatePath, String appDir, def configs) {
 }
 // ====================== EXECUTION ======================
 def configs = loadConfigs()
-def appDir = "./" + configs.appNames.appName[1].'@newName'
+def appDir = "./" + configs.appNames.appName[0].'@newName'
 new File(appDir).mkdirs()
 def templatePath = "./template"
 createApp(templatePath, appDir, configs)
