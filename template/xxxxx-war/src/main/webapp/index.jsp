@@ -54,7 +54,7 @@ ___JSP_REPORT_INDEX_URL_FUNCTION___
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <link rel="stylesheet" type="text/css" href="resources/css/jquery-ui.css" />
-<link rel="stylesheet" type="text/css" href="resources/css/pojo_style.css" />
+<link rel="stylesheet" type="text/css" href="resources/css/pojo_style.css?v=3" />
 
 <script src="resources/js/jquery-1.11.1.min.js"></script>
 <script src="resources/js/jquery-ui.min.js"></script>
