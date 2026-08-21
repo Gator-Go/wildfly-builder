@@ -797,7 +797,6 @@ def createMultiFunctionProc(String fileName, String templatePath, String outputD
             def processed = insertFunc
             if (processed.contains("___JSP_SEQ___")) {
                 processed = processed.replace("___JSP_SEQ___", jspSetSeq.toString())
-                jspSetSeq++
             }
             if (processed.contains("___JSP_SET_SEQ___")) {
                 processed = processed.replace("___JSP_SET_SEQ___", jspSetSeq.toString())
