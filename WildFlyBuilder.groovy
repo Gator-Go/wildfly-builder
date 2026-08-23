@@ -953,7 +953,7 @@ void createApp(String templatePath, String appDir, def configs) {
                             default:
                                 println " ⚠️ Unknown proc '${procName}' for ${i}"
                         }
-                        break
+                        
                     }
                 }
                 if (!processed) {
