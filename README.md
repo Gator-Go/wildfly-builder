@@ -22,7 +22,7 @@ wildfly-builder/
 │   ├── APP_FUNCS.xml
 │   └── APP_PROCS.xml
 └── template/
-
+```
 ## Build scripts
 
 Build/deploy scripts live in each generated app repo, not in this builder.
