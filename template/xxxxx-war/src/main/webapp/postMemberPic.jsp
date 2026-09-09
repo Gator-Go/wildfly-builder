@@ -13,6 +13,9 @@ String httpRoot = System.getProperty("com.sw-builder.sync.app.http-root");
 <div align="left">
 
 <img src="<%= httpRoot %>/thumbnail/Member/Picture/${postMemberThumb}" alt="${postMemberName}" >
+<strong style="font-size: 20px;">
+${postComment}
+</strong>
 
 </div>
 </div>

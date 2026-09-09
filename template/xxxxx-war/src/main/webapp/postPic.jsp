@@ -18,15 +18,3 @@ String httpRoot = System.getProperty("com.sw-builder.sync.app.http-root");
 </div>
 </div>
 
-<div class='pojo-section'>
-<div class='pojo-section-header'>Post Comment</div>
-<div class='pojo-section-body'>
-<div align="left">
-<strong style="font-size: 20px;">
-
-${postComment}
-
-</strong>
-</div>
-</div>
-</div>
