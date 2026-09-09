@@ -201,6 +201,10 @@ ___JSP_REPORT_INDEX_DIV_FUNCTION___
     <div id="pictureInclude"> <jsp:include page="picture.jsp" /> </div>
 </c:if>
 
+<c:if test="${ !empty showPostPic }">
+    <div id="pictureInclude"> <jsp:include page="postPic.jsp" /> </div>
+</c:if>
+
 <c:if test="${ !empty showVideo }">
     <div id="videoInclude"> <jsp:include page="video.jsp" /> </div>
 </c:if>
