@@ -8,7 +8,7 @@ String httpRoot = System.getProperty("com.sw-builder.sync.app.http-root");
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <div class='pojo-section'>
-<div class='pojo-section-header'>${postMemberName} + " Posted"</div>
+<div class='pojo-section-header'>${postMemberName} Posted</div>
 <div class='pojo-section-body'>
 <div align="left">
 
