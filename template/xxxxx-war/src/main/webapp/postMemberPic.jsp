@@ -9,10 +9,9 @@ String httpRoot = System.getProperty("com.sw-builder.sync.app.http-root");
 <div class='pojo-section-body'>
 <div style="display: flex; align-items: center; gap: 12px;">
 <img src="<%= httpRoot %>/thumbnail/Member/Picture/${postMemberThumb}" alt="${postMemberName}">
-<strong style="font-size: 20px;">
+<strong style="font-size: 20px; line-height: 1.6;">
 ${postComment}
 </strong>
 </div>
 </div>
 </div>
-
