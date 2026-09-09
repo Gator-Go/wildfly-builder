@@ -621,6 +621,7 @@
     <code indent='12'>req.setAttribute("showComments", "true");</code>
     <code indent='12'>req.setAttribute("pictureTitle", "Fffff");</code>
     <code indent='12'>req.setAttribute("postMemberName", yyyyy.getMember().getName());</code>
+    <code indent='12'>req.setAttribute("postComment", yyyyy.getPostingInfo());</code>
     <code indent='12'>req.setAttribute("postMemberThumb", yyyyy.getMember().getPictureName() + ".jpg");</code>
     <code indent='12'>req.setAttribute("videoPath", "Yyyyy/Fffff/" + yyyyy.getFffffName() + ".mp4");</code>
     <code indent='8'>}</code>
