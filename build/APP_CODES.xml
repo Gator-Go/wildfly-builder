@@ -608,9 +608,11 @@
   <appCode codeKey='___SHOW_PICTURE_POST___' codeType='Post'>
     <code indent='8'>String posttype = yyyyy.getFffffType();</code>
     <code indent='8'>if (posttype.equals("pic")) {</code>
+    <code indent='12'>req.setAttribute("showMember", "true");</code>
     <code indent='12'>req.setAttribute("showPostPic", "true");</code>
     <code indent='12'>req.setAttribute("showComments", "true");</code>
-    <code indent='12'>req.setAttribute("postTitle", "Fffff");</code>
+    <code indent='12'>req.setAttribute("postMemberName", "yyyyy.getMember().getName()");</code>
+    <code indent='12'>req.setAttribute("postMemberThumb", "yyyyy.getMember().getPictureName() + ".jpg");</code>
     <code indent='12'>req.setAttribute("postComment", yyyyy.getPostingInfo());</code>
     <code indent='12'>req.setAttribute("postPath", "Yyyyy/Fffff/" + yyyyy.getFffffName() + ".jpg");</code>
     <code indent='8'>} else if (posttype.equals("vid")) {</code>

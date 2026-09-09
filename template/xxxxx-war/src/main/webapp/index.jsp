@@ -197,6 +197,10 @@ ___JSP_REPORT_INDEX_DIV_FUNCTION___
 
 </div>
 
+<c:if test="${ !empty showMember }">
+    <div id="pictureInclude"> <jsp:include page="postMemberPic.jsp" /> </div>
+</c:if>
+
 <c:if test="${ !empty showPicture }">
     <div id="pictureInclude"> <jsp:include page="picture.jsp" /> </div>
 </c:if>
