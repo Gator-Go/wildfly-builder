@@ -514,7 +514,7 @@ def createMultiUrlProc(String fileName, String templatePath, String outputDir, d
         theCode << "<span class='app-label'>${node.@appsDesc}</span>"
         theCode << "</div></a></td>"
         count++
-        if (count > 3) {
+        if (count == 3) {
             theCode << "</tr><tr>${NL}${NL}"
             count = 0
         } else {

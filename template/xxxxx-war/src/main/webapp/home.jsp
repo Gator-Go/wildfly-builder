@@ -24,8 +24,6 @@ ___JSP_HOME_URLS___
 	</tr>
 	</table>
 
-<H3>Link To App Store And Setup Guides</H3><br>
-
 <style>
   .swb-header-link {
     display: block;
@@ -71,7 +69,7 @@ ___JSP_HOME_URLS___
     <img src="https://sw-builder.com/logo.png" alt="SW Builder Logo">
     <div class="swb-header-text">
       <h1>sw-builder.com</h1>
-      <p>Practical Software Factories</p>
+      <p>One options set. Two factories. Apps that can sync.</p>
     </div>
   </div>
 </a>
