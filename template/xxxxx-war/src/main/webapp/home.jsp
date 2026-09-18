@@ -68,7 +68,7 @@ ___JSP_HOME_URLS___
   <div class="swb-header-content">
     <img src="https://sw-builder.com/logo.png" alt="SW Builder Logo">
     <div class="swb-header-text">
-      <h1>sw-builder.com</h1>
+      <h1>Software Builder Factories</h1>
       <p>One options set. Two factories. Apps that can sync.</p>
     </div>
   </div>
