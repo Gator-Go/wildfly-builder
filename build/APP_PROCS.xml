@@ -12,6 +12,8 @@
   <appProc fileName='adminIndex.jsp' procName='createMultiFunctionProc' codeType='Code'/>
   <appProc fileName='import.sql' procName='createMultiFunctionProc' codeType='Code'/>
 
+  <appProc fileName='GetEmailListener.java' procName='createMultiFilesProc' codeType='GetEmail'/>
+
   <appProc fileName='Report.java' procName='createMultiFilesProc' codeType='Report'/>
   <appProc fileName='RptList.java' procName='createMultiFilesProc' codeType='Report'/>
   <appProc fileName='RptParam.java' procName='createMultiFilesProc' codeType='Report'/>
