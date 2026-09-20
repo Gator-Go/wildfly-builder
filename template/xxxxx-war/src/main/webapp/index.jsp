@@ -218,7 +218,7 @@ ___JSP_REPORT_INDEX_DIV_FUNCTION___
 </c:if>
 
 <c:if test="${ !empty showComments }">
-    <div id="commentsInclude"> <jsp:include page="list/PostingCommentList.jsp" /> </div>
+    <div id="commentsInclude"> <jsp:include page="PostingCommentList.jsp" /> </div>
 </c:if>
 
 </body>
