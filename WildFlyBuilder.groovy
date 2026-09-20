@@ -758,6 +758,7 @@ def createFunc(String funcKey, def configs) {
  * Main processor for function-based templates (e.g. controllers, services, etc.).
  */
 def createMultiFunctionProc(String fileName, String templatePath, String outputDir, def configs) {
+    def allCodeTypes = configs.appCodeTypes.appCodeType.'@codeType'*.toString()
     def templateContent = new File("${templatePath}/${fileName}").text
     def newFileName = insertAppNames(fileName, configs)
     newFileName = insertTableNames(newFileName, configs) // we'll define this helper
@@ -765,6 +766,7 @@ def createMultiFunctionProc(String fileName, String templatePath, String outputD
     int jspSetAdminSeq = 4
     def content = templateContent
     for (funcNode in configs.appFuncs.appFunc) {
+        if (!allCodeTypes.contains(funcNode.'@codeType')) continue
         def funcKey = funcNode.'@funcKey'
         def codeNbr = funcNode.'@codeNbr'
         def tblOrder = funcNode.'@tblOrder' ?: "normal"
