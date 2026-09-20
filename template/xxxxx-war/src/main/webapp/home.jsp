@@ -8,7 +8,7 @@ String httpRoot = System.getProperty("com.sw-builder.sync.app.http-root");
 <div class='pojo-section'>
       <div class='pojo-section-header'>Home Page</div>
       <div class='pojo-section-body'>
-	<H3>Your Apps</H3><br>
+	<H3>Your Apps:</H3><br>
 
 	<table class="pojo_tablestyle">
         <tr>
@@ -23,6 +23,7 @@ ___JSP_HOME_URLS___
 
 	</tr>
 	</table>
+	<H3>Software Builder Home:</H3><br>
 
 <style>
   .swb-header-link {
