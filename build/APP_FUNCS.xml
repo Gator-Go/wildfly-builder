@@ -188,12 +188,12 @@
   </appFunc>
 
   <appFunc funcKey='___JSP_INDEX_LI_FUNCTION___' tblOrder='forward' codeNbr='Table' codeType='Code'>
-    <func indent='12'>LLLLLliGGGGGLLLLLa href="MMMMM{YyyyyURL}"GGGGGDDDDDLLLLL/aGGGGGLLLLL/liGGGGG</func>
+    <func indent='12'>LLLLLliGGGGGLLLLLa href="#YyyyyTab"GGGGGDDDDDLLLLL/aGGGGGLLLLL/liGGGGG</func>
   </appFunc>
 
   <appFunc funcKey='___JSP_INDEX_DIV_FUNCTION___' tblOrder='forward' codeNbr='Table' codeType='Code'>
     <func indent='8'>LLLLLdiv id="YyyyyTab"GGGGG</func>
-    <func indent='0'>LLLLL% if ("___JSP_SET_SEQ___".equals(tabIdx)) { %GGGGG</func>
+    <func indent='0'>LLLLL% if (tabIdx == "___JSP_SET_SEQ___") { %GGGGG</func>
     <func indent='0'>LLLLLjsp:include page="LLLLL%= jsp %GGGGG" /GGGGG</func>
     <func indent='0'>LLLLL% } %GGGGG</func>
     <func indent='8'>LLLLL/divGGGGG</func>
@@ -239,12 +239,12 @@
   </appFunc>
 
   <appFunc funcKey='___JSP_REPORT_INDEX_LI_FUNCTION___' tblOrder='forward' codeNbr='Once' codeType='Report'>
-    <func indent='12'>LLLLLli id="ReportTab"GGGGGLLLLLa href="MMMMM{ReportListURL}"GGGGGReportsLLLLL/aGGGGGLLLLL/liGGGGG</func>
+    <func indent='12'>LLLLLli id="ReportTab"GGGGGLLLLLa href="#Report"GGGGGReportsLLLLL/aGGGGGLLLLL/liGGGGG</func>
   </appFunc>
 
   <appFunc funcKey='___JSP_REPORT_INDEX_DIV_FUNCTION___' tblOrder='forward' codeNbr='Once' codeType='Report'>
     <func indent='8'>LLLLLdiv id="Report"GGGGG</func>
-    <func indent='0'>LLLLL% if ("___JSP_SET_SEQ___".equals(tabIdx)) { %GGGGG</func>
+    <func indent='0'>LLLLL% if (tabIdx == "___JSP_SET_SEQ___") { %GGGGG</func>
     <func indent='0'>LLLLLjsp:include page="LLLLL%= indexJsp %GGGGG" /GGGGG</func>
     <func indent='0'>LLLLL% } %GGGGG</func>
     <func indent='8'>LLLLL/divGGGGG</func>

@@ -20,22 +20,22 @@ ___JSP_ADMIN_INDEX_LI_REPORT_FUNCTION___
 	</ul>
 
 	<div id="Logs">
-<% if ("0".equals(tabIdx2)) { %>
+<% if (tabIdx2 == "0") { %>
 <jsp:include page="<%= jsp %>" />
 <% } %>
 	</div>
 	<div id="Events">
-<% if ("1".equals(tabIdx2)) { %>
+<% if (tabIdx2 == "1") { %>
 <jsp:include page="<%= jsp %>" />
 <% } %>
 	</div>
 	<div id="EmailSubs">
-<% if ("2".equals(tabIdx2)) { %>
+<% if (tabIdx2 == "2") { %>
 <jsp:include page="<%= jsp %>" />
 <% } %>
 	</div>
 	<div id="SmsSubs">
-<% if ("3".equals(tabIdx2)) { %>
+<% if (tabIdx2 == "3") { %>
 <jsp:include page="<%= jsp %>" />
 <% } %>
 	</div>
