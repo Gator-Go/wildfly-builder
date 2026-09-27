@@ -174,21 +174,21 @@ ___JSP_REPORT_ACTIVATE_FUNCTION___
 
 <div id="tabs">
 	<ul>
-		<li><a href="#Home">Home</a></li>
-		<li id="AdminTab"><a href="#Admin">Admin</a></li>
+                <li><a href="${HomeURL}">Home</a></li>
+                <li id="AdminTab"><a href="${AdminLogsURL}">Admin</a></li>
 ___JSP_INDEX_LI_FUNCTION___
 ___JSP_REPORT_INDEX_LI_FUNCTION___
 
 
 	</ul>
 	<div id="Home">
-<% if (tabIdx == "0") { %>
+<% if ("0".equals(tabIdx)) { %>
 <jsp:include page="<%= jsp %>" />
 <% } %>
         </div>
 
 	<div id="Admin">
-<% if (tabIdx == "1") { %>
+<% if ("1".equals(tabIdx)) { %>
 <jsp:include page="<%= indexJsp %>" />
 <% } %>
         </div>

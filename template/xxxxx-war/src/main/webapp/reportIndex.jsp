@@ -24,14 +24,14 @@ String tabIdx2 = ControllerEnums.Calls.get(op).getTabIdx2();
 	</ul>
 
 	<div id="ReportList">
-	<% if (tabIdx2 == "0") { %>
+	<% if ("0".equals(tabIdx2)) { %>
 	  <jsp:include page="<%= jsp %>" />
 	<% } %>
 	</div>
 
 	<c:if test="${ role != 'GUEST' }">
 	  <div id="GenReport">
-	  <% if (tabIdx2 == "1") { %>
+	  <% if ("1".equals(tabIdx2)) { %>
 	    <jsp:include page="<%= jsp %>" />
 	  <% } %>
 	  </div>
