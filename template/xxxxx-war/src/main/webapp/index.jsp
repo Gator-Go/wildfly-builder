@@ -10,9 +10,12 @@ String op = (String)request.getAttribute("op");
 if (op == null) {
   op = "Home";
 }
-String role = (String)request.getAttribute("role");
-if (role == null)
-    role = "GUEST";
+String role = (String) request.getAttribute("role");
+if (role == null) {
+    if (request.isUserInRole("ADMIN")) role = "ADMIN";
+    else if (request.isUserInRole("USER")) role = "USER";
+    else role = "GUEST";
+}
 String jsp = ControllerEnums.Calls.get(op).getJsp();
 String indexJsp = ControllerEnums.Calls.get(op).getIndexJsp();
 String tabIdx = ControllerEnums.Calls.get(op).getTabIdx();
