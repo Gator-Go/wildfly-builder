@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jboss-web>
    <security-domain>other</security-domain>
+   <context-root>/xxxxx</context-root>
    <session-config>
       <cookie-config>
-         <path>/</path>
+         <path>/xxxxx</path>
       </cookie-config>
    </session-config>
 </jboss-web>
