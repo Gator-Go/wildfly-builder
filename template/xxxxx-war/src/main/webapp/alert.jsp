@@ -188,6 +188,7 @@ function getPage() {
     type: 'GET',
     url: alertURL,
     dataType: "json",
+    xhrFields: { withCredentials: true },
     success: function(data) {
       if (data){
         var alertData = '';
