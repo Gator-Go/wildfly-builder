@@ -1,9 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="ISO-8859-1" %>
-<%
-String httpRoot = System.getProperty("com.sw-builder.sync.app.http-root");
-String alertUser = System.getProperty("com.sw-builder.sync.app.alert-user");
-String alertPassword = System.getProperty("com.sw-builder.sync.app.alert-password");
-%>
 
 <div class='pojo-section'>
 <div class='pojo-section-header'>Log List</div>
@@ -77,13 +72,12 @@ var timeoutID = 0;
 getAlerts();
 
 function getAlerts() {
-  var alertURL = "<%= httpRoot %>/xxxxxws/rest/xxxxxAlerts";
+  var alertURL = "rest/xxxxxAlerts";
   $.ajax({
     type: 'GET',
     url: alertURL,
     dataType: "json",
-    username: "<%= alertUser %>",
-    password: "<%= alertPassword %>",
+    xhrFields: { withCredentials: true },
     success: function(data) {
       if (data){
         var alertData = '';
@@ -115,13 +109,12 @@ function getAlertView(id) {
   $("#alertsTablePage").hide();
   $("#alertsViewPage").show();
 
-  var alertURL = "<%= httpRoot %>/xxxxxws/rest/xxxxxAlerts/" + id;
+  var alertURL = "rest/xxxxxAlerts/" + id;
   $.ajax({
     type: 'GET',
     url: alertURL,
     dataType: "json",
-    username: "<%= alertUser %>",
-    password: "<%= alertPassword %>",
+    xhrFields: { withCredentials: true },
     success: function(data) {
       if (data){
         var alertData =
@@ -190,7 +183,7 @@ function getAlertPage(inPage) {
 }
 
 function getPage() {
-  var alertURL = "<%= httpRoot %>/xxxxxws/rest/xxxxxAlertPage/page/" + page;
+  var alertURL = "rest/xxxxxAlertPage/page/" + page;
   $.ajax({
     type: 'GET',
     url: alertURL,

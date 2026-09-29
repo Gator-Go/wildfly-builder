@@ -30,4 +30,52 @@
   </cookie-config>
   <tracking-mode>COOKIE</tracking-mode>
 </session-config>
+
+<context-param>
+  <param-name>resteasy.scan</param-name>
+  <param-value>true</param-value>
+</context-param>
+<context-param>
+  <param-name>resteasy.role.based.security</param-name>
+  <param-value>true</param-value>
+</context-param>
+<context-param>
+  <param-name>resteasy.servlet.mapping.prefix</param-name>
+  <param-value>/rest</param-value>
+</context-param>
+
+<listener>
+  <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+</listener>
+
+<servlet>
+  <servlet-name>resteasy-servlet</servlet-name>
+  <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>resteasy-servlet</servlet-name>
+  <url-pattern>/rest/*</url-pattern>
+</servlet-mapping>
+
+<security-constraint>
+  <web-resource-collection>
+    <web-resource-name>booklet-rest</web-resource-name>
+    <url-pattern>/rest/*</url-pattern>
+  </web-resource-collection>
+  <auth-constraint>
+    <role-name>ADMIN</role-name>
+    <role-name>USER</role-name>
+  </auth-constraint>
+</security-constraint>
+
+<security-role>
+  <role-name>ADMIN</role-name>
+</security-role>
+<security-role>
+  <role-name>USER</role-name>
+</security-role>
+<security-role>
+  <role-name>GUEST</role-name>
+</security-role>
+
 </web-app>
