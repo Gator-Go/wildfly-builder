@@ -48,16 +48,16 @@ ___JSP_INDEX_URL_FUNCTION___
 ___JSP_REPORT_INDEX_URL_FUNCTION___
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
 <title>XDXDXDXDX</title>
 <link rel="shortcut icon" href="resources/gfx/logo.png" type="image/x-icon" />
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <link rel="stylesheet" type="text/css" href="resources/css/jquery-ui.css" />
-<link rel="stylesheet" type="text/css" href="resources/css/pojo_style.css?v=3" />
+<link rel="stylesheet" type="text/css" href="resources/css/pojo_style.css" />
 
 <script src="resources/js/jquery-1.11.1.min.js"></script>
 <script src="resources/js/jquery-ui.min.js"></script>
@@ -66,26 +66,18 @@ ___JSP_REPORT_INDEX_URL_FUNCTION___
 <script src="resources/js/pojo-ui.js"></script>
 
 <script>
-
 $(document).ready(function() {
-
-<c:set var="role" scope="session" value="<%= role %>"/>
-<c:if test="${ role != 'ADMIN' }">
-    $('#AdminTab').hide();
-</c:if>
-
+  <c:set var="role" scope="session" value="<%= role %>"/>
+  <c:if test="${ role != 'ADMIN' }">
+      $('#AdminTab').hide();
+  </c:if>
 });
 
 $(function () {
-
   $( "#tabs" ).tabs({
-
     active: <%= tabIdx %>,
-
     beforeActivate: function (event, ui) {
-
       var tabId = ui.newPanel.attr('id');
-
       if (tabId == "Home"){
         document.location = '<c:out value="${HomeURL}" />';
         return false;
@@ -94,57 +86,43 @@ $(function () {
         document.location = '<c:out value="${AdminLogsURL}" />';
         return false;
       }
-
 ___JSP_INDEX_ID_FUNCTION___
 ___JSP_REPORT_INDEX_ID_FUNCTION___
     }
-
   });
 
-
-<c:set var="tabIdx" scope="session" value="<%= tabIdx %>"/>
-<c:if test="${ tabIdx == 1 }">
-  $( "#adminTabs" ).tabs({
-    active: <%= tabIdx2 %>,
-
-    beforeActivate: function (event, ui) {
-      var tabId = ui.newPanel.attr('id');
-
-      if (tabId == "Logs"){
-        document.location = '<c:out value="${AdminLogsURL}" />';
-        return false;
-      }
-      if (tabId == "Events"){
-        document.location = '<c:out value="${AdminEventsURL}" />';
-        return false;
-      }
-      if (tabId == "EmailSubs"){
-        document.location = '<c:out value="${AdminEmailSubsURL}" />';
-        return false;
-      }
-      if (tabId == "SmsSubs"){
-        document.location = '<c:out value="${AdminSmsSubsURL}" />';
-        return false;
-      }
-
+  <c:set var="tabIdx" scope="session" value="<%= tabIdx %>"/>
+  <c:if test="${ tabIdx == 1 }">
+    $( "#adminTabs" ).tabs({
+      active: <%= tabIdx2 %>,
+      beforeActivate: function (event, ui) {
+        var tabId = ui.newPanel.attr('id');
+        if (tabId == "Logs"){
+          document.location = '<c:out value="${AdminLogsURL}" />';
+          return false;
+        }
+        if (tabId == "Events"){
+          document.location = '<c:out value="${AdminEventsURL}" />';
+          return false;
+        }
+        if (tabId == "EmailSubs"){
+          document.location = '<c:out value="${AdminEmailSubsURL}" />';
+          return false;
+        }
+        if (tabId == "SmsSubs"){
+          document.location = '<c:out value="${AdminSmsSubsURL}" />';
+          return false;
+        }
 ___JSP_INDEX_ID_REPORT_FUNCTION___
-
-    }
-  });
-</c:if>
-
+      }
+    });
+  </c:if>
 
 ___JSP_REPORT_ACTIVATE_FUNCTION___
-
-
-
 });
-
 </script>
-
 </head>
 <body>
-
 
 <%
   Principal principal = request.getUserPrincipal();
@@ -156,70 +134,57 @@ ___JSP_REPORT_ACTIVATE_FUNCTION___
   }
 %>
 
-<table style="width: 100%;">
-<tr><td style="padding:20px; display: block; float: left;">
-
-<div class="ext-box">
-        <img src="resources/gfx/logo.png" />
-    <div class="int-box">
-        <span>XDXDXDXDX</span>
+<header class="app-header">
+  <div class="app-header-content">
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <img src="resources/gfx/logo.png" alt="Logo" />
+      <h1 class="app-title">XDXDXDXDX</h1>
     </div>
-</div>
+    <div class="app-user-info">
+      <%= username %> &nbsp;&nbsp; <%= logout %><br>
+      IP: <%= ipDisplay %>
+    </div>
+  </div>
+</header>
 
-</td><td style="padding:20px; display: block; float: right;">
-
-<div id="pojo-header">
-      <span class="pojo-header-info"> <%= username %> &nbsp;&nbsp;&nbsp; <%= logout %> <br /> IP=<%= ipDisplay %> </span>
-      <span class="pojo-section-break" />
-</div>
-
-</td></tr></table>
-
-<div id="tabs">
-	<ul>
-		<li><a href="#Home">Home</a></li>
-		<li id="AdminTab"><a href="#Admin">Admin</a></li>
+<main class="container">
+  <div id="tabs">
+    <ul>
+      <li><a href="#Home">Home</a></li>
+      <li id="AdminTab"><a href="#Admin">Admin</a></li>
 ___JSP_INDEX_LI_FUNCTION___
 ___JSP_REPORT_INDEX_LI_FUNCTION___
-
-
-	</ul>
-	<div id="Home">
+    </ul>
+    <div id="Home">
 <% if (tabIdx == "0") { %>
 <jsp:include page="<%= jsp %>" />
 <% } %>
-        </div>
-
-	<div id="Admin">
+    </div>
+    <div id="Admin">
 <% if (tabIdx == "1") { %>
 <jsp:include page="<%= indexJsp %>" />
 <% } %>
-        </div>
+    </div>
 ___JSP_INDEX_DIV_FUNCTION___
 ___JSP_REPORT_INDEX_DIV_FUNCTION___
-
-</div>
+  </div>
+</main>
 
 <c:if test="${ !empty showMember }">
     <div id="pictureInclude"> <jsp:include page="postMemberPic.jsp" /> </div>
 </c:if>
-
 <c:if test="${ !empty showPicture }">
     <div id="pictureInclude"> <jsp:include page="picture.jsp" /> </div>
 </c:if>
-
 <c:if test="${ !empty showPostPic }">
     <div id="pictureInclude"> <jsp:include page="postPic.jsp" /> </div>
 </c:if>
-
 <c:if test="${ !empty showVideo }">
     <div id="videoInclude"> <jsp:include page="video.jsp" /> </div>
 </c:if>
-
 <c:if test="${ !empty showMap }">
     <div id="mapInclude"> <jsp:include page="map.jsp" /> </div>
 </c:if>
-
 <c:if test="${ !empty showComments }">
     <div id="commentsInclude"> <jsp:include page="PostingCommentList.jsp" /> </div>
 </c:if>

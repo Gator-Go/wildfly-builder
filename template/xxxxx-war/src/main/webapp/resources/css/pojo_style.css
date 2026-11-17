@@ -1,304 +1,257 @@
-/* Pojo Core styles for the page */
+/* Modern app styles inspired by sw-builder.com — mobile-friendly, light theme */
+:root {
+  --bg: #f8fafc;
+  --text: #1e3a8a;
+  --header: #1e3a8a;
+  --nav: #1e40af;
+  --accent: #fb923c;
+  --accent-hover: #f97316;
+  --card-bg: #ffffff;
+  --border: #e2e8f0;
+  --shadow: 0 4px 12px rgba(0,0,0,0.08);
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+
 body {
-  background: #303030;
-  color: #121212;
   font-family: Arial, Helvetica, sans-serif;
-  padding: 0;
   margin: 0;
-  font-size: 13px;
-  line-height: 14px;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 16px;
 }
 
-a {
-  color: #303030;
-  text-decoration: none;
+a { color: var(--nav); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+header, .app-header {
+  background: var(--header);
+  color: white;
+  padding: 1rem;
 }
 
-a:hover {
-  color: #5488ad;
-  font-weight: bold;
-  text-decoration: underline;
-}
-
-
-.app-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  text-align: center;
-}
-
-.app-item {
+.app-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px; /* space between logo and text */
-  padding: 15px;
-  flex-direction: row; /* logo then text */
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
-.app-logo {
-  height: 60px;     /* adjust size as needed */
+.app-header-content img {
+  height: 48px;
   width: auto;
-  display: block;
 }
 
-.app-label {
+.app-title {
+  font-size: 1.5rem;
   font-weight: bold;
-  font-size: 17px;
-  color: black;
-  white-space: nowrap;
+  margin: 0;
+  color: white;
 }
 
-#pojo-login {
-  background: #5488ad;
-  color: #ffffff;
-  font-size: 1.2em;
-  font-weight: bold;
-  border: 3px solid #ffffff;
-  border-radius: 5px;
-  width: 25%;
-  margin: auto;
-  padding: 20px;
-}
-
-#pojo-login div {
-  width: 50%;
-  margin: auto;
-  padding: 5px;
-}
-
-.pojo-font {
-  color: #000000;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 11px;
-}
-
-.pojo-small-font {
-  color: #000000;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 9px;
-}
-
-.pojo-border {
-  border-radius: 5px;
-  border: 1px solid #000000;
-  padding: 5px;
-}
-
-.pojo-header-info {
-  color: #c0c0c0;
-  float: right;
+.app-user-info {
   text-align: right;
+  font-size: 0.9rem;
 }
 
-.pojo-header-info a {
-  color: #ffffff;
+.app-user-info a { color: #fdba74; font-weight: bold; }
+
+nav, #tabs ul {
+  background: var(--nav);
+  padding: 0.5rem 1rem;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#tabs ul li {
+  margin: 0;
+}
+
+#tabs ul li a {
+  color: white;
+  padding: 0.5rem 1rem;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+#tabs ul li.ui-tabs-active a,
+#tabs ul li a:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+}
+
+/* Cards / sections — redefines old pojo classes */
+.pojo-section, .section, .card {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.pojo-section-header, .section-header {
+  background: transparent;
+  color: var(--text);
+  font-size: 1.4rem;
   font-weight: bold;
-}
-
-.pojo-fronttext {
-  color: #000000;
-  font-size: 13px;
-}
-
-.ui-widget-content {
-  background: #303030;
-}
-
-.ui-widget-header {
-  background: #303030;
-}
-
-.ui-tabs .ui-tabs-nav {
-  background: none repeat scroll 0% 0% #303030;
-}
-
-.ui-tabs-nav .ui-state-default {
-  background: #c0c0c0;
-  border: 3px;
-  border-bottom: 1px solid #c0c0c0;
-  border-radius: 16px 16px 0px 0px;
-}
-
-.ui-tabs-nav .ui-state-hover {
-  background: #5488ad;
-}
-
-/* Remove the bottom border on the active state */
-.ui-tabs .ui-tabs-nav li.ui-tabs-active {
-  background: #5488ad;
-  margin-bottom: -2px;
-  margin-top: -2px;
-  padding-bottom: 6px;
-  /* top-left, top-right, bottom-right, bottom-left */
-  border-radius: 6px 6px 0px 0px;
-}
-
-.ui-tabs-nav .ui-state-default a {
-  color: #303030;
-}
-
-.ui-tabs-nav .ui-state-hover a:hover,
-.ui-tabs-nav .ui-state-active a {
-  color: #ffffff;
-}
-
-/* Override jQuery-ui padding for the panel */
-.ui-tabs .ui-tabs-panel {
-  padding: 0em;
-}
-
-/* Warning messages */
-.pojo-msg-alert {
-  font-family: Verdana, Arial, Helvetica, Sans-Serif, sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-  color: #821717;
-}
-
-div.ext-box {
-  display: table;
-  background: #303030;
-  color: #ffffff;
-  font-size: 2.25em;
-  font-weight: bold;
-  text-align: left;
-}
-div.int-box {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-/***********
-* SECTIONS *
-************/
-/* Special formatting used on alerts area beneath main page */
-.pojo-alerts {
-  background: #c0c0c0;
-  border-radius: 5px;
-  border: 1px solid #000000;
-  padding: 5px;
-}
-
-/* Special formatting used on alerts header area beneath main page */
-.pojo-alerts-header {
-  background: #303030;
-  color: #ffffff;
-  font-size: 1.25em;
-  font-weight: bold;
-  padding: 10px;
-  text-align: left;
-}
-
-/* Special formatting used on alerts body area beneath main page */
-.pojo-alerts-body {
-  background: #f0f0f0;
-  border-radius: 3px;
-  clear: both;
-  padding: 10px;
-}
-
-.pojo-section {
-  background: #5488ad;
-  border-radius: 5px;
-  border: 1px solid #000000;
-  padding: 5px;
-}
-
-/* Table or section header */
-.pojo-section-header {
-  background: #5488ad;
-  color: #ffffff;
-  font-size: 1.25em;
-  font-weight: bold;
-  padding: 10px;
-  text-align: left;
-}
-
-.pojo-section-header a {
-  background: #5488ad;
-  color: #ffffff;
-  font-size: 0.5em;
-  font-weight: bold;
-  text-align: left;
+  padding: 0 0 0.75rem 0;
+  margin: 0 0 1rem 0;
+  border-bottom: 3px solid var(--accent);
 }
 
 .pojo-section-body {
-  /* Special formatting used on sub-pages for text (opposite of alternate tag below) */
-  background: #f0f0f0;
-  border-radius: 3px;
-  clear: both;
-  padding: 10px;
+  background: transparent;
+  padding: 0;
 }
 
-.pojo-section-alternate {
-  /* Special formatting used on sub-pages for text (opposite of body tag above) */
-  background-color: #c0c0c0;
-}
-
-.pojo-section-break {
-  /* Special formatting used on home pages of the components to set a line break */
-  clear: both;
-}
-
-.pojo-section-item {
-  /* Special formatting used on home pages of the components for each sub-page link/button */
-  float: left;
-  margin: 10px;
-  text-align: center;
-}
-
-.pojo-section-selected {
-  /* Not sure what this one is used for because it is not currently being used */
-}
-
-.pojo-section-subheader {
-  font-size: 10px;
-  font-weight: bold;
-}
-
-.pojo-section-footer {
-  font-size: 11px;
-}
-
-/* Text that belongs to the table but does not fall in one of the other categories
-(e.g. explanatory or help text that is associated with the section. */
-.pojo-section-text {
-  font-size: 12px;
-  font-style: italic;
-}
-
-/******************
-* pojo_tablestyle *
-*******************/
+/* Tables — keep functionality, modern look */
 .pojo_tablestyle {
-  clear: both;
   width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background: white;
 }
 
 .pojo_tablestyle th {
-  background: #5488ad;
-  color: #ffffff;
-  font-size: 12px;
+  background: var(--nav);
+  color: white;
+  padding: 0.75rem 0.5rem;
+  text-align: left;
   font-weight: bold;
-  padding: 0 10px 0 5px;
-  border-bottom: #c0c0c0 dotted 1px;
 }
 
 .pojo_tablestyle td {
-  height: 2em;
-  padding-left: 6px;
-  font-size: 11px;
-  padding: 5px 5px;
-}
-
-/* Using new CSS3 selectors for styling */
-.pojo_tablestyle tr:nth-child(odd) {
-  background: #c0c0c0;
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .pojo_tablestyle tr:nth-child(even) {
-  background: #ffffff;
+  background: #f1f5f9;
 }
 
+.pojo_tablestyle tr:hover {
+  background: #e0e7ff;
+}
+
+/* Buttons */
+.btn, button, .btnAdd, .btnEdit, .btnSearch, .btnViewIcon, .btnEditIcon, .btnDeleteIcon, .btnBack, .btnPrevious, .btnNext, .btnBlank {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  margin: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.btn:hover, button:hover {
+  background: var(--accent-hover);
+}
+
+.btnBack, .btnSecondary {
+  background: var(--nav);
+}
+
+.btnBack:hover, .btnSecondary:hover {
+  background: #1e3a8a;
+}
+
+/* Login specific */
+#pojo-login {
+  background: var(--card-bg);
+  color: var(--text);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 2rem;
+  border: 1px solid var(--border);
+}
+
+#pojo-login div {
+  margin-bottom: 1rem;
+}
+
+#pojo-login label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+}
+
+#pojo-login input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Grid for home apps */
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.app-item {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.15s ease;
+}
+
+.app-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app-header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  .app-user-info {
+    text-align: center;
+  }
+  #tabs ul {
+    flex-direction: column;
+  }
+  .pojo_tablestyle {
+    font-size: 0.9rem;
+  }
+  .pojo_tablestyle th, .pojo_tablestyle td {
+    padding: 0.4rem 0.3rem;
+  }
+  #pojo-login {
+    margin: 1rem;
+    width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 15px; }
+  .app-title { font-size: 1.3rem; }
+  button, .btn { width: 100%; margin: 0.4rem 0; }
+}

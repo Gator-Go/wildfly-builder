@@ -1,11 +1,11 @@
 <%@ page import="java.net.InetAddress" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Social - Login</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login</title>
 <link rel="stylesheet" type="text/css" href="resources/css/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="resources/css/pojo_style.css" />
 <script src="resources/js/jquery-1.11.1.min.js"></script>
@@ -13,26 +13,31 @@
 <script src="resources/js/pojo-ui.js"></script>
 </head>
 <body>
-<div id="pojo-header">
-  <img src="resources/gfx/logo.png" />
-<%
-  String ipAddress = InetAddress.getLocalHost().getHostAddress();
-%>
-  <span class="pojo-header-info">  IP=<%= ipAddress %></span>
-  <span class="pojo-section-break" />
-</div>
-<div id="pojo-login">
-  <form name="login" method="POST" action="j_security_check">
+<header class="app-header">
+  <div class="app-header-content">
+    <img src="resources/gfx/logo.png" alt="Logo" />
     <div>
-      <label>User</label>
-      <input type="text" name="j_username" />
+      <h1 class="app-title">App Login</h1>
     </div>
-    <div>
-      <label>Password</label>
-      <input type="password" name="j_password" />
-    </div>
-    <div><button class="btnBlank" type="submit" name="login">Login</button></div>
-  </form>
-</div>
+  </div>
+</header>
+
+<main class="container">
+  <div id="pojo-login" class="card">
+    <form name="login" method="POST" action="j_security_check">
+      <div>
+        <label for="j_username">User</label>
+        <input type="text" id="j_username" name="j_username" required />
+      </div>
+      <div>
+        <label for="j_password">Password</label>
+        <input type="password" id="j_password" name="j_password" required />
+      </div>
+      <div>
+        <button class="btn" type="submit" name="login">Login</button>
+      </div>
+    </form>
+  </div>
+</main>
 </body>
 </html>

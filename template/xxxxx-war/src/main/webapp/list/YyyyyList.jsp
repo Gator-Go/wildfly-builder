@@ -28,90 +28,69 @@ if (role == null)
   <c:param name="opSub" value="nextPage" />
 </c:url>
 
-<div class='pojo-section'>
-<div class='pojo-section-header'>DDDDD List</div>
-<div class='pojo-section-body'>
+<section class="section">
+  <h2 class="section-header">DDDDD List</h2>
+  <div class="pojo-section-body">
 
-<p>
-   <label style="color: green;width: 100%;text-align: left;">${msg}</label> 
-</p>
+    <p>
+       <label style="color: green;width: 100%;text-align: left;">${msg}</label> 
+    </p>
 
-<c:if test="${ role != 'GUEST' }">
-  <a href='<c:out value="${addURL}" />'>
-    <button class='btnAdd'>Add</button>
-  </a>
-</c:if>
+    <div style="margin-bottom:1rem;">
+      <c:if test="${ role != 'GUEST' }">
+        <a href='<c:out value="${addURL}" />' class="btn">Add</a>
+      </c:if>
+      <a href='<c:out value="${searchURL}" />' class="btn">Search</a>
+      <c:if test="${!empty previousFlag}">
+        <a href='<c:out value="${previousURL}" />' class="btn">Prev</a>
+      </c:if>
+      <c:if test="${!empty nextFlag}">
+        <a href='<c:out value="${nextURL}" />' class="btn">Next</a>
+      </c:if>
+    </div>
 
-&nbsp;&nbsp;
+    <p><strong>${pageInfo}</strong></p>
 
-<a href='<c:out value="${searchURL}" />'>
-  <button class='btnSearch'>Search</button>
-</a>
-
-<c:if test="${!empty previousFlag}">
-  &nbsp;&nbsp;
-  <a href='<c:out value="${previousURL}" />'>
-    <button class='btnPrevious'>Prev</button>
-  </a>
-</c:if>
-
-<c:if test="${!empty nextFlag}">
-  &nbsp;&nbsp;
-  <a href='<c:out value="${nextURL}" />'>
-    <button class='btnNext'>Next</button>
-  </a>
-</c:if>
-
-<br><font class="Verdana"><b>${pageInfo}</b></font>
-
-<table class="pojo_tablestyle">
-
-<thead>
-<tr>
-  <th valign="top" width="10%">Action</th>
+    <table class="pojo_tablestyle">
+      <thead>
+        <tr>
+          <th>Action</th>
 ___JSP_LIST_HEADING___
-</tr>
-</thead>
-
-<tbody>
-
-<c:forEach items="${yyyyys}" var="item">
-        
-      <tr>
-        <c:url value="do" var="viewURL">
-           <c:param name="op"   value="YyyyyView" />
-           <c:param name="id"   value="${item.id}" />
-        </c:url>
-	<c:if test="${ role != 'GUEST' }">
-          <c:url value="do" var="editURL">
-            <c:param name="op"   value="YyyyyEdit" />
-            <c:param name="id"   value="${item.id}" />
-          </c:url>
-          <c:url value="do" var="deleteURL">
-            <c:param name="op"   value="YyyyyDelete" />
-            <c:param name="id"   value="${item.id}" />
-          </c:url>
-	</c:if>
+        </tr>
+      </thead>
+      <tbody>
+        <c:forEach items="${yyyyys}" var="item">
+          <tr>
+            <c:url value="do" var="viewURL">
+               <c:param name="op"   value="YyyyyView" />
+               <c:param name="id"   value="${item.id}" />
+            </c:url>
+            <c:if test="${ role != 'GUEST' }">
+              <c:url value="do" var="editURL">
+                <c:param name="op"   value="YyyyyEdit" />
+                <c:param name="id"   value="${item.id}" />
+              </c:url>
+              <c:url value="do" var="deleteURL">
+                <c:param name="op"   value="YyyyyDelete" />
+                <c:param name="id"   value="${item.id}" />
+              </c:url>
+            </c:if>
 
 ___JSP_LIST_URL_ONE2MANY_PARENT___
 ___JSP_LIST_URL_ONE2MANY_PARENT_ALERT___
-      <td>
-          <a href='<c:out value="${viewURL}" />'><button class='btnViewIcon'>View</button></a>
-	  <c:if test="${ role != 'GUEST' }">
-            <a href='<c:out value="${editURL}" />'><button class='btnEditIcon'>Edit</button></a>
-            <c:if test="${!empty admin}">
-              <a href='<c:out value="${deleteURL}" />'><button class='btnDeleteIcon'>Delete</button></a>
-            </c:if>
-	  </c:if>
-      </td>
+            <td>
+              <a href='<c:out value="${viewURL}" />' class="btn">View</a>
+              <c:if test="${ role != 'GUEST' }">
+                <a href='<c:out value="${editURL}" />' class="btn">Edit</a>
+                <c:if test="${!empty admin}">
+                  <a href='<c:out value="${deleteURL}" />' class="btn">Delete</a>
+                </c:if>
+              </c:if>
+            </td>
 ___JSP_LIST_BODY___
-	</tr>
-
-</c:forEach>
-
-</tbody>
-
-</table>
-
-</div>
-</div>
+          </tr>
+        </c:forEach>
+      </tbody>
+    </table>
+  </div>
+</section>

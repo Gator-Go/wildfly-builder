@@ -5,75 +5,21 @@
 String httpRoot = System.getProperty("com.sw-builder.sync.app.http-root");
 %>
 
-<div class='pojo-section'>
-      <div class='pojo-section-header'>Home Page</div>
-      <div class='pojo-section-body'>
-	<H3>Your Apps:</H3><br>
-
-	<table class="pojo_tablestyle">
-        <tr>
-           <th width="33%"></th>
-           <th width="33%"></th>
-           <th width="33%"></th>
-        </tr>
-
-	<tr>
-
+<section class="section">
+  <h2 class="section-header">Home Page</h2>
+  <div class="pojo-section-body">
+    <h3>Your Apps</h3>
+    <div class="app-grid">
 ___JSP_HOME_URLS___
-
-	</tr>
-	</table>
-	<H3>Software Builder Home:</H3><br>
-
-<style>
-  .swb-header-link {
-    display: block;
-    background: #1e3a8a;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    padding: 1.2rem 1.5rem;
-    max-width: 520px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: background 0.2s ease;
-  }
-  .swb-header-link:hover {
-    background: #1e40af;
-  }
-  .swb-header-content {
-    display: flex;
-    align-items: center;
-    gap: 1.4rem;
-    flex-wrap: wrap;
-  }
-  .swb-header-content img {
-    height: 72px;
-    width: auto;
-    flex-shrink: 0;
-  }
-  .swb-header-text h1 {
-    margin: 0 0 0.15rem 0;
-    font-size: 1.7rem;
-    font-weight: bold;
-    color: white;
-    line-height: 1.2;
-  }
-  .swb-header-text p {
-    margin: 0;
-    font-size: 1.05rem;
-    color: #e0e7ff;
-  }
-</style>
-
-<a href="https://sw-builder.com" target="_blank" class="swb-header-link">
-  <div class="swb-header-content">
-    <img src="https://sw-builder.com/logo.png" alt="SW Builder Logo">
-    <div class="swb-header-text">
-      <h1>Software Builder Factories</h1>
-      <p>One options set. Two factories. Apps that can sync.</p>
     </div>
-  </div>
-</a>
 
+    <h3 style="margin-top:2rem;">Software Builder Home</h3>
+    <a href="https://sw-builder.com" target="_blank" class="card" style="display:flex; align-items:center; gap:1rem; max-width:520px; text-decoration:none;">
+      <img src="https://sw-builder.com/logo.png" alt="SW Builder Logo" style="height:64px; width:auto;">
+      <div>
+        <strong style="font-size:1.2rem;">Software Builder Factories</strong><br>
+        <span style="color:#64748b;">One options set. Two factories. Apps that can sync.</span>
       </div>
-</div>
+    </a>
+  </div>
+</section>
