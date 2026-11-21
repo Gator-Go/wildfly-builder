@@ -73,7 +73,7 @@
                 <artifactId>wildfly-maven-plugin</artifactId>
                 <configuration>
                     <skip>false</skip>
-                    <hostname>192.168.4.45</hostname>
+                    <hostname>${wildfly.hostname}</hostname>
                     <port>9990</port>
                     <id>wildfly-local</id>
                 </configuration>
